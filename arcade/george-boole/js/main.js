@@ -348,6 +348,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             loreScreen.classList.remove('active');
             difficultyModal.dataset.from = 'lore';
             difficultyModal.classList.add('active');
+            document.dispatchEvent(new CustomEvent('boole:mode-picker-open'));
         };
 
         // ---- The how-to-play screen as a menu, over a live game ----
@@ -457,9 +458,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const modal = document.getElementById('instructionsModal');
             const back = document.getElementById('instructionsBack');
             if (back) {
-                back.textContent = returnToLoreScreen
+                setArrowLabel(back, returnToLoreScreen
                     ? '← how to play'
-                    : '← back to game';
+                    : '← back to game');
             }
             modal.classList.add('active');
             const content = modal.querySelector('.instructions-content');
@@ -538,6 +539,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 returnToPicker = false;
                 difficultyModal.dataset.from = 'lore';
                 difficultyModal.classList.add('active');
+            document.dispatchEvent(new CustomEvent('boole:mode-picker-open'));
                 return;
             }
             if (returnToLoreScreen) {
@@ -546,64 +548,161 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // Setup difficulty selection
-        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
-        
-        difficultyButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const difficulty = btn.dataset.difficulty;
-                const target = parseInt(btn.dataset.target);
-                const theme = btn.dataset.theme || 'snes';
+        // ── starting a game ─────────────────────────────────────────
+        //
+        // One function, because there are two ways in now: the CLASSIC reel
+        // picks a width and START launches it, and GAUNTLET is its own
+        // button. This used to be the body of a click handler bound to every
+        // .difficulty-btn, which worked while every mode was a button in a
+        // list and stopped being enough the moment one of them became a dial.
+        //
+        // LEARN's branch is gone with it. It was on this list, started no
+        // board, and returned before any of this; it is a primary button on
+        // the menu now and does not appear here at all.
+        function startMode(el) {
+            const difficulty = el.dataset.difficulty;
+            const target = parseInt(el.dataset.target);
+            const theme = el.dataset.theme || 'snes';
 
-                // LEARN is a mode on this list and not a game: it starts no
-                // board, so it returns before any of the below.
-                //
-                // It must not touch lastPlayedDifficulty either. That key is
-                // what getScoreboardDefault() opens the scoreboard on, and
-                // 'tutorial' is not a column there -- the board would come up
-                // on a mode that has no scores and never will.
-                if (difficulty === 'tutorial') {
-                    difficultyModal.classList.remove('active');
-                    if (window.BooleTutorial && window.BooleTutorial.open) {
-                        returnToLoreScreen = false;
-                        returnToPicker = true;
-                        window.BooleTutorial.open();
-                    } else {
-                        // No tutorial.js in this build: fall back to the rules
-                        // rather than to a button that does nothing.
-                        openInstructions('start with counting');
-                    }
-                    return;
-                }
+            currentDifficulty = difficulty;
+            localStorage.setItem('lastPlayedDifficulty', difficulty);
 
-                currentDifficulty = difficulty;
-                localStorage.setItem('lastPlayedDifficulty', difficulty);
-                
-                // Clean up old game instance to prevent memory leaks
-                if (currentGame) {
-                    currentGame.destroy();
-                }
-                
-                // Apply theme to body
-                document.body.setAttribute('data-theme', theme);
-                
-                // Add game-active class to enable animations
-                document.body.classList.add('game-active');
-                
-                // Mark gauntlet mode for side panel highlighting
-                if (difficulty === 'endless') {
-                    document.body.classList.add('game-active-gauntlet');
-                } else {
-                    document.body.classList.remove('game-active-gauntlet');
-                }
-                
-                // Hide difficulty modal
-                difficultyModal.classList.remove('active');
-                
-                // Start game with selected difficulty
-                currentGame = new BooleBoard(difficulty, target);
-            });
+            // Clean up old game instance to prevent memory leaks
+            if (currentGame) {
+                currentGame.destroy();
+            }
+
+            document.body.setAttribute('data-theme', theme);
+            document.body.classList.add('game-active');
+
+            // Mark gauntlet mode for side panel highlighting
+            if (difficulty === 'endless') {
+                document.body.classList.add('game-active-gauntlet');
+            } else {
+                document.body.classList.remove('game-active-gauntlet');
+            }
+
+            difficultyModal.classList.remove('active');
+            currentGame = new BooleBoard(difficulty, target);
+        }
+
+        // GAUNTLET, and anything else on this screen that starts a game.
+        //
+        // The [data-difficulty] is doing work rather than tidying: LEARN sits
+        // beside GAUNTLET and is NOT a difficulty, so it declares none and is
+        // excluded by the selector itself. That is better than starting it
+        // here and returning early on a special name, which is what this used
+        // to do and what left a branch in the middle of startMode() reading
+        // "this one is not a game".
+        document.querySelectorAll('.difficulty-btn[data-difficulty]').forEach((btn) => {
+            btn.addEventListener('click', () => startMode(btn));
         });
+
+        // LEARN, which opens the primer rather than a board. Back on this
+        // screen because it IS a mode once it is four taught moves on the
+        // real board: it just is not a width, so it belongs beside GAUNTLET
+        // and not on the reel.
+        const modeLearn = document.getElementById('modeLearn');
+        if (modeLearn) {
+            modeLearn.addEventListener('click', () => {
+                difficultyModal.classList.remove('active');
+                if (window.BooleTutorial && window.BooleTutorial.open) {
+                    // Leaving the primer lands back on the mode list it was
+                    // picked off, not on the how-to-play screen.
+                    returnToLoreScreen = false;
+                    returnToPicker = true;
+                    window.BooleTutorial.open();
+                } else {
+                    openInstructions('start with counting');
+                }
+            });
+        }
+
+        // ── the CLASSIC reel ────────────────────────────────────────────
+        //
+        // Scroll snapping does the work; this only has to answer which slot
+        // is in the window and keep the button honest about it. Reading the
+        // centre from the rendered positions rather than tracking an index
+        // means a flick, a tap, a keyboard arrow and a resize all land in the
+        // same place without any of them being special-cased.
+        const modeReel = document.getElementById('modeReel');
+        const modeWindow = document.getElementById('modeWindow');
+        const modeStart = document.getElementById('modeStart');
+        if (modeReel && modeStart) {
+            const slots = Array.from(modeReel.querySelectorAll('.mode-slot'));
+            let centre = slots.find((s) => s.dataset.difficulty === '4') || slots[0];
+
+            const centreOf = (slot) =>
+                slot.offsetTop - modeReel.clientHeight / 2 + slot.offsetHeight / 2;
+
+            function settle() {
+                const mid = modeReel.getBoundingClientRect().top + modeReel.clientHeight / 2;
+                let best = slots[0];
+                let bestD = Infinity;
+                slots.forEach((s) => {
+                    const r = s.getBoundingClientRect();
+                    const d = Math.abs(r.top + r.height / 2 - mid);
+                    if (d < bestD) { bestD = d; best = s; }
+                });
+                centre = best;
+                slots.forEach((s) => {
+                    const on = s === best;
+                    s.classList.toggle('is-centre', on);
+                    s.setAttribute('aria-selected', on ? 'true' : 'false');
+                });
+                // The window takes the width's own theme colour, so spinning
+                // the reel previews the mode rather than only naming it.
+                const accent = best.dataset.theme || 'snes';
+                if (modeWindow) modeWindow.dataset.theme = accent;
+                modeStart.textContent = 'START ' + best.querySelector('b').textContent;
+            }
+
+            let raf = 0;
+            modeReel.addEventListener('scroll', () => {
+                if (raf) return;
+                raf = requestAnimationFrame(() => { raf = 0; settle(); });
+            });
+
+            // A tap on a neighbour brings it to the window rather than
+            // starting it. Two different outcomes from one gesture, decided
+            // by how accurately you hit a 70px target, is how you start the
+            // wrong game.
+            slots.forEach((s) => {
+                s.addEventListener('click', () => {
+                    modeReel.scrollTo({ top: centreOf(s), behavior: 'smooth' });
+                });
+            });
+
+            modeReel.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                e.preventDefault();
+                startMode(centre);
+            });
+
+            modeStart.addEventListener('click', () => startMode(centre));
+
+            // Open on the last width played, so the picker remembers. 4-BIT
+            // otherwise, which is what the board lesson teaches on.
+            const last = localStorage.getItem('lastPlayedDifficulty');
+            const want = slots.find((s) => s.dataset.difficulty === last) || centre;
+            const place = () => {
+                // NEXT FRAME, not this one. The modal is display:none until
+                // it opens, so offsetTop and clientHeight are all zero in
+                // the tick the active class is added and the reel lands on
+                // its first slot however carefully the sum is written. Same
+                // fault the codex had scrolling to an entry, caught the same
+                // way: by the thing opening in the wrong place.
+                requestAnimationFrame(() => {
+                    modeReel.scrollTop = centreOf(want);
+                    settle();
+                });
+            };
+            place();
+            // The modal is display:none until it opens, so the measurements
+            // above are all zero on a cold load and the reel lands on its
+            // first slot. Re-place it when the screen it lives on appears.
+            document.addEventListener('boole:mode-picker-open', place);
+        }
 
         // Back button: wherever the mode picker was opened from.
         //

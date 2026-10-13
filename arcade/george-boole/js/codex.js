@@ -221,7 +221,7 @@
     const el = (tag, className, text) => {
         const node = document.createElement(tag);
         if (className) node.className = className;
-        if (text !== undefined) node.textContent = text;
+        if (text !== undefined) setArrowLabel(node, text);
         return node;
     };
 
@@ -230,8 +230,8 @@
     const toastQueue = [];
     let toastBusy = false;
 
-    function toast(kicker, title, gate) {
-        toastQueue.push({ kicker, title, gate });
+    function toast(kicker, title, gate, target) {
+        toastQueue.push({ kicker, title, gate, target: target || gate });
         if (!toastBusy) nextToast();
     }
 
@@ -247,6 +247,34 @@
         node.setAttribute('role', 'status');
         node.appendChild(el('span', 'codex-toast-kicker', item.kicker));
         node.appendChild(el('span', 'codex-toast-title', item.title));
+
+        /**
+         * THE TOAST IS A DOOR, which it was not, and it is the best one the
+         * overflow has.
+         *
+         * The overflow banner looks like the obvious target and is a bad
+         * one: it shows for a second before a 300ms fade, and game.js uses
+         * the same element for the height bonus, so the thing being pointed
+         * at is not always the same thing. This toast is raised by the same
+         * move, lasts 2400ms, is already labelled with what was found, and
+         * exists precisely because something worth reading just happened.
+         *
+         * Tapping it opens the codex at that entry: the gate for a gate, the
+         * discovery for a discovery, which for an overflow is `wraparound`
+         * and reads "every bit flips at once and nothing is left".
+         */
+        if (item.target) {
+            node.classList.add('codex-opener');
+            node.setAttribute('role', 'button');
+            node.setAttribute('tabindex', '0');
+            node.appendChild(el('span', 'codex-toast-more', 'tap to read'));
+            const go = () => { node.remove(); open(item.target); };
+            node.addEventListener('click', go);
+            node.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+            });
+        }
+
         document.body.appendChild(node);
         setTimeout(() => {
             node.classList.add('is-leaving');
@@ -341,6 +369,10 @@
     function discoveryItem(d) {
         const found = state.discoveries[d.id];
         const item = el('li', 'codex-discovery');
+        // So open() can scroll to it. Gate cards have had ids since they
+        // were written; discoveries did not, which is why the only thing
+        // the codex could be opened AT was a gate.
+        item.id = `codex-disc-${d.id}`;
         if (!found) item.classList.add('is-locked');
         const head = el('div', 'codex-discovery-head');
         head.appendChild(el('span', 'codex-discovery-mark', found ? '✓' : '?'));
@@ -402,8 +434,40 @@
         const panel = modal.querySelector('.codex-content');
         panel.scrollTop = 0;
         if (gateName) {
-            const card = document.getElementById(`codex-${String(gateName).toLowerCase()}`);
-            if (card) panel.scrollTop = card.offsetTop - 60;
+            // A gate card or a discovery. The two id spaces cannot collide
+            // -- gates are XOR, OR, AND, NOT and discoveries are
+            // self_inverse, wraparound and the rest -- so one lookup with a
+            // fallback keeps a single way in rather than two openers that
+            // would drift.
+            const key = String(gateName).toLowerCase();
+            const card = document.getElementById(`codex-${key}`)
+                || document.getElementById(`codex-disc-${key}`);
+            // scrollIntoView, not offsetTop arithmetic. A gate card's
+            // offsetParent happens to be the scrolling panel, so the old sum
+            // worked for the four of them and silently did not for a
+            // discovery, whose <li> reports its offset against the list it
+            // sits in: the codex opened and stayed at the top, which looks
+            // exactly like the entry not being there.
+            //
+            // Measuring rects instead was the obvious repair and was still
+            // wrong, because it reads them in the same tick the modal is
+            // made active and the panel has not laid out at its open size
+            // yet. scrollIntoView has neither problem: it finds the
+            // scrollable ancestor itself and the browser does it after
+            // layout. The nudge afterwards is the sticky header's depth,
+            // which is the one thing it cannot know.
+            if (card) {
+                card.scrollIntoView({ block: 'start' });
+                // Clear the sticky header, and only by as much as it takes.
+                // A flat nudge is wrong whenever the panel is already
+                // scrolled as far as it goes, which is the case for anything
+                // near the end of a short document: scrollIntoView cannot
+                // lift the card any higher, so subtracting 60 just pushes it
+                // back DOWN the screen. Measure the gap and close it.
+                const gap = card.getBoundingClientRect().top
+                    - panel.getBoundingClientRect().top;
+                if (gap < 60) panel.scrollTop -= (60 - gap);
+            }
         }
     }
 
@@ -436,7 +500,7 @@
         }
         for (const id of found.discoveries) {
             const d = DISCOVERIES.find((x) => x.id === id);
-            toast('discovery', d.title);
+            toast('discovery', d.title, null, d.id);
             document.dispatchEvent(new CustomEvent('boole:discovery', { detail: { id } }));
         }
         if (isOpen()) render();
@@ -468,7 +532,9 @@
             });
         };
 
-        openFrom(document.getElementById('loreCodex'));
+        // loreCodex was the how-to-play screen's link and is gone from that
+        // screen; openFrom() ignores a missing node, but naming one that
+        // cannot exist is a line that reads as a live door.
         openFrom(document.getElementById('sidePanelCodex'));
         // The strip under the board, which is the only one of these a phone
         // shows: the gate symbols there open the codex too, but a tap target
@@ -477,6 +543,60 @@
         document.querySelectorAll('.gate-tag[data-gate], .gate-ref[data-gate]').forEach((node) => {
             openFrom(node, node.dataset.gate.toUpperCase());
         });
+
+        /**
+         * THE GATE ON THE BOARD, which was the one place a gate appeared
+         * that could not be asked about.
+         *
+         * Every other reference opens this codex already: the side panel,
+         * the strip under the board, the gate names in the full rules. The
+         * tile does not, and it is the only one the player is actually
+         * looking at when they wonder what just happened to their numbers.
+         *
+         * DELEGATED, because the loop above cannot reach these. render()
+         * reassigns tile.className on every move, so a node bound at load
+         * is replaced the first time anything slides.
+         *
+         * A tap here is free and that was the thing worth checking rather
+         * than assuming. shared/adenosine-puzzle.js binds touchstart
+         * `{ passive: true }`, so it cannot preventDefault at all;
+         * touchmove only preventDefaults once movement passes its swipe
+         * threshold; and touchend only when a direction was found, a move
+         * was committed, or the finger left the board. A stationary tap
+         * over a tile trips none of them, so the browser raises an ordinary
+         * click and the engine never sees it as a gesture.
+         *
+         * Opening over a live board is safe for a reason that was already
+         * true: `.codex-modal.active` is in game.js's OVERLAY_SELECTOR, so
+         * arrow keys and swipes are refused while this is up and the board
+         * cannot move behind it.
+         */
+        /**
+         * The overflow banner, for the second and a bit it is on screen.
+         *
+         * The toast above is the real door and this is the one the thumb is
+         * already near, so it goes to the same place. Gated on the kind,
+         * because game.js reuses this element for the height bonus and that
+         * has no codex entry to open: a tap there would be a door into the
+         * wrong room, which is worse than no door.
+         */
+        const banner = document.getElementById('overflowNotification');
+        if (banner) {
+            banner.addEventListener('click', () => {
+                if (banner.dataset.kind !== 'overflow') return;
+                banner.style.display = 'none';
+                open('wraparound');
+            });
+        }
+
+        const board = document.getElementById('gameBoard');
+        if (board) {
+            board.addEventListener('click', (e) => {
+                const tile = e.target.closest('.gate-tile[data-gate]');
+                if (!tile || !board.contains(tile)) return;
+                open(tile.dataset.gate.toUpperCase());
+            });
+        }
     });
 
     root.BooleCodex.open = open;

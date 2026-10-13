@@ -62,22 +62,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
-    <link rel="stylesheet" href="css/base.css?v=bf0b79e4">
+    <link rel="stylesheet" href="css/base.css?v=c0fd618b">
     <link rel="stylesheet" href="css/themes.css?v=7b5f0931">
     <link rel="stylesheet" href="css/container.css?v=13f4f513">
-    <link rel="stylesheet" href="css/game.css?v=3eaa3eb3">
+    <link rel="stylesheet" href="css/game.css?v=6424a900">
     <link rel="stylesheet" href="css/modal-title.css?v=58376cd2">
-    <link rel="stylesheet" href="css/modal-lore.css?v=d6251757">
-    <link rel="stylesheet" href="css/modal-difficulty.css?v=2cea08f0">
+    <link rel="stylesheet" href="css/modal-lore.css?v=2524e2fa">
+    <link rel="stylesheet" href="css/modal-difficulty.css?v=79a2eb2c">
     <link rel="stylesheet" href="css/modal-scoreboard.css?v=0ae5f201">
     <link rel="stylesheet" href="css/modal-settings.css?v=52d3c30a">
     <link rel="stylesheet" href="css/modal-misc.css?v=4d409b4e">
     <link rel="stylesheet" href="css/responsive.css?v=f0fe00bb">
     <link rel="stylesheet" href="css/gates.css?v=fefddded">
     <link rel="stylesheet" href="css/side-panels.css?v=81928961">
-    <link rel="stylesheet" href="css/math-overlay.css?v=8d366f17">
-    <link rel="stylesheet" href="css/codex.css?v=3335dbdb">
-    <link rel="stylesheet" href="css/tutorial.css?v=e1b58825">
+    <link rel="stylesheet" href="css/math-overlay.css?v=a78ab338">
+    <link rel="stylesheet" href="css/codex.css?v=d19a71d9">
+    <link rel="stylesheet" href="css/tutorial.css?v=878b89f6">
 </head>
 <body>
     <a href="../puzzles/" class="mc-back">puzzles</a>
@@ -141,8 +141,8 @@
                     <div class="rule-item">progress through <span class="rule-highlight">8-bit</span></div>
                 </div>
 
-                <div class="full-rules-link" id="sidePanelHowToPlay">full rules &rarr;</div>
-                <div class="full-rules-link" id="sidePanelCredits">credits &rarr;</div>
+                <div class="full-rules-link" id="sidePanelHowToPlay">full rules <span class="ui-arrow">&rarr;</span></div>
+                <div class="full-rules-link" id="sidePanelCredits">credits <span class="ui-arrow">&rarr;</span></div>
             </div>
         </div>
 
@@ -204,9 +204,9 @@
                      two through the menu for the things a player reaches for
                      while playing. -->
                 <div class="rules-row">
-                    <span class="rule-link" id="howToPlayLink">full rules &rarr;</span>
-                    <span class="rule-link" id="stripCodexLink">gate codex &rarr;</span>
-                    <span class="rule-link" id="stripCreditsLink">credits &rarr;</span>
+                    <span class="rule-link" id="howToPlayLink">full rules <span class="ui-arrow">&rarr;</span></span>
+                    <span class="rule-link" id="stripCodexLink">gate codex <span class="ui-arrow">&rarr;</span></span>
+                    <span class="rule-link" id="stripCreditsLink">credits <span class="ui-arrow">&rarr;</span></span>
                 </div>
             </div>
         </div>
@@ -220,7 +220,7 @@
                     <div class="gate-ref-symbol">&#x2295;</div>
                     <div class="gate-ref-name">XOR</div>
                     <div class="gate-ref-desc">exclusive or &mdash; sets each bit where the inputs differ</div>
-                    <div class="gate-ref-example">1 &oplus; 2 = 3<span class="bits">0001 &oplus; 0010 = 0011</span>2 &oplus; 3 = 1<span class="bits">0010 &oplus; 0011 = 0001</span></div>
+                    <div class="gate-ref-example"><span class="gate-example-label">binary</span><span class="gate-bits">0001 &oplus; 0010 = 0011</span><span class="gate-bits">0010 &oplus; 0011 = 0001</span></div>
                     <div class="gate-ref-usage">sandwich: [num][&oplus;][num]</div>
                 </div>
 
@@ -228,7 +228,7 @@
                     <div class="gate-ref-symbol">&#x2228;</div>
                     <div class="gate-ref-name">OR</div>
                     <div class="gate-ref-desc">bitwise or &mdash; sets any bit that is 1 in either input</div>
-                    <div class="gate-ref-example">1 &or; 2 = 3<span class="bits">0001 &or; 0010 = 0011</span>4 &or; 3 = 7<span class="bits">0100 &or; 0011 = 0111</span></div>
+                    <div class="gate-ref-example"><span class="gate-example-label">binary</span><span class="gate-bits">0001 &or; 0010 = 0011</span><span class="gate-bits">0100 &or; 0011 = 0111</span></div>
                     <div class="gate-ref-usage">sandwich: [num][&or;][num]</div>
                 </div>
 
@@ -236,7 +236,7 @@
                     <div class="gate-ref-symbol">&#x2227;</div>
                     <div class="gate-ref-name">AND</div>
                     <div class="gate-ref-desc">bitwise and &mdash; keeps only shared bits</div>
-                    <div class="gate-ref-example">3 &and; 2 = 2<span class="bits">0011 &and; 0010 = 0010</span>7 &and; 4 = 4<span class="bits">0111 &and; 0100 = 0100</span></div>
+                    <div class="gate-ref-example"><span class="gate-example-label">binary</span><span class="gate-bits">0011 &and; 0010 = 0010</span><span class="gate-bits">0111 &and; 0100 = 0100</span></div>
                     <div class="gate-ref-usage">sandwich: [num][&and;][num]</div>
                 </div>
 
@@ -244,7 +244,7 @@
                     <div class="gate-ref-symbol">&#xAC;</div>
                     <div class="gate-ref-name">NOT</div>
                     <div class="gate-ref-desc">inverts all bits &mdash; unary, acts on one number</div>
-                    <div class="gate-ref-example">&not;1 = 2 (2-bit)<span class="bits">&not;01 = 10</span>&not;8 = 7 (4-bit)<span class="bits">&not;1000 = 0111</span></div>
+                    <div class="gate-ref-example"><span class="gate-example-label">binary</span><span class="gate-bits">&not;01 = 10</span><span class="gate-bits">&not;1000 = 0111</span></div>
                     <div class="gate-ref-usage">slide into any tile</div>
                 </div>
 
@@ -255,7 +255,7 @@
                 </div>
 
                 <!-- Opened by js/codex.js, as is each gate above. -->
-                <div class="full-rules-link" id="sidePanelCodex">gate codex &rarr;</div>
+                <div class="full-rules-link" id="sidePanelCodex">gate codex <span class="ui-arrow">&rarr;</span></div>
             </div>
         </div>
     </div>
@@ -333,20 +333,19 @@
             <div class="menu-primary">
                 <button class="menu-btn menu-learn" id="menuLearn" type="button">
                     <span class="menu-btn-label">LEARN</span>
-                    <span class="menu-btn-sub">binary from scratch</span>
+                    <!-- This has now been wrong in both directions, which
+                         is the thing to notice rather than the wording: it
+                         said "binary from scratch" while LEARN opened the
+                         board, and "four taught moves" while LEARN opened
+                         the bench. A label naming what is behind the door
+                         goes stale every time the door is re-hung, so this
+                         one names what a player GETS, which is the same
+                         either way. The mode list carries the same words. -->
+                    <span class="menu-btn-sub">binary, by hand</span>
                 </button>
                 <button class="menu-btn menu-play" id="loreContinue" type="button">
                     <span class="menu-btn-label">PLAY</span>
                     <span class="menu-btn-sub">pick a mode</span>
-                </button>
-            </div>
-
-            <div class="lore-quick-actions">
-                <button class="lore-action-btn" id="quickHighScores">
-                    <span>HIGH SCORES</span>
-                </button>
-                <button class="lore-action-btn" id="quickSettings">
-                    <span>SETTINGS</span>
                 </button>
             </div>
 
@@ -358,21 +357,29 @@
             <div class="lore-examples">
                 <div class="lore-example">
                     <div class="lore-eq" aria-hidden="true">
-                        <div class="tile" data-value="1"><div class="tile-decimal">1</div><div class="tile-binary">0001</div></div>
-                        <div class="tile" data-value="1"><div class="tile-decimal">1</div><div class="tile-binary">0001</div></div>
+                        <div class="tile" data-value="1"><div class="example-binary">0001</div></div>
+                        <div class="tile" data-value="1"><div class="example-binary">0001</div></div>
                         <span class="lore-arrow">&rarr;</span>
-                        <div class="tile" data-value="1"><div class="tile-decimal">1</div><div class="tile-binary">0001</div></div>
+                        <div class="tile" data-value="1"><div class="example-binary">0001</div></div>
+                        <!-- game.js: a same-value merge scores `current`, the tile
+                             that is left. Two 1s make a 1, so the payout is 1. -->
+                        <span class="lore-points" data-kind="same">+1</span>
                     </div>
                     <p class="lore-caption">same + same = same</p>
                 </div>
 
                 <div class="lore-example">
                     <div class="lore-eq" aria-hidden="true">
-                        <div class="tile" data-value="5" data-intensity="2"><div class="tile-decimal">5</div><div class="tile-binary">0101</div></div>
+                        <div class="tile" data-value="5" data-intensity="2"><div class="example-binary">0101</div></div>
                         <div class="tile gate-tile" data-value="gate" data-gate="xor">&#8853;</div>
-                        <div class="tile" data-value="3" data-intensity="2"><div class="tile-decimal">3</div><div class="tile-binary">0011</div></div>
+                        <div class="tile" data-value="3" data-intensity="2"><div class="example-binary">0011</div></div>
                         <span class="lore-arrow">&rarr;</span>
-                        <div class="tile" data-value="6" data-intensity="3"><div class="tile-decimal">6</div><div class="tile-binary">0110</div></div>
+                        <div class="tile" data-value="6" data-intensity="3"><div class="example-binary">0110</div></div>
+                        <!-- game.js scores a gate by its RESULT, so this is the one
+                             line where the number made and the number paid can be
+                             seen to be the same thing. 5 XOR 3 is 6, so +6. Cyan,
+                             because that is XOR everywhere else in the game. -->
+                        <span class="lore-points" data-gate="xor">+6</span>
                     </div>
                     <p class="lore-caption">different numbers need a <em>gate</em></p>
                 </div>
@@ -380,12 +387,33 @@
                 <div class="lore-example">
                     <div class="lore-eq" aria-hidden="true">
                         <div class="tile gate-tile" data-value="gate" data-gate="not">&#172;</div>
-                        <div class="tile" data-value="15"><div class="tile-decimal">15</div><div class="tile-binary">1111</div></div>
+                        <div class="tile" data-value="15"><div class="example-binary">1111</div></div>
                         <span class="lore-arrow">&rarr;</span>
-                        <span class="lore-bonus">+45</span>
+                        <span class="lore-points" data-kind="overflow">+45</span>
                     </div>
                     <p class="lore-caption">NOT the max: <em>overflow bonus</em></p>
                 </div>
+            </div>
+
+            <!-- The rule the three payouts above are instances of. Without it
+                 +1 teaches nothing, because on that line the tile and the
+                 points are both 1 and there is no way to tell which one is
+                 being paid. -->
+            <p class="lore-scoring">score = result in decimal</p>
+
+            <!-- The utility row: the audio pair the app injects ahead of
+                 it, then bests and settings. It sat between PLAY and the
+                 divider, which put four housekeeping controls between the
+                 two buttons somebody came here to press and the screen
+                 this one is named after. Below the worked examples it is
+                 still on the first screen and no longer in the way. -->
+            <div class="lore-quick-actions">
+                <button class="lore-action-btn" id="quickHighScores">
+                    <span>HIGH SCORES</span>
+                </button>
+                <button class="lore-action-btn" id="quickSettings">
+                    <span>SETTINGS</span>
+                </button>
             </div>
 
             <div class="lore-links">
@@ -397,10 +425,21 @@
                      BooleRules.showSection for the page each one wants, by
                      heading rather than by number, since a number moves the
                      next time a section is added. -->
-                <button class="lore-rules-link" id="loreFullRules" type="button">full rules &rarr;</button>
-                <!-- Opened by js/codex.js. -->
-                <button class="lore-rules-link" id="loreCodex" type="button">gate codex &rarr;</button>
-                <button class="lore-rules-link" id="loreCredits" type="button">credits &rarr;</button>
+                <button class="lore-rules-link" id="loreFullRules" type="button">full rules <span class="ui-arrow">&rarr;</span></button>
+                <!-- THE GATE CODEX IS NOT HERE, and that is a removal
+                     rather than an oversight. It has three other doors,
+                     and two of them are on the board: the rules strip on
+                     a phone, the side panel on a desktop, and every gate
+                     tile you can tap mid-game. Those are where it is
+                     actually wanted -- a codex is for the moment you
+                     wonder what just happened to your numbers, not for
+                     the moment you are deciding whether to play. -->
+
+                <!-- NOR IS THE BENCH, and for the opposite reason: LEARN
+                     opens it again, so a link here would be the same door
+                     twice on one screen. It had this link only while LEARN
+                     went somewhere else. -->
+                <button class="lore-rules-link" id="loreCredits" type="button">credits <span class="ui-arrow">&rarr;</span></button>
             </div>
 
             <!-- Every panel in the game has a way back except this one, which
@@ -412,7 +451,7 @@
                  this panel is the way in to the game, so the one control that
                  leaves without playing should be reachable and should not be
                  the first thing offered. -->
-            <button class="lore-back" id="loreTitle" type="button">&larr; title</button>
+            <button class="lore-back" id="loreTitle" type="button"><span class="ui-arrow">&larr;</span> title</button>
         </div>
     </div>
 
@@ -420,78 +459,87 @@
     <div class="difficulty-modal" id="difficultyModal">
         <div class="difficulty-content">
             <h3>SELECT YOUR MODE</h3>
-            <p class="difficulty-subtitle">how many bits?</p>
+            <!-- The "how many bits?" that used to sit here has moved onto
+                 the reel's own rail, because it is no longer true of this
+                 whole screen: GAUNTLET is not a width. Scoped to the thing
+                 it describes, it also stops the question being asked twice. -->
             
-            <div class="difficulty-buttons">
-                <!-- LEARN. A mode, deliberately, rather than a link on the
-                     how-to-play screen, which is where it started and where it
-                     read as documentation: a tutorial you pick off the mode
-                     list is something you play, and this is the screen a new
-                     player is standing on when they need it. It carries no
-                     data-target and starts no BooleBoard; js/main.js spots the
-                     difficulty and hands off to js/tutorial.js. First in the
-                     list because the one person who needs it is the one who
-                     cannot yet read the rest of them. -->
-                <button class="difficulty-btn learn-mode" data-difficulty="tutorial" data-theme="snes">
-                    <span class="diff-label">LEARN</span>
-                    <span class="diff-subtitle">binary from scratch</span>
-                </button>
+            <!-- CLASSIC IS A DIAL, NOT A LIST.
+                 Seven of the nine entries here differed only by a number,
+                 which is one ordered axis, and a column of near-identical
+                 buttons says the opposite: that the options are unlike each
+                 other. They are a reel now, and the two that genuinely ARE
+                 unlike sit outside it.
 
-                <!-- 2-BIT MODE -->
-                <button class="difficulty-btn joke-mode" data-difficulty="2" data-target="4" data-theme="gameboy">
-                    <span class="diff-label">2-BIT</span>
-                    <span class="diff-subtitle">crumb | max: 3</span>
-                </button>               
+                 Every slot keeps data-difficulty, data-target and data-theme
+                 exactly as the buttons had them, because js/main.js reads
+                 those and nothing about starting a game changed.
 
-                <!-- 3-BIT MODE -->
-                <button class="difficulty-btn" data-difficulty="3" data-target="8" data-theme="nes">
-                    <span class="diff-label">3-BIT</span>
-                    <span class="diff-subtitle">tribit | max: 7</span>
-                    <!--<span class="diff-value">Max: 7</span> -->
-                </button>               
-
-                <!-- 4-BIT MODE -->
-                <button class="difficulty-btn" data-difficulty="4" data-target="16" data-theme="snes">
-                    <span class="diff-label">4-BIT</span>
-                    <span class="diff-subtitle">nibble | max: 15</span>
-                    <!--<span class="diff-value">Max: 15</span> -->
-                </button>               
-
-                <!-- 5-BIT MODE  -->
-                <button class="difficulty-btn" data-difficulty="5" data-target="32" data-theme="genesis">
-                    <span class="diff-label">5-BIT</span>
-                    <span class="diff-subtitle">pentad | max: 31</span>
-                    <!--<span class="diff-value">Max: 31</span> -->
-                </button>               
-
-                <!-- 6-BIT MODE - Expert -->
-                <button class="difficulty-btn highlighted" data-difficulty="6" data-target="64" data-theme="arcade">
-                    <span class="diff-label">6-BIT</span>
-                    <span class="diff-subtitle">hexad | max: 63</span>
-                    <!--<span class="diff-value">Max: 63</span> -->
-                </button>               
-
-                <!-- 7-BIT MODE -->
-                <button class="difficulty-btn" data-difficulty="7" data-target="128" data-theme="neogeo">
-                    <span class="diff-label">7-BIT</span>
-                    <span class="diff-subtitle">ascii | max: 127</span>
-                    <!--<span class="diff-value">Max: 127</span> -->
-                </button>               
-
-                <!-- 8-BIT MODE -->
-                <button class="difficulty-btn legendary" data-difficulty="8" data-target="256" data-theme="ps1">
-                    <span class="diff-label">8-BIT</span>
-                    <span class="diff-subtitle">byte  | max: 255</span>
-                    <!--<span class="diff-value">Max: 255</span> -->
-                </button>               
-
-                <!-- GAUNTLET MODE-->
-                <button class="difficulty-btn endless" data-difficulty="endless" data-target="999999" data-theme="matrix">
-                    <span class="diff-label">GAUNTLET</span>
-                    <span class="diff-subtitle">progressive</span>
-                </button>
-                <button class="difficulty-back-btn" id="difficultyBack">&larr; BACK</button>
+                 LEARN IS GONE FROM THIS SCREEN. It is not a width, so on the
+                 reel you would scroll past a tutorial to reach 5-BIT, and it
+                 is already a primary button on the menu beside PLAY: listing
+                 it here as well was the same door twice. -->
+            <p class="mode-rail">CLASSIC<em>how many bits?</em></p>
+            <div class="mode-reel-wrap">
+                <div class="mode-reel" id="modeReel" role="listbox"
+                     aria-label="how many bits" tabindex="0">
+                    <div class="mode-slot" role="option" data-difficulty="2" data-target="4" data-theme="gameboy">
+                        <b>2-BIT</b><span>crumb | max 3</span>
+                    </div>
+                    <div class="mode-slot" role="option" data-difficulty="3" data-target="8" data-theme="nes">
+                        <b>3-BIT</b><span>tribit | max 7</span>
+                    </div>
+                    <div class="mode-slot" role="option" data-difficulty="4" data-target="16" data-theme="snes">
+                        <b>4-BIT</b><span>nibble | max 15</span>
+                    </div>
+                    <div class="mode-slot" role="option" data-difficulty="5" data-target="32" data-theme="genesis">
+                        <b>5-BIT</b><span>pentad | max 31</span>
+                    </div>
+                    <div class="mode-slot" role="option" data-difficulty="6" data-target="64" data-theme="arcade">
+                        <b>6-BIT</b><span>hexad | max 63</span>
+                    </div>
+                    <div class="mode-slot" role="option" data-difficulty="7" data-target="128" data-theme="neogeo">
+                        <b>7-BIT</b><span>ascii | max 127</span>
+                    </div>
+                    <div class="mode-slot" role="option" data-difficulty="8" data-target="256" data-theme="ps1">
+                        <b>8-BIT</b><span>byte | max 255</span>
+                    </div>
+                </div>
+                <div class="mode-window" id="modeWindow" aria-hidden="true"></div>
             </div>
+
+            <button class="mode-start" id="modeStart" type="button">START 4-BIT</button>
+
+            <!-- NEITHER OF THESE IS A WIDTH, so neither is on the reel.
+                 LEARN is four taught moves on the real board and GAUNTLET
+                 is every width in turn: both are modes, and the reel is
+                 for choosing a number.
+
+                 LEARN CARRIES NO data-difficulty, deliberately, because it
+                 is not one. js/main.js binds the game-starting handler to
+                 .difficulty-btn[data-difficulty], so declaring none is what
+                 keeps it out of that path rather than a name checked
+                 against a list somewhere. -->
+            <button class="difficulty-btn learn-mode" id="modeLearn" type="button">
+                <span class="diff-label">LEARN</span>
+                <span class="diff-subtitle">binary, by hand</span>
+            </button>
+
+            <button class="difficulty-btn endless" data-difficulty="endless" data-target="999999" data-theme="matrix">
+                <span class="diff-label">GAUNTLET</span>
+                <span class="diff-subtitle">progressive</span>
+            </button>
+
+            <!-- THE WAY OUT, which this screen did without for a while.
+                 Every other panel in the app has one, its handler is in
+                 main.js, Escape already routes to it and the style is in
+                 modal-difficulty.css: all of that outlived the button
+                 itself, which went when `.difficulty-buttons` became the
+                 reel. So opening the picker and changing your mind left
+                 starting SOME game as the only move available, including
+                 mid-game, where the board you were playing was still
+                 behind it. The handler knows where you came from. -->
+            <button class="difficulty-back-btn" id="difficultyBack" type="button"><span class="ui-arrow">&larr;</span> BACK</button>
         </div>
     </div>
     
@@ -563,7 +611,7 @@
                  because this panel opens from two places and goes back to
                  whichever one it came from. -->
             <div class="instructions-topbar">
-                <button class="modal-back" id="instructionsBack" type="button">&larr; how to play</button>
+                <button class="modal-back" id="instructionsBack" type="button"><span class="ui-arrow">&larr;</span> how to play</button>
             </div>
             <h3 style="margin-bottom: 25px;">full rules</h3>
             
@@ -767,9 +815,9 @@
             <div class="rule-box" style="background: rgba(255, 255, 0, 0.08); padding: 12px; margin-bottom: 15px; border-left: 3px solid #ffff00;">
                 <p style="margin: 0 0 8px 0; font-size: 11px;"><strong style="color: #ffff00;">same + same = same</strong> <span style="color: #00ff00; opacity: 0.9;">(idempotence)</span></p>
                 <ul style="font-size: 10px; line-height: 1.7; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
-                    <li style="margin-bottom: 4px;">→ 1 + 1 = 1 <span style="opacity: 0.8;">(consolidates, awards points)</span></li>
-                    <li style="margin-bottom: 4px;">→ 2 + 2 = 2 <span style="opacity: 0.8;">(merges to same, no doubling!)</span></li>
-                    <li style="margin-bottom: 4px;">→ 7 + 7 = 7 <span style="opacity: 0.8;">(Boolean logic: A<span class="glyph">∨</span>A = A)</span></li>
+                    <li style="margin-bottom: 4px;"><span class="ui-arrow">→</span> 1 + 1 = 1 <span style="opacity: 0.8;">(consolidates, awards points)</span></li>
+                    <li style="margin-bottom: 4px;"><span class="ui-arrow">→</span> 2 + 2 = 2 <span style="opacity: 0.8;">(merges to same, no doubling!)</span></li>
+                    <li style="margin-bottom: 4px;"><span class="ui-arrow">→</span> 7 + 7 = 7 <span style="opacity: 0.8;">(Boolean logic: A<span class="glyph">∨</span>A = A)</span></li>
                 </ul>
             </div>
             
@@ -796,25 +844,25 @@
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">⊕</div>
                     <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>XOR</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">sets bits where inputs differ</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">⊕</span>2=3<span class="bits">0001<span class="glyph">⊕</span>0010=0011</span>2<span class="glyph">⊕</span>3=1<span class="bits">0010<span class="glyph">⊕</span>0011=0001</span></div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="gate-example-label">binary</span><span class="gate-bits">0001<span class="glyph">⊕</span>0010=0011</span><span class="gate-bits">0010<span class="glyph">⊕</span>0011=0001</span></div>
                 </div>
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∨</div>
                     <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>OR</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">sets any bit that is 1 in either</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">∨</span>2=3<span class="bits">0001<span class="glyph">∨</span>0010=0011</span>4<span class="glyph">∨</span>3=7<span class="bits">0100<span class="glyph">∨</span>0011=0111</span></div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="gate-example-label">binary</span><span class="gate-bits">0001<span class="glyph">∨</span>0010=0011</span><span class="gate-bits">0100<span class="glyph">∨</span>0011=0111</span></div>
                 </div>
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∧</div>
                     <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>AND</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">keeps bits that are 1 in both</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">3<span class="glyph">∧</span>2=2<span class="bits">0011<span class="glyph">∧</span>0010=0010</span>7<span class="glyph">∧</span>4=4<span class="bits">0111<span class="glyph">∧</span>0100=0100</span></div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="gate-example-label">binary</span><span class="gate-bits">0011<span class="glyph">∧</span>0010=0010</span><span class="gate-bits">0111<span class="glyph">∧</span>0100=0100</span></div>
                 </div>
                 <div class="gate-card" style="background: rgba(255, 215, 0, 0.08); padding: 10px; border: 2px solid rgba(255, 215, 0, 0.5);">
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.6);">¬</div>
                     <div style="font-size: 11px; color: #ffd700; margin: 4px 0 5px 0;"><strong>NOT</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">flips every bit, on one number</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="glyph">¬</span>1=2 (2-bit)<span class="bits"><span class="glyph">¬</span>01 = 10</span><span class="glyph">¬</span>8=7 (4-bit)<span class="bits"><span class="glyph">¬</span>1000 = 0111</span></div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="gate-example-label">binary</span><span class="gate-bits"><span class="glyph">¬</span>01 = 10</span><span class="gate-bits"><span class="glyph">¬</span>1000 = 0111</span></div>
                     <div style="font-size: 10px; color: #ff4444; margin-top: 4px;"><span class="glyph">¬</span>max = OVERFLOW</div>
                 </div>
             </div>
@@ -825,7 +873,7 @@
                     <li style="margin-bottom: 4px;"><strong style="color: #ffd700;"><span class="glyph">¬</span> NOT:</strong> slide into any number! <span style="color: #00ff00;">[<span class="glyph">¬</span>][num]</span> or <span style="color: #00ff00;">[num][<span class="glyph">¬</span>]</span></li>
                     <li style="margin-bottom: 4px;"><strong style="color: #ffd700;"><span class="glyph">¬</span> meets <span class="glyph">¬</span>:</strong> two NOTs cancel: both tiles clear, for no points</li>
                     <li style="margin-bottom: 4px;"><strong style="color: #00ffff;"><span class="glyph">⊕</span> <span class="glyph">∨</span> <span class="glyph">∧</span>:</strong> sandwich between two numbers! <span style="color: #00ff00;">[num][gate][num]</span></li>
-                    <li style="margin-bottom: 4px;"><strong style="color: #ff4444;">result 0:</strong> a gate that comes out to 0 clears its tiles for no points: <span style="color: #00ff00;">3<span class="glyph">⊕</span>3 = 0, 1<span class="glyph">∧</span>2 = 0<span class="bits">0011<span class="glyph">⊕</span>0011 = 0000, 0001<span class="glyph">∧</span>0010 = 0000</span></span></li>
+                    <li style="margin-bottom: 4px;"><strong style="color: #ff4444;">result 0:</strong> a gate that comes out to 0 clears its tiles for no points: <span style="color: #00ff00;">0011<span class="glyph">⊕</span>0011 = 0000; 0001<span class="glyph">∧</span>0010 = 0000</span></li>
                 </ul>
             </div>
             
@@ -853,8 +901,8 @@
                         • bitwise operations never exceed the maximum, but <strong style="color: #ffd700;"><span class="glyph">¬</span> NOT of the max value is 0</strong>, and no tile can hold 0<br>
                         • that tile disappears (clears space) and awards a <strong style="color: #ffff00;">3× max value bonus</strong><br>
                         • this is the only way to overflow<br>
-                        • e.g., in 2-bit: <span class="glyph">¬</span>3 <span class="bits-inline">(¬11 = 00)</span> → <strong style="color: #00ff00;">overflow! +9 pts</strong><br>
-                        • e.g., in 4-bit: <span class="glyph">¬</span>15 <span class="bits-inline">(¬1111 = 0000)</span> → <strong style="color: #00ff00;">overflow! +45 pts</strong>
+                        • e.g., in 2-bit: <span class="glyph">¬</span>11 = 00 <span class="ui-arrow">→</span> <strong style="color: #00ff00;">overflow! +9 pts</strong><br>
+                        • e.g., in 4-bit: <span class="glyph">¬</span>1111 = 0000 <span class="ui-arrow">→</span> <strong style="color: #00ff00;">overflow! +45 pts</strong>
                     </p>
                 </div>
             </div>
@@ -873,8 +921,8 @@
                     <ul style="font-size: 10px; line-height: 1.8; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
                         <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">START:</strong> begin at 2-BIT mode (max value: 3)</li>
                         <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">GOAL:</strong> merge tiles to create the max value</li>
-                        <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">UPGRADE:</strong> creating max → automatic upgrade</li>
-                        <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">PROGRESS:</strong> 2→3→4→5→6→7→8 BIT challenges</li>
+                        <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">UPGRADE:</strong> creating max <span class="ui-arrow">→</span> automatic upgrade</li>
+                        <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">PROGRESS:</strong> 2<span class="ui-arrow">→</span>3<span class="ui-arrow">→</span>4<span class="ui-arrow">→</span>5<span class="ui-arrow">→</span>6<span class="ui-arrow">→</span>7<span class="ui-arrow">→</span>8 BIT challenges</li>
                         <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">DISPLAY:</strong> message reminder is at the top</li>
                         <li style="margin-bottom: 5px;">• <strong style="color: #ffff00;">SURVIVE:</strong> final challenge is 8-BIT!</li>
                     </ul>
@@ -906,7 +954,7 @@
             
             <div class="example-box" style="background: rgba(0, 255, 0, 0.08); padding: 10px; margin-top: 12px; border-left: 3px solid #00ff00;">
                 <p style="margin: 0; font-size: 10px; line-height: 1.7; color: #00ff00;">
-                    <strong>example (4-bit):</strong> first time reaching 15 → +15 pts + 30 bonus = <strong>45 pts total!</strong>
+                    <strong>example (4-bit):</strong> first time reaching 15 <span class="ui-arrow">→</span> +15 pts + 30 bonus = <strong>45 pts total!</strong>
                 </p>
             </div>
             
@@ -1039,14 +1087,15 @@
 <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
 <script src="../shared/adenosine-audio.js?v=d96fbb5f"></script>
 <script src="../shared/adenosine-puzzle.js?v=3a721d3b"></script>
+    <script src="js/arrow-label.js?v=8f6e64ed"></script>
     <script src="js/config.js?v=fdc4d4d3"></script>
     <script src="js/scoring.js?v=36b0bed2"></script>
-    <script src="js/game.js?v=07c4ebce"></script>
-    <script src="js/math-overlay.js?v=44ff0d30"></script>
-    <script src="js/codex.js?v=e5f34bee"></script>
-    <script src="js/rules-pages.js?v=99d0cd0d"></script>
-    <script src="js/tutorial.js?v=4ef569cd"></script>
-    <script src="js/main.js?v=bf8ea3b3"></script>
+    <script src="js/game.js?v=f8e89cd7"></script>
+    <script src="js/math-overlay.js?v=43a84ae2"></script>
+    <script src="js/codex.js?v=1710c6a1"></script>
+    <script src="js/rules-pages.js?v=5eb81e1f"></script>
+    <script src="js/tutorial.js?v=ea04db38"></script>
+    <script src="js/main.js?v=4bfe70af"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
 <script src="../shared/adenosine-chat.js?v=4a6b886b"></script>

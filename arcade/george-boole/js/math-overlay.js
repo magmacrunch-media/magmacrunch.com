@@ -39,13 +39,12 @@
 
     let layer = null;
     let currentCard = null;
-    let cardTimer = 0;
+    let previousFocus = null;
 
     function getLayer() {
         if (!layer) {
             layer = document.createElement('div');
             layer.className = 'math-layer';
-            layer.setAttribute('aria-hidden', 'true');
             document.body.appendChild(layer);
         }
         return layer;
@@ -90,6 +89,7 @@
 
             const el = document.createElement('div');
             el.className = 'point-label';
+            el.setAttribute('aria-hidden', 'true');
             el.dataset.kind = op.kind;
             if (op.gate) el.dataset.gate = op.gate.toLowerCase();
             if (op.kind === 'gate' && op.result === 0) el.dataset.cleared = 'true';
@@ -153,9 +153,13 @@
     }
 
     function clearCard() {
-        clearTimeout(cardTimer);
+        const hadCard = !!currentCard;
+        const hadFocus = currentCard && currentCard.contains(document.activeElement);
         if (currentCard) currentCard.remove();
         currentCard = null;
+        if (hadFocus && previousFocus && previousFocus.isConnected) previousFocus.focus({ preventScroll: true });
+        previousFocus = null;
+        if (hadCard) document.dispatchEvent(new CustomEvent('boole:math-dismissed'));
     }
 
     function showCard(op, width) {
@@ -165,6 +169,8 @@
 
         const card = document.createElement('div');
         card.className = 'math-card';
+        card.setAttribute('role', 'dialog');
+        card.setAttribute('aria-label', 'Move explained in binary');
         card.dataset.gate = op.gate.toLowerCase();
         if (op.kind === 'overflow') card.dataset.overflow = 'true';
 
@@ -192,6 +198,14 @@
             caption.textContent = `${op.a} ${op.gate} ${op.b} = ${op.result}`;
         }
         card.appendChild(caption);
+
+        const dismiss = document.createElement('button');
+        dismiss.type = 'button';
+        dismiss.className = 'math-dismiss';
+        dismiss.textContent = 'continue';
+        dismiss.setAttribute('aria-label', 'Dismiss math and continue playing');
+        dismiss.addEventListener('click', clearCard);
+        card.appendChild(dismiss);
 
         getLayer().appendChild(card);
 
@@ -228,13 +242,12 @@
         card.style.top = `${top}px`;
 
         currentCard = card;
-        cardTimer = setTimeout(() => {
-            card.classList.add('is-leaving');
-            setTimeout(() => {
-                if (currentCard === card) clearCard();
-                else card.remove();
-            }, 220);
-        }, 1300);
+        previousFocus = document.activeElement;
+        // Let the iOS docking observer position the card before focusing it.
+        // Focusing an off-screen floating position can scroll its ancestors.
+        setTimeout(() => {
+            if (currentCard === card) dismiss.focus({ preventScroll: true });
+        }, 0);
     }
 
     // ── wiring ──────────────────────────────────────────────────────────────
@@ -255,6 +268,28 @@
     // A new game, or leaving the board, should not leave a card floating over
     // whatever comes next.
     document.addEventListener('boole:game-over', clearCard);
+    document.addEventListener('boole:board-reset', clearCard);
+    document.addEventListener('boole:board-closed', clearCard);
+    document.addEventListener('boole:mode-picker-open', clearCard);
+    window.addEventListener('resize', clearCard);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && currentCard) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            clearCard();
+        }
+    });
+
+    // A menu opened while reading must not leave an invisible input lock or
+    // a card over the new screen. Observe only class changes, not our styles.
+    new MutationObserver(() => {
+        if (currentCard && document.querySelector([
+            '.title-screen.active', '.lore-screen.active', '.difficulty-modal.active',
+            '.instructions-modal.active', '.settings-modal.active', '.credits-modal.active',
+            '.scoreboard-modal.active', '.codex-modal.active', '.tutorial-screen.active',
+            '.game-over.active', '.initials-prompt.active',
+        ].join(', '))) clearCard();
+    }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
 
     function syncToggle(button) {
         button.classList.toggle('active', showMath);

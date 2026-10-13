@@ -187,3 +187,22 @@ body.performance-mode::after {
         display: inline;
     }
 }
+
+/* Arrows use a system face with a full-size glyph, independently of the pixel
+   labels. Specificity also beats the iOS rules-strip's 8px text floor. */
+.ui-arrow.ui-arrow,
+.lore-arrow.lore-arrow,
+.dropdown-arrow.dropdown-arrow {
+    display: inline-block;
+    flex-shrink: 0;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    vertical-align: -0.12em;
+}
+
+@media (max-width: 374px) {
+    .lore-arrow.lore-arrow { margin: 0; }
+    .lore-screen .lore-eq { gap: 3px; }
+}

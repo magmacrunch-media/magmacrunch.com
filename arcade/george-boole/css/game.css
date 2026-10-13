@@ -635,3 +635,40 @@ body[data-theme="matrix"] .tile.gauntlet-max-earned {
         display: none;
     }
 }
+
+/* Origin labels last until the next successful move. They remain useful with
+   motion disabled, and do not recolor the mode or personal-best tiles. */
+.game-board .tile[data-arrival] {
+    position: relative;
+}
+.game-board .tile[data-arrival]::before {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 3px;
+    font: bold 9px/1 Arial, sans-serif;
+    letter-spacing: 0.4px;
+    color: #fff;
+    background: #151525;
+    border: 1px solid #fff;
+    pointer-events: none;
+}
+.game-board .tile[data-arrival="new"]::before { content: 'NEW'; }
+.game-board .tile[data-arrival="merged"]::before { content: 'MERGED'; }
+.game-board .tile[data-arrival="merged"] {
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+}
+/* First show the result, then reveal the new arrival. The board's actual
+   update stays synchronous, so quick swipes and game-over checks stay exact. */
+.game-board .tile[data-arrival="new"] {
+    animation: tileArrival 180ms ease-out 140ms both;
+}
+@keyframes tileArrival {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .game-board .tile[data-arrival="new"] { animation: none; }
+}
+body.performance-mode .game-board .tile[data-arrival="new"] { animation: none; }

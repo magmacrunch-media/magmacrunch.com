@@ -58,7 +58,7 @@
     function el(tag, className, text) {
         const node = document.createElement(tag);
         if (className) node.className = className;
-        if (text) node.textContent = text;
+        if (text) setArrowLabel(node, text);
         return node;
     }
 
@@ -89,12 +89,12 @@
         // same naming the panel's own back button uses.
         const before = here && at > 0 ? chapters[at - 1] : null;
         const after = here && at < chapters.length - 1 ? chapters[at + 1] : null;
-        prev.textContent = before && current === here.first
+        setArrowLabel(prev, before && current === here.first
             ? `← ${before.name}`
-            : '← prev';
-        next.textContent = after && current === here.last
+            : '← prev');
+        setArrowLabel(next, after && current === here.last
             ? `${after.name} →`
-            : 'next →';
+            : 'next →');
 
         prev.disabled = current === 0;
         next.disabled = current === pages.length - 1;

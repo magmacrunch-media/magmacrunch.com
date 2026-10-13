@@ -30,6 +30,7 @@ const OVERLAY_SELECTOR = [
     '.tutorial-screen.active',
     '.initials-prompt.active',
     '.game-over.active',
+    '.math-card', // Read at your own pace; Continue/Escape releases board input.
 ].join(', ');
 
 function overlayOpen() {
@@ -107,16 +108,31 @@ class BooleBoard {
 
         // Touch-drag feedback. See _dragTiles.
         this._dragging = false;
+        this._dragTile = null;
+        this._settlingTile = null;
         this._settleTimer = 0;
 
         // Everything that scored during the move in progress. See _note.
         this._ops = [];
         this._opAt = null;
         this.lastOperations = [];
+        this._arrivals = new Map();
 
         this.init();
         this.setupEventListeners();
         
+        // Register before the engine so its drag callback knows where the
+        // gesture began. A swipe from a gap still moves the board on release.
+        this.addListener(this.gameBoardElement, 'touchstart', (event) => {
+            this._settleTiles();
+            if (event.touches.length !== 1 || overlayOpen()) return;
+            const tile = event.target.closest('.tile');
+            const index = this.tiles.indexOf(tile);
+            if (index >= 0 && this.board[Math.floor(index / this.size)][index % this.size] !== 0) {
+                this._dragTile = tile;
+            }
+        });
+
         // Initialize puzzle input (keyboard + touch)
         this.input = AdPuzzle.createInput({
             onMove: (dir) => {
@@ -146,21 +162,18 @@ class BooleBoard {
         this.addListener(this.gameBoardElement, 'touchcancel', () => this._settleTiles());
     }
 
-    /**
-     * Nudge the occupied tiles after the finger, along the drag's axis.
-     *
-     * A rubber band, deliberately not a prediction. Tiles here are sixteen
-     * fixed cells whose contents change in place, so showing each tile sliding
-     * to where it will land would mean knowing the result of the move before
-     * making it. That leaves two ways to find out, and both are wrong: copy the
-     * merge rules into the renderer, which is a fourth implementation of them
-     * in all but name, or simulate the move, which plays real sounds and shows
-     * real popups -- checkGameOver() already does that by accident. So every
-     * occupied tile leans the same way, capped at a fraction of a cell, which
-     * says "the board heard you" without pretending to say what happens next.
+    /** Follow the finger with only the tile where this gesture began.
+     * This is touch feedback, not a prediction: release still moves the whole
+     * board through the existing rules, with no simulated moves or scoring.
      */
     _dragTiles({ dx, dy, direction }) {
-        if (this.gameOver || this.waitingForInitials) return;
+        if (!this._dragTile || this.gameOver || this.waitingForInitials || overlayOpen()) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+            document.body.classList.contains('performance-mode')) return;
+        // A new drag may begin before the previous return animation finishes.
+        clearTimeout(this._settleTimer);
+        if (this._settlingTile) this._settlingTile.style.transition = '';
+        this._settlingTile = null;
         const size = this.size;
         const first = this.tiles[0];
         if (!first || !this.tiles[1] || !this.tiles[size]) return;
@@ -187,45 +200,33 @@ class BooleBoard {
             ? `translate3d(${offset.toFixed(1)}px, 0, 0)`
             : `translate3d(0, ${offset.toFixed(1)}px, 0)`;
 
-        for (let i = 0; i < size; i++) {
-            for (let j = 0; j < size; j++) {
-                const tile = this.tiles[i * size + j];
-                if (this.board[i][j] === 0) {
-                    tile.style.transform = '';
-                    continue;
-                }
-                // The tile's own `transition: all 0.15s` would make it trail
-                // the finger by a sixth of a second.
-                tile.style.transition = 'none';
-                tile.style.transform = transform;
-            }
-        }
+        this._dragTile.style.transition = 'none';
+        this._dragTile.style.transform = transform;
         this._dragging = true;
     }
 
-    /** Let whatever _dragTiles moved glide back into its cell. */
+    /** Settle only the touched tile, including cancelled and multi-touch gestures. */
     _settleTiles() {
-        if (!this._dragging) return;
+        const tile = this._dragTile;
+        this._dragTile = null;
+        if (!this._dragging || !tile) return;
         this._dragging = false;
-
-        for (const tile of this.tiles) {
-            tile.style.transition = 'transform 0.12s ease-out';
-            tile.style.transform = '';
-        }
-
-        // Hand the transition back to the stylesheet afterwards. A plain
-        // setTimeout rather than _setTimeout: checkGameOver() clears the
-        // pending-timeout list when it probes a full board, and losing this
-        // one would leave every tile on a transform-only transition, silently
-        // dropping the color fades.
+        tile.style.transition = 'transform 0.12s ease-out';
+        tile.style.transform = '';
+        this._settlingTile = tile;
         clearTimeout(this._settleTimer);
         this._settleTimer = setTimeout(() => {
-            for (const tile of this.tiles) tile.style.transition = '';
+            tile.style.transition = '';
+            this._settlingTile = null;
         }, 140);
     }
-    
+
     // Clean up event listeners and timeouts to prevent memory leaks
     destroy() {
+        this._settleTiles();
+        if (this._settlingTile) this._settlingTile.style.transition = '';
+        this._settlingTile = null;
+        this._emit('board-closed', {});
         this.eventListeners.forEach(({ element, event, handler }) => {
             element.removeEventListener(event, handler);
         });
@@ -333,6 +334,8 @@ class BooleBoard {
     }
     
     init() {
+        this._arrivals.clear();
+        this._emit('board-reset', {});
         this.board = Array(this.size).fill().map(() => Array(this.size).fill(0));
         this.previousBoard = Array(this.size).fill().map(() => Array(this.size).fill(0));
         this.score = 0;
@@ -533,6 +536,8 @@ class BooleBoard {
                 // causing legitimately-earned tiles to miss the gold treatment.
             }
             
+            this._arrivals.set(row * this.size + col, 'new');
+
             // Play spawn sound
             AdAudio.playSfx('spawn');
         }
@@ -659,6 +664,23 @@ class BooleBoard {
         });
         this._ops = [];
         this._opAt = null;
+        if (boardChanged) {
+            this._arrivals.clear();
+            for (const tile of this.tiles) tile.removeAttribute('data-arrival');
+            // A chain can write the same cell several times. Only its final
+            // operation can describe the tile that is still there.
+            const final = new Map();
+            for (const op of this.lastOperations) {
+                if (['same', 'gate', 'overflow'].includes(op.kind)) {
+                    final.set(op.row * this.size + op.col, op);
+                }
+            }
+            for (const [index, op] of final) {
+                if (op.result > 0 && this.board[op.row][op.col] === op.result) {
+                    this._arrivals.set(index, 'merged');
+                }
+            }
+        }
         if (boardChanged && this.lastOperations.length) {
             this._emit('operations', { direction, operations: this.lastOperations });
         }
@@ -868,6 +890,10 @@ class BooleBoard {
         if (!notification) return;
         
         notification.textContent = `*** OVERFLOW +${bonus} ***`;
+        // Which of this element's two jobs it is doing. js/codex.js makes it
+        // a door to the wraparound entry while it is up, and the height
+        // bonus below has no entry to open.
+        notification.dataset.kind = 'overflow';
         notification.style.display = 'block';
         notification.style.opacity = '1';
         notification.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -894,6 +920,7 @@ class BooleBoard {
         if (!notification) return;
         
         notification.textContent = `>>> HEIGHT BONUS ${value} (+${bonus})`;
+        notification.dataset.kind = 'height';
         notification.style.display = 'block';
         notification.style.opacity = '1';
         notification.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -1518,6 +1545,15 @@ class BooleBoard {
                                 tile.setAttribute('data-value', 'gate');
                                 tile.className = 'tile gate-tile';
                                 tile.setAttribute('data-gate', this.getGateName(value).toLowerCase());
+                                // Tapping it opens the codex at this gate;
+                                // js/codex.js delegates the click off the
+                                // board. The label is here because this is
+                                // where the gate's name is already known,
+                                // and a tile reading only "+" to a screen
+                                // reader is the same gap on another axis.
+                                tile.setAttribute('role', 'button');
+                                tile.setAttribute('aria-label',
+                                    this.getGateName(value) + ' gate, what does this do');
                                 tile.removeAttribute('data-intensity');
                                 tile.removeAttribute('data-personal-best');
                             }
@@ -1565,6 +1601,18 @@ class BooleBoard {
                     this.previousBoard[i][j] = value;
                 }
                 
+                // Keep origin separate from value dirty-checking: merging
+                // 1 + 1 leaves a 1 in a cell whose value never changed.
+                const arrival = this._arrivals.get(tileIndex);
+                if (arrival && value !== 0) {
+                    if (tile.getAttribute('data-arrival') !== arrival) {
+                        tile.setAttribute('data-arrival', arrival);
+                    }
+                    tile.setAttribute('aria-description', arrival === 'new' ? 'New tile' : 'Merge result');
+                } else {
+                    tile.removeAttribute('data-arrival');
+                    tile.removeAttribute('aria-description');
+                }
                 tileIndex++;
             }
         }

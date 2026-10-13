@@ -48,6 +48,7 @@ global.document = {
     querySelector(){ return createMockEl(); },
     querySelectorAll(){ return []; },
     createElement(){ return createMockEl(); },
+    createTextNode(text){ const node = createMockEl(); node.textContent = text; return node; },
     addEventListener(){},
     removeEventListener(){},
     dispatchEvent(){ return true; },
@@ -84,6 +85,7 @@ global.scoreClient = { save(){ return Promise.resolve(); }, load(){ return Promi
 const fs = require('fs');
 const vm = require('vm');
 
+vm.runInThisContext(fs.readFileSync(__dirname + '/../js/arrow-label.js', 'utf8'), { filename: 'arrow-label.js' });
 vm.runInThisContext(fs.readFileSync(__dirname + '/../js/game.js', 'utf8'), { filename: 'game.js' });
 vm.runInThisContext(fs.readFileSync(__dirname + '/../js/tutorial.js', 'utf8'), { filename: 'tutorial.js' });
 
@@ -114,85 +116,30 @@ console.log('=== George Boole primer tests ===\n');
 
 console.log('Exports:');
 assert(!!T, 'BooleTutorial is exported');
+
+// ONE LESSON, which is the deck being gone rather than the deck being short.
+// The primer was fourteen steps across six lessons, and the structure itself
+// was the problem: fourteen transitions nobody asked for, nothing
+// accumulating across them, and a row of dots for progress, which is a
+// reading metaphor. It is a bench now, one screen that grows, and the only
+// thing still shaped like a lesson is the scripted board at the end, because
+// that one really is a sequence of moves.
 assert(Array.isArray(T.LESSONS), 'LESSONS is an array');
-assertEqual(T.LESSONS.length, 4, 'four lessons');
-assertEqual(T.LESSONS.map(l => l.id), ['lamps', 'onebit', 'number', 'board'], 'lesson order');
+assertEqual(T.LESSONS.map(l => l.id), ['board'], 'one lesson left, and it is the board');
 console.log(`  ${passed} passed\n`);
 
-// ── Lamp arithmetic ──────────────────────────────────────────────────────────
+// ── The arithmetic the bench is made of ──────────────────────────────────────
 
-console.log('Lamps:');
-assertEqual(T.lampSum([0, 0, 0, 0]), 0, 'no lamps is 0');
-assertEqual(T.lampSum([1, 1, 1, 1]), 15, 'every lamp is 15');
+console.log('Arithmetic:');
+assertEqual(T.lampSum([0, 0, 0, 0]), 0, 'no switches is 0');
+assertEqual(T.lampSum([1, 1, 1, 1]), 15, 'every switch is 15');
 assertEqual(T.lampSum([0, 1, 1, 0]), 6, '0110 is 6');
 assertEqual(T.lampSum([1, 0, 1, 1]), 11, '1011 is 11');
 assertEqual(T.lampsOf(6, 4), [0, 1, 1, 0], '6 is 0110');
-assertEqual(T.lampsOf(11, 4), [1, 0, 1, 1], '11 is 1011');
 assertEqual(T.bitsOf(5, 4), '0101', '5 renders as 0101');
+assertEqual(T.sumLine([0, 1, 1, 0]).expr, '4 + 2', '0110 shows its working');
+assertEqual(T.sumLine([0, 1, 1, 0]).sum, 6, 'and sums to 6');
 
-// The working, which is the thing a beginner actually reads.
-assertEqual(T.sumLine([0,0,0,0]).expr, 'nothing lit', 'no lamps reads as nothing lit');
-assertEqual(T.sumLine([0,0,0,0]).sum, 0, 'and sums to 0');
-assertEqual(T.sumLine([0,1,1,0]).expr, '4 + 2', '0110 shows its working');
-assertEqual(T.sumLine([0,1,1,0]).sum, 6, 'and sums to 6');
-assertEqual(T.sumLine([1,1,1,1]).expr, '8 + 4 + 2 + 1', 'every lamp shows four terms');
-assertEqual(T.sumLine([0,0,0,1]).expr, '1', 'one lamp is one term');
-
-const lampTasks = T.lessonById('lamps').tasks;
-
-/**
- * The first step must ask for nothing.
- *
- * This lesson opened on "make 6" and taught nothing: the arithmetic that
- * answers it appeared only in the success message, after it had been solved.
- * The explore step is the fix and it has to stay first, so it is asserted
- * rather than left to whoever edits the list next.
- */
-assert(lampTasks[0].explore === true, 'the lamps lesson opens on a step with no target');
-assert(!T.lampsSolved(lampTasks[0], [0,0,0,0]), 'which is not already cleared');
-assert(T.lampsSolved(lampTasks[0], [0,0,0,1]), 'and is cleared by lighting any lamp');
-assert(lampTasks.filter((t) => t.explore).length === 1, 'and there is exactly one of it');
-
-// The targets ramp by how much arithmetic they need. The first real one must
-// be a single lamp, so the first thing ever asked for needs no addition at all.
-const targets = lampTasks.filter((t) => !t.explore).map((t) => t.want);
-
-// The lesson grows from one lamp to four, because that is where binary starts:
-// a lamp is on or off. Four weighted lamps is the fourth thing about it, and
-// opening there asks for place value, doubling and the two digits at once.
-const widths = lampTasks.map((t) => t.width || 4);
-assertEqual(widths[0], 1, 'it opens on a single lamp');
-assert(widths.every((w, i) => i === 0 || w >= widths[i - 1]),
-    `the lamp count never shrinks (${widths.join(' -> ')})`);
-assert(widths[widths.length - 1] === 4, 'and reaches four by the end');
-lampTasks.forEach((t) => {
-    const w = t.width || 4;
-    if (t.explore) return;
-    assert(t.want >= 1 && t.want <= Math.pow(2, w) - 1,
-        `target ${t.want} fits in ${w} lamp(s)`);
-});
-assertEqual(T.lampSum([1]), 1, 'one lamp lit is 1');
-assertEqual(T.lampSum([1, 1]), 3, 'two lamps lit is 3');
-assertEqual(T.lampSum([1, 0]), 2, 'the left of two is worth 2');
-assertEqual(T.sumLine([1, 1]).expr, '2 + 1', 'two lamps show their working');
-targets.forEach((want, i) => {
-    const task = lampTasks.filter((t) => !t.explore)[i];
-    assert(want >= 1 && want <= 15, `lamps target ${want} fits 4 bits`);
-    assert(T.lampsSolved(task, T.lampsOf(want, 4)), `lamps target ${want} is solvable`);
-    assert(!T.lampsSolved(task, [0,0,0,0]), `lamps target ${want} is not solved before a tap`);
-    // A note must add something the sum does not. The readout shows the
-    // working now, so a note of "4 + 2" on the task whose answer is 4 + 2
-    // reads as a stutter, which is what they all used to be.
-    if (task.note) {
-        assert(task.note !== T.sumLine(T.lampsOf(want, 4)).expr,
-            `lamps target ${want}: the note does not repeat the sum`);
-    }
-});
-console.log(`  ${passed} passed\n`);
-
-// ── One-bit rules ────────────────────────────────────────────────────────────
-
-console.log('One bit:');
 assertEqual([T.oneBit('XOR',0,0), T.oneBit('XOR',0,1), T.oneBit('XOR',1,0), T.oneBit('XOR',1,1)],
     [0,1,1,0], 'XOR table');
 assertEqual([T.oneBit('OR',0,0), T.oneBit('OR',0,1), T.oneBit('OR',1,0), T.oneBit('OR',1,1)],
@@ -201,131 +148,282 @@ assertEqual([T.oneBit('AND',0,0), T.oneBit('AND',0,1), T.oneBit('AND',1,0), T.on
     [0,0,0,1], 'AND table');
 assertEqual([T.oneBit('NOT',0,0), T.oneBit('NOT',1,0)], [1,0], 'NOT table');
 
-// Each task must be answerable, or the lesson is a dead end. Brute force the
-// four input pairs rather than reasoning about which one works.
-//
-// And none of them may be answered by the rig's STARTING state, which is both
-// lamps off. OR originally asked for a dark output, which is what an untouched
-// rig already shows: the lesson opened on a tick nobody had earned, with
-// nothing to do and no way to tell a finished task from a broken one. Found by
-// playing it rather than by running this file, which is why the assertion is
-// here now.
-const oneBitTasks = T.lessonById('onebit').tasks;
-
-// Same rule as the lamps lesson: the first step asks for nothing.
-assert(oneBitTasks[0].explore === true, 'the one-bit lesson opens on a step with no target');
-assert(!T.oneBitSolved(oneBitTasks[0], 0, 0), 'which is not already cleared');
-assert(T.oneBitSolved(oneBitTasks[0], 1, 0), 'and is cleared by touching an input');
-assert(oneBitTasks.filter((t) => t.explore).length === 1, 'and there is exactly one of it');
-
-oneBitTasks.forEach((task) => {
-    let reachable = 0;
-    for (let a = 0; a < 2; a++) {
-        for (let b = 0; b < 2; b++) {
-            if (T.oneBitSolved(task, a, b)) reachable++;
-        }
-    }
-    assert(reachable > 0, `onebit ${task.gate} want=${task.want} is reachable`);
-    assert(!T.oneBitSolved(task, 0, 0),
-        `onebit ${task.gate} is not already solved before the player touches it`);
-    /**
-     * Every task must have a goal the player can SEE.
-     *
-     * This replaces an assertion that each task stated a verb, which was the
-     * right invariant while the tasks had sentences. They no longer do: the
-     * pulse is the instruction and the goal is a ghost.
-     *
-     * A ghost can only ever say "this should be LIT", because dark is what an
-     * untouched lamp already looks like. So a task is drawable only if it pins
-     * its inputs or wants a lit output. One that wanted a dark output and
-     * pinned nothing would render no goal anywhere and be silently unplayable,
-     * with no text left to fall back on -- which is what makes this worth
-     * asserting rather than eyeballing.
-     */
-    if (!task.explore) {
-        assert(!!task.inputs || task.want === 1,
-            `onebit ${task.gate} has a goal that can be drawn`);
-    }
-});
-
-// NOT before XOR. One input and a flip is the smallest gate there is, and
-// meeting it first is the same argument as meeting one lamp before four; XOR
-// is the subtle one and goes last.
-const gateOrder = oneBitTasks.map((t) => t.gate);
-assertEqual(gateOrder[0], 'NOT', 'NOT is introduced first');
-assert(gateOrder.indexOf('NOT') < gateOrder.indexOf('XOR'), 'and before XOR');
-assertEqual(gateOrder[gateOrder.length - 1], 'XOR', 'XOR is last');
-
-// Every gate the lesson shows still has to be NAMED and have a glyph. That is
-// vocabulary: XOR is a word nobody infers by tapping, and the name and the
-// symbol are the only things left on a wordless screen that must be told.
-T.GATE_ORDER.forEach((g) => {
-    assert(typeof T.GATE_SYMBOL[g] === 'string' && T.GATE_SYMBOL[g].length,
-        `${g} has a glyph to draw`);
-});
-gateOrder.forEach((g) => {
-    assert(T.GATE_ORDER.indexOf(g) !== -1, `${g} is a gate the game knows`);
-});
-console.log(`  ${passed} passed\n`);
-
-// ── Whole-number gates, and the answers being unique ────────────────────────
-
-console.log('Whole number:');
 assertEqual(T.applyGate('XOR', 5, 3, 4), 6, '5 XOR 3 = 6');
 assertEqual(T.applyGate('OR', 5, 3, 4), 7, '5 OR 3 = 7');
 assertEqual(T.applyGate('AND', 5, 3, 4), 1, '5 AND 3 = 1');
 assertEqual(T.applyGate('NOT', 5, null, 4), 10, 'NOT 5 = 10');
-assertEqual(T.applyGate('NOT', 15, null, 4), 0, 'NOT 15 = 0');
-assertEqual(T.applyGate('NOT', 3, null, 2), 0, 'NOT 3 = 0 in 2-bit');
+assertEqual(T.applyGate('NOT', 15, null, 4), 0, 'NOT 15 = 0, which is the overflow');
 
-// The lesson asks "which gate makes n". If two gates make n, the wrong answer
-// is marked wrong for a player who was right.
-const numberLesson = T.lessonById('number');
+// The column working the wide bench draws, and the sentence it is there to
+// make: a gate does not know what 5 is, it runs the same one-bit rule once
+// per column and nothing carries between them.
+const cols = T.columnWork('XOR', 5, 3, 4);
+assertEqual(cols.length, 4, 'four columns');
+assertEqual(cols.map((c) => c.weight), [8, 4, 2, 1], 'weighted high to low');
+assertEqual(cols.map((c) => c.result).join(''), '0110', 'and they spell the answer');
+cols.forEach((c) => {
+    assertEqual(c.result, T.oneBit('XOR', c.a, c.b),
+        `column ${c.weight} is the one-bit rule and nothing more`);
+});
+console.log(`  ${passed} passed\n`);
 
-// And again: the first step asks for nothing. Guessing which gate makes 6 is
-// a fair question only once a gate has been seen to do anything at all.
-assert(numberLesson.tasks[0].explore === true, 'the whole-number lesson opens on a step with no target');
-assert(!T.numberSolved(numberLesson.tasks[0], null, 4), 'which is not cleared before a gate is tapped');
-assert(T.numberSolved(numberLesson.tasks[0], 'AND', 4), 'and is cleared by tapping any gate');
-assert(numberLesson.tasks.filter((t) => t.explore).length === 1, 'and there is exactly one of it');
+// ── The bench ────────────────────────────────────────────────────────────────
+//
+// Ten things to find, and the apparatus derived from which of them have
+// been. The checks are pure functions over a LOG of observations, which is
+// what makes them testable at all: a bench state is where the switches are,
+// and a discovery is something about where they have BEEN.
+//
+// COUNTING COMES FIRST and the gates come second, which is the reverse of
+// how this started. `six` and `max` used to be sixth and seventh, behind
+// NOT, AND, OR and XOR, so the player met four logic rules before meeting
+// the thing the rules operate on -- and "four switches are a number" is what
+// the entire board rests on. The order is asserted here because it is a
+// decision about teaching rather than an implementation detail.
 
-numberLesson.tasks.filter((t) => !t.explore).forEach((task) => {
-    const bits = numberLesson.bits;
-    const producing = T.gatesProducing(task.a, task.b, task.want, bits);
-    assertEqual(producing, [task.answer],
-        `${task.a}${task.b === null ? '' : ' and ' + task.b} -> ${task.want} is ${task.answer} alone`);
-    assert(T.numberSolved(task, task.answer, bits), `${task.answer} clears its own task`);
+console.log('The bench:');
+const IDS = ['both', 'count', 'six', 'max', 'not', 'and', 'or', 'xor', 'cross', 'over'];
+assertEqual(T.DISCOVERIES.map((d) => d.id), IDS, 'ten discoveries, in order');
+assert(IDS.indexOf('max') < IDS.indexOf('not'),
+    'every counting discovery comes before every gate');
+T.DISCOVERIES.forEach((d) => {
+    assert(typeof d.text === 'string' && d.text.length, `${d.id} says what to do`);
+    assert(typeof d.check === 'function', `${d.id} can be checked`);
+    assertEqual(T.discoveryById(d.id), d, `${d.id} is findable by id`);
+    // THE WIDTH IS A FIELD, NOT A SENTENCE. It used to be carried in the
+    // prose as a direction -- "go back to one switch, and see what NOT
+    // does..." -- which goes stale the moment the player is already there,
+    // and the bench OPENS at one switch. So the task read as an instruction
+    // already carried out, while the only control on screen offered the
+    // opposite. As a field the apparatus can show it only when it is not
+    // already true.
+    assert(d.bits === 1 || d.bits === 4, `${d.id} declares the width it is about`);
 });
 
+// And the prose must not go back to giving directions, which is the thing
+// that broke rather than the particular wording.
+T.DISCOVERIES.forEach((d) => {
+    assert(!/\b(go back to|widen|narrow)\b/.test(d.text),
+        `${d.id} says what to learn, not where to stand`);
+});
+assertEqual(T.discoveryById('nope'), null, 'and an unknown id is null');
+
 /**
- * The column working, which is the sentence this lesson exists to make.
+ * ONE NEW THING AT A TIME, which was the deck's rule and is still the
+ * bench's, enforced on the unlock chain rather than on a list of lessons.
  *
- * A gate does not know what 5 is: it runs the same one-bit rule the lesson
- * before taught, once per column, and nothing carries. So the columns must
- * reassemble into exactly the whole-number answer, every gate, every operand.
+ * The deck got this wrong once: a rung arrived carrying a second switch AND
+ * a gate, and it was reported as much harder than the two before it. The
+ * same mistake here would be a discovery that bolts on two things at once,
+ * so the apparatus is asserted step by step as the chain is walked.
  */
-for (let a = 0; a <= 15; a++) {
-    for (let b = 0; b <= 15; b++) {
-        T.GATE_ORDER.forEach((gate) => {
-            if (gate === 'NOT') return;
-            const cols = T.columnWork(gate, a, b, 4);
-            const rebuilt = cols.reduce((n, c) => n + (c.result ? c.weight : 0), 0);
-            if (rebuilt !== T.applyGate(gate, a, b, 4)) {
-                failed++;
-                console.error(`  FAIL: ${a} ${gate} ${b}: columns rebuild ${rebuilt}`);
-            }
-        });
-    }
+const SHAPE = [
+    { after: [],        socket: false, rows: 1, gates: [],                              wide: false, step: false },
+    { after: ['both'],  socket: false, rows: 1, gates: [],                              wide: true,  step: true },
+    { after: ['count'], socket: false, rows: 1, gates: [],                              wide: true,  step: false },
+    { after: ['six'],   socket: false, rows: 1, gates: [],                              wide: true,  step: false },
+    { after: ['max'],   socket: true,  rows: 1, gates: ['NOT'],                         wide: true,  step: false },
+    { after: ['not'],   socket: true,  rows: 2, gates: ['NOT', 'AND'],                  wide: true,  step: false },
+    { after: ['and'],   socket: true,  rows: 2, gates: ['NOT', 'AND', 'OR'],            wide: true,  step: false },
+    { after: ['or'],    socket: true,  rows: 2, gates: ['NOT', 'AND', 'OR', 'XOR'],     wide: true,  step: false },
+    { after: ['xor'],   socket: true,  rows: 2, gates: ['NOT', 'AND', 'OR', 'XOR'],     wide: true,  step: false },
+];
+let held = [];
+SHAPE.forEach((want) => {
+    held = held.concat(want.after);
+    const gear = T.apparatus(held);
+    const where = held.length ? `after ${held[held.length - 1]}` : 'at the start';
+    assertEqual(gear.socket, want.socket, `${where}: socket is ${want.socket}`);
+    assertEqual(gear.rows, want.rows, `${where}: ${want.rows} row(s)`);
+    assertEqual(gear.gates, want.gates, `${where}: gates are ${want.gates.join('/') || 'none'}`);
+    assertEqual(gear.canWiden, want.wide, `${where}: widening is ${want.wide}`);
+    assertEqual(gear.stepper, want.step, `${where}: the +1 button is ${want.step}`);
+});
+
+// THE ODOMETER IS WITHDRAWN, and the row above is where that is asserted.
+// It is the one piece of apparatus that goes away again, which is on
+// purpose: `six` and `max` ask the player to place the bits themselves, and
+// a button that walks to any number on the player's behalf turns that into
+// the task it was meant to follow.
+assert(T.apparatus(['both']).stepper && !T.apparatus(['both', 'count']).stepper,
+    'the +1 button arrives with the width and leaves when counting is done');
+
+/**
+ * Walking the chain, each step introduces at most one new IDEA.
+ *
+ * Ideas, and not parts, which is the whole of why this is written out
+ * rather than counted. Some pieces of apparatus arrive together because
+ * neither means anything without the other, and calling those two things is
+ * pedantry that would argue for a worse bench:
+ *
+ *  - a socket and the first gate to put in it. An empty socket teaches
+ *    nothing, and NOT with nowhere to sit is not on the bench at all.
+ *  - a second row and the first gate that reads two. A row with no binary
+ *    gate can do nothing, and AND with one row has nothing to compare.
+ *    "Combining two inputs" is ONE idea wearing two parts.
+ *  - the width and the odometer. Three more switches with no way to drive
+ *    them is a bigger bench and not a new thought; the thought is that four
+ *    switches are a NUMBER, and watching one count is how that is shown.
+ *
+ * A gate arriving on its own is different and does count: OR and XOR are
+ * each a new rule on apparatus the player already has.
+ *
+ * The first version of this counted parts, failed on the first two links,
+ * and would have had me reordering a chain that is correct. That is the
+ * second time in this file an invariant has been slightly wrong and
+ * reported the code as wrong instead of itself, which is worth the words:
+ * an assertion is a claim about the design and deserves the same scrutiny.
+ */
+let before = T.apparatus([]);
+IDS.forEach((id, i) => {
+    const after = T.apparatus(IDS.slice(0, i + 1));
+    const gotSocket = after.socket && !before.socket;
+    const gotRow = after.rows > before.rows;
+    const gotGate = after.gates.length > before.gates.length;
+    const gotWidth = after.canWiden && !before.canWiden;
+    // A gate that arrives alongside the socket or the second row is part of
+    // that idea rather than another one.
+    const added = (gotSocket ? 1 : 0)
+        + (gotRow ? 1 : 0)
+        + (gotGate && !gotSocket && !gotRow ? 1 : 0)
+        + (gotWidth ? 1 : 0);
+    assert(added <= 1, `${id} introduces one idea, not ${added}`);
+    assert(after.rows >= before.rows, `${id} never takes a row away`);
+    assert(after.gates.length >= before.gates.length, `${id} never takes a gate away`);
+    assert(!(gotRow && after.rows - before.rows > 1), `${id} adds at most one row`);
+    before = after;
+});
+
+// The list shows the next few and never all ten. All of it at once is a
+// syllabus; three is a direction.
+assertEqual(T.stillToFind([], 3).map((d) => d.id), ['both', 'count', 'six'],
+    'the list opens on the first three');
+assertEqual(T.stillToFind(['both', 'count'], 3).map((d) => d.id), ['six', 'max', 'not'],
+    'and moves along as they are found');
+assertEqual(T.stillToFind(IDS, 3), [], 'and empties');
+
+/**
+ * NEW APPARATUS ARRIVES ON A CLEARED BENCH.
+ *
+ * The bug this exists for: `max` is "make 15", so earning it leaves the row
+ * holding 1111 -- and what it grants is the socket with NOT in it. The bench
+ * then computed NOT 1111 = 0000 and handed over `over`, the TENTH discovery,
+ * "NOT the biggest number there is, and watch it fall to nothing", before
+ * the player had reached the fifth and without them touching anything.
+ *
+ * The general fault is a newly socketed gate reporting on a number set for a
+ * different purpose, so the rule is general: anything that grants apparatus
+ * clears the rows.
+ */
+assert(T.grantsApparatus(['max']), 'finding max grants the socket, so the bench clears');
+assert(T.grantsApparatus(['both']), 'and both grants the width and the odometer');
+assert(!T.grantsApparatus(['six']), 'six grants nothing, so it disturbs nothing');
+assert(!T.grantsApparatus([]), 'and finding nothing grants nothing');
+assert(!T.grantsApparatus(['cross', 'over']),
+    'the last two grant nothing either, so the bench is left as the player set it');
+assert(T.grantsApparatus(['six', 'max']), 'any one of several is enough');
+
+// `over` is still reachable, by the player doing it rather than by the bench
+// being left standing on it. The check is unchanged; only the state is.
+assert(T.DISCOVERIES.filter((d) => d.unlocks).map((d) => d.id).join() === 'both,max,not,and,or',
+    'exactly five discoveries hand over new apparatus');
+
+/** Drive a log the way the bench does, so the checks are tested as used. */
+function log(...obs) {
+    const out = [];
+    obs.forEach((o) => T.observe(out, {
+        bits: o.bits, rows: o.rows || 1, gate: o.gate || null,
+        a: o.a, b: o.b || 0, out: o.out, via: o.via || null,
+    }));
+    return out;
 }
-passed++;  // the 1024-case sweep above, counted once
-assertEqual(T.columnWork('XOR', 5, 3, 4).map((c) => c.result), [0, 1, 1, 0],
-    '5 XOR 3 is 0110 column by column');
-assertEqual(T.columnWork('XOR', 5, 3, 4).map((c) => c.weight), [8, 4, 2, 1],
-    'and the columns are weighted 8 4 2 1, left to right');
-assertEqual(T.columnWork('NOT', 15, null, 4).map((c) => c.result), [0, 0, 0, 0],
-    'NOT 15 clears every column');
-assert(T.columnWork('NOT', 5, null, 4).every((c) => c.b === null),
-    'a unary gate reports no second operand');
+
+/** Counting from 0 to 15 on the odometer, as a log. */
+function counted() {
+    const obs = [];
+    for (let n = 0; n <= 15; n += 1) obs.push({ bits: 4, a: n, out: n, via: 'step' });
+    return log(...obs);
+}
+
+// observe() dedupes on everything that makes an observation distinct, so
+// flipping a switch back and forth does not fill the log with repeats.
+const dedupe = log({ bits: 1, a: 1, out: 1 }, { bits: 1, a: 1, out: 1 });
+assertEqual(dedupe.length, 1, 'the same observation is recorded once');
+assertEqual(log({ bits: 1, a: 0, out: 0 }, { bits: 1, a: 1, out: 1 }).length, 2,
+    'and a different one is recorded');
+
+const check = (id, l) => T.discoveryById(id).check(l);
+
+assert(!check('both', log({ bits: 1, a: 1, out: 1 })), 'one state is not both');
+assert(check('both', log({ bits: 1, a: 0, out: 0 }, { bits: 1, a: 1, out: 1 })),
+    'off and on is both');
+
+assert(!check('not', log({ bits: 1, gate: 'NOT', a: 0, out: 1 })), 'one row is not NOT learned');
+assert(check('not', log({ bits: 1, gate: 'NOT', a: 0, out: 1 },
+                        { bits: 1, gate: 'NOT', a: 1, out: 0 })), 'both rows is');
+
+// The ways to light each gate, which is what the gate discoveries count and
+// what separates them from one another.
+assert(check('and', log({ bits: 1, rows: 2, gate: 'AND', a: 1, b: 1, out: 1 })),
+    'AND wants its one way');
+assert(!check('and', log({ bits: 1, rows: 2, gate: 'AND', a: 1, b: 0, out: 0 })),
+    'and a dark row is not it');
+assert(!check('or', log({ bits: 1, rows: 2, gate: 'OR', a: 0, b: 1, out: 1 },
+                        { bits: 1, rows: 2, gate: 'OR', a: 1, b: 0, out: 1 })),
+    'two of OR three ways is not all of them');
+assert(check('or', log({ bits: 1, rows: 2, gate: 'OR', a: 0, b: 1, out: 1 },
+                       { bits: 1, rows: 2, gate: 'OR', a: 1, b: 0, out: 1 },
+                       { bits: 1, rows: 2, gate: 'OR', a: 1, b: 1, out: 1 })),
+    'three is');
+assert(check('xor', log({ bits: 1, rows: 2, gate: 'XOR', a: 0, b: 1, out: 1 },
+                        { bits: 1, rows: 2, gate: 'XOR', a: 1, b: 0, out: 1 })),
+    'XOR wants its two');
+
+// The wide half, where the switches become a number.
+//
+// `count` wants EVERY value, not the last one, because the lesson is in the
+// carries: 7 to 8 turns three switches off and a fourth on in a single tick,
+// and a player who sets 15 by hand never sees that happen.
+assert(check('count', counted()), 'all sixteen is counting');
+assert(!check('count', log({ bits: 4, a: 15, out: 15, via: 'step' })),
+    'and arriving at 15 alone is not');
+const nearly = counted().filter((o) => o.a !== 8);
+assert(!check('count', nearly), 'fifteen of sixteen is not either');
+
+// AND THE TWO AFTER IT MUST NOT BE SOLVED BY IT. The odometer passes through
+// 6 and 15 on its way, so a check that only asked for the number would read
+// done the moment it was offered -- the fault this bench has had once
+// already, where a task was complete before the player touched anything.
+// `via` is what keeps a counted 6 and a placed 6 apart.
+assert(!check('six', counted()), 'counting past 6 does not place 6');
+assert(!check('max', counted()), 'nor past 15');
+assert(check('six', log({ bits: 4, a: 6, out: 6 })), 'six is six, set by hand');
+assert(!check('six', log({ bits: 1, a: 6, out: 6 })), 'but not at one switch a row');
+assert(check('max', log({ bits: 4, a: 15, out: 15 })), 'fifteen is the most four hold');
+
+// Which only works because the log keeps both: the dedupe key carries `via`,
+// so a number counted to and the same number set by hand are two records and
+// not one. Drop it from the key and the second is silently discarded,
+// leaving `six` unearnable for a player who counted first.
+const bothWays = log({ bits: 4, a: 6, out: 6, via: 'step' }, { bits: 4, a: 6, out: 6 });
+assertEqual(bothWays.length, 2, 'counted to and placed are separate observations');
+assert(check('six', bothWays), 'and the placed one still earns it');
+assert(check('cross', log({ bits: 4, rows: 2, gate: 'XOR', a: 5, b: 3, out: 6 })),
+    'a gate across two whole numbers');
+assert(!check('cross', log({ bits: 4, rows: 2, gate: 'XOR', a: 5, b: 0, out: 5 })),
+    'and not with nothing in the second row');
+assert(!check('cross', log({ bits: 4, rows: 2, gate: 'NOT', a: 5, b: 3, out: 10 })),
+    'and not through NOT, which only reads one of them');
+assert(check('over', log({ bits: 4, gate: 'NOT', a: 15, out: 0 })),
+    'NOT the biggest number is the overflow');
+assert(!check('over', log({ bits: 4, gate: 'NOT', a: 14, out: 1 })),
+    'and NOT anything else is not');
+
+// newlyFound reports what a log has earned that the list does not have yet,
+// and never re-reports something already banked.
+const full = log({ bits: 1, a: 0, out: 0 }, { bits: 1, a: 1, out: 1 });
+assertEqual(T.newlyFound(full, []), ['both'], 'a fresh log earns what it has');
+assertEqual(T.newlyFound(full, ['both']), [], 'and does not earn it twice');
 console.log(`  ${passed} passed\n`);
 
 // ── The board lesson, against a real BooleBoard ─────────────────────────────
@@ -400,6 +498,9 @@ try {
 
     if (board) {
         assert(board instanceof BooleBoard, 'it is a real BooleBoard');
+        board._arrivals.set(0, 'merged');
+        board.loadStep(boardLesson.steps[0].board);
+        assertEqual(board._arrivals.size, 0, 'a fresh lesson clears the previous step origin labels');
         assertEqual(board.checkGameOver(), false, 'checkGameOver is stubbed false');
 
         // Fill it solid, which on a real board is game over, and confirm

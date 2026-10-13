@@ -206,18 +206,43 @@
     margin: 0 2px;
 }
 
-/* The overflow payout, in the colors of the overflow banner game.js shows. */
-.lore-bonus {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    padding: 0 10px;
-    background: rgba(255, 100, 100, 0.95);
-    color: #ffffff;
+/* What a line PAYS, drawn the way the game draws a payout: js/game.js floats a
+   .point-label over the board and math-overlay.css gives it outlined text and
+   no box at all. So the teaching screen shows the thing the player will
+   actually see when they earn it.
+
+   No box is the whole of it. The overflow payout used to be a solid red panel
+   carrying the same inset bevel the number tiles use, so +45 read as a tile
+   whose VALUE was 45 rather than as 45 points scored: two different kinds of
+   thing wearing one visual form, on the screen whose only job is teaching the
+   difference. That was already fixed for the app alone, in ios/package.mjs;
+   this is the website catching up, and it matters more now, because +1 and +6
+   sit immediately beside a tile holding that very number.
+
+   Colours are .point-label's, so a payout is the same colour here as it will
+   be over the board. Only the three this screen uses are defined: white for a
+   same-value merge, XOR's cyan, and the overflow red. */
+.lore-points {
+    margin-left: 2px;
     font-size: 14px;
-    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.35), inset -3px -3px 0 rgba(0, 0, 0, 0.3);
-    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+    letter-spacing: 1px;
+    color: #ffffff;
+    text-shadow:
+        2px 2px 0 #0a0a14, -1px -1px 0 #0a0a14,
+        1px -1px 0 #0a0a14, -1px 1px 0 #0a0a14;
+}
+
+.lore-points[data-gate="xor"] { color: #00ffff; }
+.lore-points[data-kind="overflow"] { color: #ff6b6b; }
+
+/* One line, under all three, because the payouts alone cannot carry the rule:
+   on the first line the tile and the points are both 1. */
+.lore-scoring {
+    margin: -6px 0 18px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 8px;
+    letter-spacing: 0.5px;
 }
 
 .lore-caption {
@@ -418,6 +443,18 @@
     margin-bottom: 14px;
 }
 
+
+/* The website build has no LEARN button, so PLAY is on its own and the second
+   column would be a hole beside it. site/package.mjs adds this class; nothing
+   in the app build ever does, so the rule costs the app one unused selector.
+
+   A class rather than :has(:only-child), which arrived in Safari 16.2 while
+   the app targets iOS 15 -- css/codex.css already records what that version
+   gap does to a declaration it cannot parse, which is drop it in silence. */
+.menu-primary.is-solo {
+    grid-template-columns: 1fr;
+}
+
 .menu-btn {
     display: flex;
     flex-direction: column;
@@ -497,4 +534,26 @@
     .menu-btn-sub {
         font-size: 7px;
     }
+}
+
+/* Teaching examples always show the bits; the board display setting is separate. */
+.lore-eq .example-binary {
+    font-size: 8px;
+    letter-spacing: 0;
+}
+@media (min-width: 500px) {
+    .lore-eq .example-binary { font-size: 10px; }
+}
+.gate-bits {
+    display: block;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: nowrap;
+}
+.gate-example-label {
+    display: block;
+    font-size: 8px;
+    margin-bottom: 4px;
+    color: rgba(255, 255, 255, 0.7);
 }

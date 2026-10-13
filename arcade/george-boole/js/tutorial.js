@@ -152,131 +152,6 @@
 
     const LESSONS = [
         {
-            id: 'lamps',
-            kind: 'lamps',
-            title: 'on and off',
-            lead: 'Binary has two digits, 0 and 1. That is the whole alphabet.',
-            bits: 4,
-            // The first version opened on "make 6" and taught nothing: the
-            // arithmetic that answers it, 4 + 2, appeared only in the success
-            // message, AFTER it had been solved. That is the fault the rules
-            // panel's own comment levels at the codex -- the explanation
-            // behind the thing it explains -- rebuilt here by accident.
-            //
-            // So the first step asks for nothing. Tap a lamp, watch the number
-            // move, and the mechanic is met before any question is. It cannot
-            // be failed, which is the point: a player who does not yet know
-            // what a bit is has nothing to be wrong about yet.
-            //
-            // Then the targets ramp by how much arithmetic they need rather
-            // than by size: 1 is a single tap and no sum at all, 3 is two
-            // neighbours, 6 is a sum with a gap in it, 15 is all four. 11 was
-            // in here and is gone -- 8 + 2 + 1 is three terms and a gap, which
-            // is harder than 15 and was sitting before it.
-            //
-            // A note has to say something the sum does not. They used to read
-            // "2 + 1" and "4 + 2", which was useful when the readout showed
-            // only `0011 = 3` and became a stutter the moment it started
-            // showing the working: "4 + 2 = 6 , 4 + 2".
-            // Starts at ONE lamp, because that is where binary starts. Four
-            // weighted lamps is the fourth thing about it, not the first, and
-            // opening on 8 4 2 1 asks somebody to take place value, doubling
-            // and the two digits all in one breath. The word "tile" is gone
-            // from here too: it is the game's word for a thing the player has
-            // not seen yet, so it explained nothing and sounded like jargon,
-            // which it was. Tiles are introduced on the board, where there are
-            // some.
-            //
-            // `width` is how many lamps the step shows, and it grows.
-            tasks: [
-                { explore: true, width: 1,
-                  lead: 'One lamp. Off is 0, on is 1. That is a bit, and binary is nothing but these.' },
-                { width: 2, want: 3, note: 'both on',
-                  lead: 'Two lamps. The left is worth 2, the right 1, and the lit ones add up.' },
-                { width: 2, want: 2, note: 'the 1 stays dark' },
-                { width: 4, want: 6, note: 'the 8 and the 1 stay dark',
-                  lead: 'Four lamps now. Each is worth double the one on its right.' },
-                { width: 4, want: 15, note: 'the most four lamps can hold' },
-            ],
-            done: 'That is binary. Nothing else about it is harder than this.',
-        },
-        {
-            id: 'onebit',
-            kind: 'onebit',
-            title: 'one lamp at a time',
-            lead: 'A gate is a rule about one lamp against one lamp: two in, one out.',
-            // One task per gate, each demanding a different row of that gate's
-            // table, so all four rules get used rather than read.
-            //
-            // NONE of them may be satisfied by the two lamps' starting state,
-            // which is both off. OR asked for a dark output at first and that
-            // is exactly what an untouched rig already shows, so the lesson
-            // opened on a tick it had not been given -- no instruction to
-            // follow, and a screen that reads as broken. The test asserts the
-            // invariant now.
-            //
-            // `inputs` pins the pair as well as the answer, which OR needs for
-            // a second reason: asked only for a lit output it would accept the
-            // same 0,1 that XOR just took, and the one fact worth knowing
-            // about OR is the row where the two of them disagree.
-            //
-            // Opens on a step that asks for nothing, for the same reason the
-            // lamps lesson does: poke the two inputs, watch the output follow,
-            // and the rule has been met before anybody is examined on it.
-            // NOT first, and it gets the explore step to itself: one input,
-            // one output, and the output is simply the opposite. That is the
-            // smallest gate there is, and meeting it before XOR is the same
-            // argument as meeting one lamp before four. XOR is last because
-            // "on when they differ" is the subtle one, not the typical one.
-            //
-            // Which end carries the ghost is forced by what a ghost can show.
-            // It can say "this should be lit" and cannot say "this should be
-            // dark", because dark is what an untouched lamp already looks
-            // like. So a task that wants a dark output pins its INPUT instead
-            // and lets the output follow. OR pins both inputs for a second
-            // reason: asked only for a lit output it would accept the same
-            // 0,1 that XOR just took, and the one fact worth knowing about OR
-            // is the row where the two of them disagree.
-            tasks: [
-                { explore: true, gate: 'NOT' },
-                { gate: 'AND', want: 1 },
-                { gate: 'OR', want: 1, inputs: [1, 1] },
-                { gate: 'XOR', want: 1 },
-            ],
-            done: 'Four rules, and that is all of them.',
-        },
-        {
-            id: 'number',
-            kind: 'number',
-            title: 'a whole number',
-            lead: 'The same rule, applied to all four columns at once. Nothing carries.',
-            bits: 4,
-            // 5 and 3 through the three binary gates give 6, 7 and 1, all
-            // different, so each answer is unique -- asserted in the tests.
-            // The fourth is the overflow in miniature, met here as arithmetic
-            // before the board makes it worth 45 points.
-            //
-            // And it opens on a step that asks for nothing, like the two
-            // before it: tap any gate, watch all four columns answer at once.
-            // Guessing which gate makes 6 is a fair question only once you
-            // have seen a gate do anything at all to a whole number.
-            // NOT leads here too, on one tile, because flipping four lamps
-            // at once is the easiest whole-number gate to watch happen.
-            //
-            // It is NOT 5 rather than the old NOT 15, which made 0 and was the
-            // overflow in miniature. That belongs to the board lesson, where
-            // it clears a tile and pays 45 points, and having it twice spent
-            // the game's best moment on a screen that cannot score.
-            tasks: [
-                { explore: true, a: 5, b: 3 },
-                { a: 5, b: null, want: 10, answer: 'NOT' },
-                { a: 5, b: 3, want: 1, answer: 'AND' },
-                { a: 5, b: 3, want: 7, answer: 'OR' },
-                { a: 5, b: 3, want: 6, answer: 'XOR' },
-            ],
-            done: 'The last one made 0000. No tile can hold 0, so that tile clears.',
-        },
-        {
             id: 'board',
             kind: 'board',
             title: 'the real board',
@@ -334,40 +209,6 @@
     }
 
     /**
-     * Is this lamp arrangement the answer to this lamps task?
-     *
-     * The explore step is answered by any lamp at all, so it cannot be got
-     * wrong -- see the note on LESSONS[0].tasks.
-     */
-    function lampsSolved(task, lamps) {
-        if (task.explore) return lamps.some((on) => on === 1);
-        return lampSum(lamps) === task.want;
-    }
-
-    /**
-     * Is this pair of inputs the answer to this onebit task?
-     *
-     * `inputs`, when a task carries it, pins the exact pair as well as the
-     * answer: some rows of a table matter more than the value they produce,
-     * and OR's 1,1 is the one that separates it from XOR.
-     */
-    function oneBitSolved(task, a, b) {
-        // The explore step is answered by touching an input at all.
-        if (task.explore) return a === 1 || b === 1;
-        const second = task.gate === 'NOT' ? 0 : b;
-        if (oneBit(task.gate, a, second) !== task.want) return false;
-        if (!task.inputs) return true;
-        return a === task.inputs[0] && (task.gate === 'NOT' || b === task.inputs[1]);
-    }
-
-    /** Has this gate answered the whole-number task? Explore takes any gate. */
-    function numberSolved(task, gate, bits) {
-        if (!gate) return false;
-        if (task.explore) return true;
-        return applyGate(gate, task.a, task.b, bits) === task.want;
-    }
-
-    /**
      * One gate on a whole number, written out as the one-bit sums it is.
      *
      * This is the sentence the whole lesson exists to make: a gate does not
@@ -391,10 +232,263 @@
         return out;
     }
 
+    // ── the bench ───────────────────────────────────────────────────────────
+    //
+    // ONE SCREEN, AND IT GROWS. There is no deck here, and the deck is the
+    // thing that was replaced.
+    //
+    // The primer was fourteen steps, which is fourteen transitions nobody
+    // asked for, and nothing accumulated across them: the rule learned on the
+    // second screen was gone from sight by the fourth. Progress was a row of
+    // dots, which is a reading metaphor rather than a playing one, and every
+    // fix made to it was a better deck. Reported, correctly, as maybe not
+    // needing to be a series of slides at all.
+    //
+    // So: one bench. It starts as a single switch and nothing else, and every
+    // discovery bolts something on -- a socket, a gate, a second row, four
+    // switches instead of one. The apparatus IS the progress bar, it is on
+    // screen the whole time, and a player who wants to go back and poke AND
+    // after meeting XOR simply does, because nothing was ever taken away.
+    //
+    // What it grows into is the game's own move: a four-bit number, a gate,
+    // another four-bit number. That is a tile, a gate tile and a tile, which
+    // is what the board is made of, so the last state of the bench and the
+    // first move of the game are the same picture.
+
+    /**
+     * What there is to find, in the order the bench offers it.
+     *
+     * Declarative so the tests can read it, and `unlocks` is what each one
+     * bolts on. The chain is the ladder the deck used to be, with one new
+     * thing per rung for the same reason it always had: a second switch and
+     * a gate arriving together is two ideas at once.
+     */
+    const DISCOVERIES = [
+        {
+            id: 'both',
+            bits: 1,
+            text: 'turn the switch on, and off again',
+            unlocks: 'three more switches, and a +1 button',
+            check: (log) => atBits(log, 1).filter((o) => !o.gate)
+                .some((o) => o.a === 1) && atBits(log, 1).filter((o) => !o.gate)
+                .some((o) => o.a === 0),
+        },
+        {
+            id: 'count',
+            bits: 4,
+            text: 'hold +1 and count all the way up to 15',
+            unlocks: null,
+            // EVERY number, not just the last one, because the thing being
+            // taught is in the carries and not in the destination. 7 to 8 is
+            // where three switches go off and a fourth comes on at once, and
+            // a player who sets 15 by hand never sees it happen.
+            //
+            // Which is also why the odometer exists at all: sixteen states is
+            // a lot of individual taps and no fun whatever, and one held
+            // button is the difference between a chore and watching a meter
+            // roll over.
+            check: (log) => {
+                const seen = atBits(log, 4).filter((o) => !o.gate).map((o) => o.a);
+                for (let n = 0; n <= maxFor(4); n += 1) {
+                    if (seen.indexOf(n) === -1) return false;
+                }
+                return true;
+            },
+        },
+        {
+            id: 'six',
+            bits: 4,
+            // BY HAND, which is what `via` is in the log for. The odometer
+            // has already been through 6 by the time this is asked, so a
+            // check that only looked at the number would come up solved the
+            // moment it was offered -- the same fault as a task that reads
+            // done before the player has touched anything, which this bench
+            // has had once already.
+            //
+            // The button is withdrawn here too. Counting is a thing to watch
+            // and place value is a thing to do, and leaving the easy way up
+            // on the screen turns the second into the first.
+            text: 'now set the switches to 6 yourself',
+            unlocks: null,
+            check: (log) => atBits(log, 4).some((o) => !o.gate && !o.via && o.a === 6),
+        },
+        {
+            id: 'max',
+            bits: 4,
+            text: 'and to 15, which is the most four switches hold',
+            unlocks: 'a socket, and NOT to put in it',
+            check: (log) => atBits(log, 4).some((o) => !o.gate && !o.via && o.a === 15),
+        },
+        {
+            id: 'not',
+            bits: 1,
+            text: 'see what NOT does to a 0, and to a 1',
+            unlocks: 'a second row of switches, and AND',
+            check: (log) => [0, 1].every((v) => withGate(log, 'NOT', 1).some((o) => o.a === v)),
+        },
+        {
+            id: 'and',
+            bits: 1,
+            text: 'light the lamp through AND',
+            unlocks: 'OR',
+            check: (log) => withGate(log, 'AND', 1).some((o) => o.out === 1),
+        },
+        {
+            id: 'or',
+            bits: 1,
+            text: 'light it through OR every way there is, and there are three',
+            unlocks: 'XOR',
+            check: (log) => lit(log, 'OR', 1).length >= 3,
+        },
+        {
+            id: 'xor',
+            bits: 1,
+            text: 'light it through XOR both ways',
+            unlocks: null,
+            check: (log) => lit(log, 'XOR', 1).length >= 2,
+        },
+        {
+            id: 'cross',
+            bits: 4,
+            text: 'run a gate across two whole numbers at once',
+            unlocks: null,
+            check: (log) => atBits(log, 4).some(
+                (o) => o.operands === 2 && o.gate && o.gate !== 'NOT' && o.a > 0 && o.b > 0
+            ),
+        },
+        {
+            id: 'over',
+            bits: 4,
+            text: 'NOT the biggest number there is, and watch it fall to nothing',
+            unlocks: null,
+            check: (log) => atBits(log, 4).some((o) => o.gate === 'NOT' && o.a === 15 && o.out === 0),
+        },
+    ];
+
+    /** Observations at a given width. */
+    function atBits(log, bits) {
+        return log.filter((o) => o.bits === bits);
+    }
+
+    /** Observations through a named gate at a given width. */
+    function withGate(log, gate, bits) {
+        return atBits(log, bits).filter((o) => o.gate === gate);
+    }
+
+    /** The distinct input pairs that lit the lamp through this gate. */
+    function lit(log, gate, bits) {
+        const keys = [];
+        withGate(log, gate, bits).forEach((o) => {
+            if (o.out !== 1) return;
+            const k = o.a + ',' + o.b;
+            if (keys.indexOf(k) === -1) keys.push(k);
+        });
+        return keys;
+    }
+
+    function discoveryById(id) {
+        return DISCOVERIES.find((d) => d.id === id) || null;
+    }
+
+    /**
+     * What is bolted to the bench, given what has been found.
+     *
+     * Derived rather than stored, so there is one source of truth and a
+     * half-finished unlock cannot exist. Note the gates arrive one at a time
+     * and in the order the rungs used to: NOT alone first, because it is the
+     * only one that works on a single row, then the pair that need two.
+     */
+    function apparatus(found) {
+        const has = (id) => found.indexOf(id) !== -1;
+        const gates = [];
+        if (has('max')) gates.push('NOT');
+        if (has('not')) gates.push('AND');
+        if (has('and')) gates.push('OR');
+        if (has('or')) gates.push('XOR');
+        return {
+            // THE SOCKET IS LAST NOW, not first. It used to arrive the moment
+            // the player had turned one switch both ways, which put four
+            // logic rules in front of them before they had seen four switches
+            // make a number -- and the number is what the gates are FOR.
+            socket: has('max'),
+            rows: has('not') ? 2 : 1,
+            gates: gates,
+            // And the width is first. The bench grows to four as soon as one
+            // switch has been understood, because that is the next thing to
+            // understand and not a prize for finishing the gates.
+            //
+            // It stays a control the player holds rather than a state the
+            // bench moves them into: NOT, AND, OR and XOR are all taught at
+            // one switch, where a gate has a whole truth table small enough
+            // to stand inside, and the way back there has to be theirs.
+            canWiden: has('both'),
+            // The odometer, which is withdrawn once it has been watched.
+            stepper: has('both') && !has('count'),
+        };
+    }
+
+    /**
+     * Does finding these hand the player new apparatus?
+     *
+     * If it does, the bench clears. `max` is "make 15", and what it grants
+     * is the socket with NOT in it, so the bench was computing NOT 1111 and
+     * handing over `over` -- the tenth discovery -- before the fifth, with
+     * the player having touched nothing. A newly socketed gate must not
+     * report on a number set for a different purpose.
+     */
+    function grantsApparatus(ids) {
+        return ids.some((id) => {
+            const d = discoveryById(id);
+            return !!(d && d.unlocks);
+        });
+    }
+
+    /** Which discoveries this log has earned that the list does not have yet. */
+    function newlyFound(log, found) {
+        return DISCOVERIES
+            .filter((d) => found.indexOf(d.id) === -1)
+            .filter((d) => d.check(log))
+            .map((d) => d.id);
+    }
+
+    /** The next few still to find, which is all the list ever shows. */
+    function stillToFind(found, limit) {
+        return DISCOVERIES
+            .filter((d) => found.indexOf(d.id) === -1)
+            .slice(0, limit || 3);
+    }
+
+    /**
+     * One observation, as the log records it. Deduped by everything in it.
+     *
+     * `via` is how the bench got there -- 'step' for the odometer, unset for
+     * the switches -- and it is part of the KEY as well as the record, so a 6
+     * counted up to and a 6 set by hand are two observations rather than one.
+     * Without that the task after the odometer reads solved before it is
+     * offered, since counting to 15 passes through every number on the way.
+     */
+    function observe(log, o) {
+        const key = [o.bits, o.rows, o.gate || '-', o.a, o.b, o.via || '-'].join('/');
+        if (log.some((x) => x.key === key)) return false;
+        log.push({
+            key: key,
+            bits: o.bits,
+            operands: o.rows,
+            gate: o.gate,
+            a: o.a,
+            b: o.b,
+            out: o.out,
+            via: o.via || null,
+        });
+        return true;
+    }
+
     root.BooleTutorial = {
         LESSONS, GATE_CODE, GATE_SYMBOL, GATE_ORDER, WEIGHTS,
         maxFor, lampSum, lampsOf, bitsOf, oneBit, applyGate, gatesProducing,
-        lessonById, lampsSolved, oneBitSolved, numberSolved, sumLine, columnWork,
+        lessonById, sumLine, columnWork,
+        DISCOVERIES, discoveryById, apparatus, newlyFound, stillToFind, observe,
+        grantsApparatus,
     };
 
     if (typeof document === 'undefined' || typeof document.createElement !== 'function') return;
@@ -431,7 +525,7 @@
     }
 
     function allDone() {
-        return LESSONS.every((l) => isDone(l.id));
+        return DISCOVERIES.every((d) => isDone(d.id)) && LESSONS.every((l) => isDone(l.id));
     }
 
     function emit(name, detail) {
@@ -458,7 +552,7 @@
     function el(tag, className, text) {
         const node = document.createElement(tag);
         if (className) node.className = className;
-        if (text) node.textContent = text;
+        if (text) setArrowLabel(node, text);
         return node;
     }
 
@@ -536,19 +630,13 @@
         nextBtn.addEventListener('click', advance);
         footEl.appendChild(nextBtn);
 
-        // For anybody who would rather read it. The chapter is still there and
-        // is still the reference; this screen is a second door to the same
-        // material, which is the pattern the how-to-play screen already runs.
-        const read = button('tutorial-read', 'read it instead →');
-        read.addEventListener('click', () => {
-            close();
-            if (root.BooleRules && root.BooleRules.showSection) {
-                const modal = document.getElementById('instructionsModal');
-                if (modal) modal.classList.add('active');
-                root.BooleRules.showSection('start with counting');
-            }
-        });
-        footEl.appendChild(read);
+        // "read it instead" was here, and it is gone because it did not work.
+        // Its handler called close() and then opened #instructionsModal, but
+        // close() emits boole:primer-closed, and main.js answers that by
+        // putting back whichever screen the primer was opened from -- so the
+        // rules panel was opened and then immediately covered by the screen
+        // that had just been left. The way to the written rules is still on
+        // the how-to-play screen, one tap behind "back", under its own name.
         panel.appendChild(footEl);
 
         screen.appendChild(panel);
@@ -556,14 +644,17 @@
     }
 
     function renderDots() {
+        // The board lesson's steps. These used to be one dot per lesson,
+        // which with one lesson left would be a single dot that never moved;
+        // the bench carries its own count and wants no dots at all.
         dotsEl.innerHTML = '';
-        LESSONS.forEach((lesson, i) => {
+        const steps = (lesson().steps || []).length;
+        for (let i = 0; i < steps; i++) {
             const dot = el('span', 'tutorial-dot');
-            if (i === index) dot.classList.add('is-current');
-            if (isDone(lesson.id)) dot.classList.add('is-done');
-            dot.dataset.lesson = lesson.id;
+            if (i < step) dot.classList.add('is-done');
+            if (i === step) dot.classList.add('is-current');
             dotsEl.appendChild(dot);
-        });
+        }
     }
 
     /** The task line, and whether `next` is offered yet. */
@@ -655,6 +746,31 @@
      */
     function setQuiet(on) {
         screen.classList.toggle('is-quiet', !!on);
+        // Whatever rig was up, it is not up now. renderLesson() calls this on
+        // the way into every step, so a hidden task line, or a NEXT button
+        // left over from a finished one, cannot survive into the next.
+        screen.classList.remove('is-rig');
+        screen.classList.remove('is-done');
+    }
+
+    /**
+     * A finished step waits. It does not advance itself.
+     *
+     * Every rig here used to call later(advance, ~1200) the moment its goal
+     * was met, and on the short steps that reads as the app deciding for
+     * you: the first rung is one switch, its goal is to see both states, and
+     * since it arrives showing one of them a SINGLE TAP finished the step
+     * and took the screen away. Reported exactly that way, and it is not a
+     * tuning problem -- there is no delay that makes an unasked-for
+     * transition feel chosen.
+     *
+     * So the button comes back, and only once there is something to press it
+     * about. That also buys the thing a timer cannot: a player who wants to
+     * keep flipping the switches after the rule is complete may, which is
+     * most of what separates a toy from a slide.
+     */
+    function offerNext() {
+        screen.classList.add('is-done');
     }
 
     function lesson() {
@@ -680,496 +796,578 @@
         renderFinish();
     }
 
-    // ── lesson 1: four lamps ────────────────────────────────────────────────
+    // ── the bench, drawn ────────────────────────────────────────────────────
 
-    /**
-     * Lesson one, taught without sentences.
-     *
-     * The prose version spent 38 words establishing that a lamp is on or off,
-     * beside a lamp that demonstrates it by lighting up. So this step has no
-     * lead, no instruction, no success line and no NEXT button. What it has is
-     * a lamp that pulses until it is touched, a number underneath that follows
-     * it, and -- once there is arithmetic to do -- a target to aim at.
-     *
-     * Three things carry what the writing used to:
-     *
-     *  - The pulse is the instruction. A control that is asking to be pressed
-     *    does not need a line of text saying to press it.
-     *  - The target is a numeral, not a request. "make 6" becomes a ghosted 6
-     *    that fills in when the lamps add up to it.
-     *  - Completion is the reaction, not a sentence: the readout goes green, a
-     *    sound fires, and the step advances itself.
-     *
-     * The explore step ends once both states have been seen. The lamp starts
-     * off, so in practice that is one tap -- they arrive having seen 0 and
-     * leave having seen 1, which is the whole of what the step is for.
-     *
-     * The one concession to text is the hint: after a while stuck, the lamp
-     * that belongs in the answer pulses. Still no words, and it cannot give
-     * the whole thing away, because it only ever points at one.
-     */
-    function renderLamps() {
-        const current = lesson();
-        const task = current.tasks[step];
-        const width = task.width || 4;
-        const weights = weightsFor(width);
-        const lamps = weights.map(() => 0);
-        const seen = { on: false, off: true };   // the lamp starts off
-        let touched = false;
-        let done = false;
+    let bench = null;
 
-        setQuiet(true);
-        if (task.lead) leadEl.textContent = task.lead;
-
-        const rig = el('div', 'tut-lamps');
-
-        // The goal, as a number rather than as a request. Absent on the
-        // explore step, which has nothing to aim at on purpose.
-        let targetEl = null;
-        if (!task.explore) {
-            targetEl = el('div', 'tut-target');
-            targetEl.appendChild(el('span', 'tut-target-value', String(task.want)));
-            rig.appendChild(targetEl);
-        }
-
-        const row = el('div', 'tut-lamp-row');
-        row.dataset.width = String(width);
-
-        const readout = el('div', 'tut-readout');
-        readout.dataset.width = String(width);
-        const sumRow = el('div', 'tut-readout-sumrow');
-        const exprEl = el('span', 'tut-readout-expr');
-        const eqEl = el('span', 'tut-readout-eq', '=');
-        const sumEl = el('span', 'tut-readout-sum', '0');
-        sumRow.appendChild(exprEl);
-        sumRow.appendChild(eqEl);
-        sumRow.appendChild(sumEl);
-        const bitsEl = el('div', 'tut-readout-bits', lamps.join(''));
-        readout.appendChild(sumRow);
-        readout.appendChild(bitsEl);
-
-        const lampEls = [];
-
-        /** Which lamp, if any, the player still needs. Used by the hint. */
-        function missingLamp() {
-            if (task.explore) return -1;
-            const want = lampsOf(task.want, width);
-            for (let i = 0; i < width; i++) {
-                if (want[i] !== lamps[i]) return i;
-            }
-            return -1;
-        }
-
-        function armHint() {
-            later(() => {
-                if (done) return;
-                const i = missingLamp();
-                if (i >= 0) lampEls[i].classList.add('is-hint');
-            }, 7000);
-        }
-
-        function finish() {
-            if (done) return;
-            done = true;
-            clearStepTimers();
-            lampEls.forEach((l) => l.classList.remove('is-hint', 'is-asking'));
-            readout.classList.add('is-solved');
-            if (targetEl) targetEl.classList.add('is-met');
-            // You are paid what you made. On the one-lamp step that is 1,
-            // which is the smallest honest payment there is and exactly right
-            // for the smallest thing in the game.
-            award(lampSum(lamps), readout);
-            sfx('merge');
-            buzz('solved');
-            // A beat to see it land, then on. No button, because there is
-            // nothing left to decide.
-            later(advance, 1100);
-        }
-
-        function refresh() {
-            const line = sumLine(lamps);
-
-            if (width === 1) {
-                // One lamp has nothing to add up, and the content of the step
-                // is that it carries one of two states.
-                exprEl.textContent = lamps[0] ? 'on' : 'off';
-                exprEl.classList.remove('is-empty');
-                sumEl.textContent = lamps[0] ? '1' : '0';
-                bitsEl.textContent = lamps[0] ? 'true' : 'false';
-            } else {
-                exprEl.textContent = line.expr;
-                exprEl.classList.toggle('is-empty', line.terms.length === 0);
-                sumEl.textContent = String(line.sum);
-                bitsEl.textContent = lamps.join('');
-            }
-
-            if (done) return;
-
-            if (task.explore) {
-                if (seen.on && seen.off) finish();
-                return;
-            }
-            if (lampsSolved(task, lamps)) finish();
-        }
-
-        weights.forEach((weight, i) => {
-            const lamp = button('tut-lamp');
-            lamp.dataset.weight = String(weight);
-            lamp.dataset.on = '0';
-            lamp.setAttribute('aria-label', width === 1
-                ? 'lamp' : 'lamp worth ' + weight);
-            lamp.appendChild(el('span', 'tut-lamp-weight', String(weight)));
-            lamp.appendChild(el('span', 'tut-lamp-bulb'));
-            lamp.appendChild(el('span', 'tut-lamp-bit', '0'));
-            lamp.addEventListener('click', () => {
-                if (done) return;
-                lamps[i] = lamps[i] ? 0 : 1;
-                if (lamps[i]) seen.on = true; else seen.off = true;
-                if (!touched) {
-                    touched = true;
-                    lampEls.forEach((l) => l.classList.remove('is-asking'));
-                }
-                lamp.classList.remove('is-hint');
-                lamp.dataset.on = lamps[i] ? '1' : '0';
-                lamp.querySelector('.tut-lamp-bit').textContent = String(lamps[i]);
-                sfx('move');
-                refresh();
-            });
-            lampEls.push(lamp);
-            row.appendChild(lamp);
-        });
-
-        rig.appendChild(row);
-        rig.appendChild(readout);
-        bodyEl.appendChild(rig);
-
-        // The pulse IS the instruction. On the explore step every lamp asks;
-        // afterwards the player knows what a lamp is and only the hint pulses.
-        if (task.explore) {
-            lampEls.forEach((l) => l.classList.add('is-asking'));
-        } else {
-            armHint();
-        }
-
-        refresh();
+    function benchState() {
+        return {
+            log: [],
+            bits: 1,
+            gate: null,
+            a: [0, 0, 0, 0],
+            b: [0, 0, 0, 0],
+        };
     }
 
-    // ── lesson 2: one lamp against one lamp ─────────────────────────────────
+    // A row is four cells wide in memory however many are on screen, and the
+    // visible ones are the RIGHTMOST. That is the whole of why: the single
+    // switch at width one is the ones column, so widening grows the row to
+    // its LEFT and the switch the player already set keeps the value it had.
+    //
+    // Indexing from the left instead, which is how this was first written,
+    // makes the one switch worth 1 while narrow and worth 8 the instant the
+    // bench widens. A player who turns a switch on, widens, and watches
+    // their 1 silently become an 8 has been taught something false by the
+    // apparatus, on the screen whose entire job is place value.
+    const ROW_CELLS = 4;
+
+    /** Which cells are on screen at this width, left to right. */
+    function cellsAt(bits) {
+        const out = [];
+        for (let i = ROW_CELLS - bits; i < ROW_CELLS; i++) out.push(i);
+        return out;
+    }
+
+    /** The value of a row at the current width. */
+    function rowValue(row, bits) {
+        const w = weightsFor(ROW_CELLS);
+        return cellsAt(bits).reduce((n, i) => n + (row[i] ? w[i] : 0), 0);
+    }
+
+    /** The ones column, which is the only cell a one-bit bench has. */
+    function lowBit(row) {
+        return row[ROW_CELLS - 1];
+    }
+
+    function benchOut(st, gear) {
+        const a = rowValue(st.a, st.bits);
+        const b = rowValue(st.b, st.bits);
+        if (!st.gate) return a;
+        if (st.gate === 'NOT') return applyGate('NOT', a, null, st.bits);
+        if (gear.rows < 2) return applyGate('NOT', a, null, st.bits);
+        return applyGate(st.gate, a, b, st.bits);
+    }
 
     /**
-     * Lesson two, taught without sentences.
-     *
-     * Same three mechanisms as the lamps lesson. The inputs pulse until
-     * touched, the goal is drawn rather than requested, and a match reacts and
-     * advances itself instead of printing a tick.
-     *
-     * The goal here is a GHOST: whatever the task pins is drawn in the state
-     * it wants at low opacity, and fills solid when the player gets there. A
-     * socket showing a faint lit lamp says "this should be on" without a line
-     * of text, which is what "light the output" used to cost.
-     *
-     * Note which end gets ghosted and why. A ghost can show "should be lit"
-     * and cannot show "should be dark", because dark is what an untouched lamp
-     * already looks like. So a task wanting a dark OUTPUT pins the INPUT
-     * instead -- NOT is the case -- and the output simply follows.
-     *
-     * The gate's one-line meaning is gone. The truth table underneath states
-     * the rule completely and lights the row the player is standing on, so the
-     * sentence was a worse copy of the thing directly below it.
+     * The bench. Redrawn whole on any change, which is affordable because it
+     * is a few dozen nodes, and is the only thing that keeps nine interacting
+     * unlocks from needing nine separate patch paths.
      */
-    function renderOneBit() {
-        const current = lesson();
-        const task = current.tasks[step];
-        const unary = task.gate === 'NOT';
-        const inputs = [0, 0];
-        let touched = false;
-        let done = false;
+    function renderBench() {
+        const st = bench;
+        const gear = apparatus(progress.lessons);
+        fitWidth(gear);
+        if (!gear.stepper) stopStepping();
+        if (gear.socket && !st.gate) st.gate = gear.gates[0];
+        if (st.gate && gear.gates.indexOf(st.gate) === -1) st.gate = gear.gates[0] || null;
 
-        setQuiet(true);
+        setQuiet(false);
+        screen.classList.add('is-rig');
+        leadEl.textContent = '';
 
-        const rig = el('div', 'tut-onebit');
-        rig.dataset.gate = task.gate.toLowerCase();
+        bodyEl.innerHTML = '';
+        const rig = el('div', 'tut-bench');
 
-        // The gate, named. This is vocabulary: XOR is a word nobody infers by
-        // tapping, so it is the one thing here that still has to be told.
-        const head = el('div', 'tut-gate-head');
-        head.appendChild(el('span', 'tut-gate-head-glyph', GATE_SYMBOL[task.gate]));
-        head.appendChild(el('span', 'tut-gate-head-name', task.gate));
+        const found = DISCOVERIES.filter((d) => progress.lessons.indexOf(d.id) !== -1).length;
+        const head = el('div', 'tut-bench-head');
+        head.appendChild(el('span', 'tut-bench-title', 'the bench'));
+        head.appendChild(el('span', 'tut-bench-count', found + ' of ' + DISCOVERIES.length));
+
+        /**
+         * START OVER, which there was no way to do.
+         *
+         * What has been found is saved, so a bench that has been finished
+         * once comes up finished for ever: every gate unlocked, nothing left
+         * to find, and no way back to the version a new player sees. That
+         * made the thing hardest to judge the one thing impossible to
+         * re-run, including for whoever is deciding whether it works.
+         *
+         * Two taps, because one would throw away every discovery on a
+         * mis-hit, and it asks IN the button rather than in a dialog: the
+         * label becomes the question. Three seconds to answer, then it goes
+         * back to being an unremarkable button rather than an armed one.
+         */
+        if (found > 0) {
+            const over = button('tut-reset', 'start over');
+            let armed = false;
+            over.addEventListener('click', () => {
+                if (!armed) {
+                    armed = true;
+                    over.textContent = 'sure?';
+                    over.classList.add('is-armed');
+                    later(() => {
+                        armed = false;
+                        over.textContent = 'start over';
+                        over.classList.remove('is-armed');
+                    }, 3000);
+                    return;
+                }
+                root.BooleTutorial.reset();
+                bench = benchState();
+                setScore(0);
+                sfx('move');
+                renderBench();
+            });
+            head.appendChild(over);
+        }
+
         rig.appendChild(head);
 
-        const line = el('div', 'tut-onebit-line');
-        const out = el('span', 'tut-onebit-out', '0');
-
-        const table = el('div', 'tut-truth');
-        const rows = unary ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]];
-        rows.forEach((pair) => {
-            const r = el('div', 'tut-truth-row');
-            r.dataset.key = pair.join('');
-            r.textContent = unary
-                ? GATE_SYMBOL.NOT + ' ' + pair[0] + ' = ' + oneBit('NOT', pair[0], 0)
-                : pair[0] + ' ' + GATE_SYMBOL[task.gate] + ' ' + pair[1] + ' = ' + oneBit(task.gate, pair[0], pair[1]);
-            table.appendChild(r);
-        });
-
-        const lampEls = [];
-
-        function finish() {
-            if (done) return;
-            done = true;
-            clearStepTimers();
-            lampEls.forEach((l) => l.classList.remove('is-asking', 'is-hint'));
-            rig.classList.add('is-solved');
-            award(GATE_BONUS, rig.querySelector('.tut-gate-head'));
-            sfx('merge');
-            buzz('solved');
-            later(advance, 1100);
-        }
-
-        function refresh() {
-            const value = oneBit(task.gate, inputs[0], unary ? 0 : inputs[1]);
-            out.textContent = String(value);
-            out.dataset.on = value ? '1' : '0';
-
-            const key = unary ? String(inputs[0]) : inputs.join('');
-            table.querySelectorAll('.tut-truth-row').forEach((r) => {
-                r.classList.toggle('is-here', r.dataset.key === key);
+        // ABOVE THE RIG, not under it. The bench is tall once it has grown
+        // -- two rows of four switches, a socket, an answer and the column
+        // working -- so a list at the bottom sat below the fold on a phone
+        // in exactly the state where the player has most to do. The thing
+        // that says what to do next has to be readable without scrolling
+        // past the thing it is about.
+        //
+        // It also reads in the right order now: here is what you are
+        // looking for, and here is the apparatus to look with.
+        //
+        // Only the next few of it. All nine at once is a syllabus; three is
+        // a direction.
+        const todo = stillToFind(progress.lessons, 3);
+        const find = el('div', 'tut-find');
+        find.appendChild(el('p', 'tut-find-head',
+            todo.length ? 'George Boole says' : 'George Boole is satisfied'));
+        if (todo.length) {
+            const list = el('ul', 'tut-find-list');
+            todo.forEach((d, i) => {
+                const li = el('li', 'tut-find-item', d.text);
+                if (i === 0) li.classList.add('is-next');
+                // WHERE TO STAND, and only when you are not already there.
+                // This used to be in the prose -- "go back to one switch,
+                // and see what NOT does..." -- which is a direction rather
+                // than a thing to learn, and it goes stale the moment the
+                // player is already at one switch, which is exactly where
+                // the bench opens. So the task read as an instruction that
+                // had already been carried out, while the only control on
+                // screen offered the opposite of it.
+                if (d.bits && d.bits !== st.bits) {
+                    li.appendChild(el('span', 'tut-find-at',
+                        d.bits === 1 ? 'at 1 switch' : 'at 4 switches'));
+                }
+                list.appendChild(li);
             });
-
-            // A ghost that has been reached stops being a ghost.
-            lampEls.forEach((l, i) => {
-                if (l.dataset.want === undefined) return;
-                l.classList.toggle('is-met', String(inputs[i]) === l.dataset.want);
-            });
-            if (out.dataset.want !== undefined) {
-                out.classList.toggle('is-met', String(value) === out.dataset.want);
-            }
-
-            if (done) return;
-
-            if (task.explore) {
-                if (touched) finish();
-                return;
-            }
-            if (oneBitSolved(task, inputs[0], inputs[1])) finish();
-        }
-
-        function inputLamp(i) {
-            const lamp = button('tut-bit');
-            lamp.dataset.on = '0';
-            lamp.textContent = '0';
-            lamp.setAttribute('aria-label', 'input ' + (i + 1));
-            // Ghost it if this task pins it.
-            if (task.inputs && task.inputs[i] !== undefined) {
-                lamp.dataset.want = String(task.inputs[i]);
-            }
-            lamp.addEventListener('click', () => {
-                if (done) return;
-                inputs[i] = inputs[i] ? 0 : 1;
-                touched = true;
-                lampEls.forEach((l) => l.classList.remove('is-asking'));
-                lamp.classList.remove('is-hint');
-                lamp.dataset.on = inputs[i] ? '1' : '0';
-                lamp.textContent = String(inputs[i]);
-                sfx('move');
-                refresh();
-            });
-            lampEls.push(lamp);
-            return lamp;
-        }
-
-        if (unary) {
-            line.appendChild(el('span', 'tut-onebit-glyph', GATE_SYMBOL.NOT));
-            line.appendChild(inputLamp(0));
+            find.appendChild(list);
         } else {
-            line.appendChild(inputLamp(0));
-            line.appendChild(el('span', 'tut-onebit-glyph', GATE_SYMBOL[task.gate]));
-            line.appendChild(inputLamp(1));
+            // Its OWN class, not .tutorial-next. The bench sets `is-rig`,
+            // which hides .tutorial-next because a rig has no next, and the
+            // button was therefore in the DOM and invisible: nine
+            // discoveries made and no way out of the screen but back.
+            // Caught by looking at it rather than by querying for it, which
+            // reported the element present and said nothing about display.
+            const go = button('tut-goboard', 'play the board →');
+            go.addEventListener('click', startBoard);
+            find.appendChild(go);
         }
-        line.appendChild(el('span', 'tut-onebit-eq', '='));
+        // The LIST goes above; the way out does not. Once there is nothing
+        // left to find this box stops being guidance and becomes a single
+        // button, and a button is a thing to reach rather than a thing to
+        // read: at the top it sat above the whole bench, which is both an
+        // odd place for the primary action and an easy way to leave by
+        // accident while reaching for a switch. Read high, tap low, which
+        // is the same split the how-to-play menu uses.
+        if (todo.length) rig.appendChild(find);
 
-        // The output is ghosted only when the task pins it AND the state it
-        // wants is "lit": see the note at the top about dark being invisible.
-        if (!task.explore && !task.inputs && task.want === 1) {
-            out.dataset.want = '1';
+
+        /** One row of switches, with its value when the row is wide. */
+        function switchRow(which) {
+            const row = el('div', 'tut-brow');
+            row.dataset.which = which;
+            const bits = st.bits;
+            const weights = weightsFor(ROW_CELLS);
+            const cells = el('div', 'tut-brow-cells');
+            cellsAt(bits).forEach((i) => {
+                const sw = button('tut-bsw');
+                sw.dataset.on = st[which][i] ? '1' : '0';
+                sw.setAttribute('aria-pressed', st[which][i] ? 'true' : 'false');
+                sw.setAttribute('aria-label',
+                    bits === 1 ? 'switch' : 'switch worth ' + weights[i]);
+                if (bits > 1) sw.appendChild(el('span', 'tut-bsw-weight', String(weights[i])));
+                sw.appendChild(el('span', 'tut-bsw-bulb'));
+                sw.appendChild(el('span', 'tut-bsw-bit', st[which][i] ? '1' : '0'));
+                sw.addEventListener('click', () => {
+                    st[which][i] = st[which][i] ? 0 : 1;
+                    sfx('move');
+                    settle();
+                });
+                cells.appendChild(sw);
+            });
+            row.appendChild(cells);
+
+            const v = rowValue(st[which], bits);
+            const tag = el('div', 'tut-brow-value');
+            // One switch has nothing to add up and three names worth having.
+            // Four switches have a number, which is the point of being four.
+            tag.textContent = bits === 1
+                ? (v ? 'on  1  true' : 'off  0  false')
+                : bitsOf(v, bits) + '  =  ' + v;
+            row.appendChild(tag);
+            return row;
         }
-        line.appendChild(out);
-        rig.appendChild(line);
-        rig.appendChild(table);
+
+        const body = el('div', 'tut-bench-rig');
+        body.appendChild(switchRow('a'));
+
+        // The socket. Tapping it swaps the gate, which is the one control on
+        // the bench that is a CHOICE rather than an input, so it is drawn
+        // differently: a thing held in a holder, not a thing switched.
+        if (gear.socket) {
+            const sock = button('tut-socket');
+            sock.dataset.gate = st.gate.toLowerCase();
+            sock.appendChild(el('span', 'tut-socket-glyph', GATE_SYMBOL[st.gate]));
+            sock.appendChild(el('span', 'tut-socket-name', st.gate));
+            if (gear.gates.length > 1) {
+                sock.appendChild(el('span', 'tut-socket-swap', 'tap to swap'));
+            }
+            sock.addEventListener('click', () => {
+                const i = gear.gates.indexOf(st.gate);
+                st.gate = gear.gates[(i + 1) % gear.gates.length];
+                sfx('spawn');
+                settle();
+            });
+            body.appendChild(sock);
+        }
+
+        // NOT takes one row, so the second is dimmed rather than removed
+        // while it is socketed: hiding it would make the bench appear to
+        // shrink every time the player tried the one unary gate.
+        if (gear.rows > 1) {
+            const rowB = switchRow('b');
+            if (st.gate === 'NOT') rowB.dataset.unused = '1';
+            body.appendChild(rowB);
+        }
+
+        /**
+         * THE ODOMETER.
+         *
+         * Sixteen states is sixteen taps, which is a chore, and a chore is
+         * the surest way to teach somebody that binary is tedious. Held, it
+         * is a meter rolling over, and the rolling is the entire lesson: 7
+         * to 8 turns three switches off and a fourth on in one tick, which
+         * is a carry, and nothing about setting 8 by hand shows it.
+         *
+         * It counts how many of the sixteen have been seen, because the
+         * player can start anywhere and wraps round at 15. Without that the
+         * task has no visible edge and the only way to know you are done is
+         * that it suddenly says so.
+         */
+        if (gear.stepper) {
+            const seen = {};
+            st.log.forEach((o) => {
+                if (o.bits === ROW_CELLS && !o.gate) seen[o.a] = true;
+            });
+            const n = Object.keys(seen).length;
+            const total = maxFor(ROW_CELLS) + 1;
+
+            const meter = el('div', 'tut-step-wrap');
+            const step = button('tut-step', '+1');
+            step.setAttribute('aria-label', 'add one');
+            // pointerdown, not click: a hold has to start on the way down.
+            // Mouse, touch and pen all arrive here as one event, so there is
+            // no separate touch path to keep in step with this one.
+            step.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                startStepping();
+            });
+            meter.appendChild(step);
+            meter.appendChild(el('span', 'tut-step-seen',
+                n + ' of ' + total + ' seen'));
+            body.appendChild(meter);
+        }
+
+        const out = rowValue(st.a, st.bits);
+        const value = benchOut(st, gear);
+        // No gate, no answer to show. Before the socket exists the bench is
+        // one row and the row already states its own value, so an output box
+        // under it reads "off 0 false, which is off 0 false": a tautology in
+        // the one place the player is being taught to read one.
+        if (st.gate) {
+            const outBox = el('div', 'tut-bout');
+            outBox.dataset.on = value ? '1' : '0';
+            outBox.appendChild(el('span', 'tut-bout-label', 'gives'));
+            outBox.appendChild(el('span', 'tut-bout-value', st.bits === 1
+                ? (value ? 'on  1  true' : 'off  0  false')
+                : bitsOf(value, st.bits) + '  =  ' + value));
+            body.appendChild(outBox);
+        }
+        rig.appendChild(body);
+
+        // What the bench is doing, written out. At one bit that is the gate's
+        // whole table with the rows the player has stood on filled in; at
+        // four it is the same rule run down the columns, which is the thing
+        // the board does and the reason the bench ends up shaped like one.
+        if (st.gate && st.bits === 1) {
+            const unary = st.gate === 'NOT' || gear.rows < 2;
+            const table = el('div', 'tut-truth');
+            table.dataset.gate = st.gate.toLowerCase();
+            table.dataset.width = unary ? '1' : '2';
+            const rows = unary ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]];
+            const here = unary
+                ? String(lowBit(st.a))
+                : String(lowBit(st.a)) + String(lowBit(st.b));
+            rows.forEach((pair) => {
+                const r = el('div', 'tut-truth-row');
+                const key = pair.join('');
+                const v = unary
+                    ? oneBit('NOT', pair[0], 0)
+                    : oneBit(st.gate, pair[0], pair[1]);
+                r.textContent = unary
+                    ? GATE_SYMBOL.NOT + ' ' + pair[0] + ' = ' + v
+                    : pair[0] + ' ' + GATE_SYMBOL[st.gate] + ' ' + pair[1] + ' = ' + v;
+                const met = st.log.some(
+                    (o) => o.bits === 1 && o.gate === st.gate
+                        && (unary ? String(o.a) === key : (String(o.a) + String(o.b)) === key)
+                );
+                r.classList.toggle('is-seen', met);
+                r.classList.toggle('is-here', key === here);
+                table.appendChild(r);
+            });
+            rig.appendChild(table);
+        } else if (st.gate && st.bits === 4) {
+            const unary = st.gate === 'NOT' || gear.rows < 2;
+            const work = el('div', 'tut-columns');
+            columnWork(st.gate, rowValue(st.a, 4), unary ? null : rowValue(st.b, 4), 4)
+                .forEach((col) => {
+                    const c = el('div', 'tut-col');
+                    c.appendChild(el('span', 'tut-col-weight', String(col.weight)));
+                    c.appendChild(el('span', 'tut-col-a', String(col.a)));
+                    if (!unary) c.appendChild(el('span', 'tut-col-b', String(col.b)));
+                    const res = el('span', 'tut-col-out', String(col.result));
+                    res.dataset.on = col.result ? '1' : '0';
+                    c.appendChild(res);
+                    work.appendChild(c);
+                });
+            rig.appendChild(work);
+            rig.appendChild(el('p', 'tut-columns-note',
+                'one rule, four columns, nothing carried between them'));
+        }
+
+        if (gear.canWiden && !gear.stepper) {
+            /**
+             * BOTH WIDTHS, ALWAYS, with the current one marked.
+             *
+             * It was one button whose label flipped: "widen to four" at one
+             * switch, "back to one" at four. A verb like that says what it
+             * will DO and never where you ARE, which is the wrong half. At
+             * one switch, with a task asking for one switch, the only
+             * control on the bench read "widen to four" -- so the obvious
+             * move was the wrong one, and the bench looked broken rather
+             * than already correct.
+             *
+             * A pair of options cannot lie about the current state, because
+             * the current state is which one is lit.
+             */
+            const want = todo.length ? todo[0].bits : 0;
+            const pick = el('div', 'tut-width');
+            pick.setAttribute('role', 'group');
+            pick.setAttribute('aria-label', 'how many switches');
+            [1, ROW_CELLS].forEach((n) => {
+                const opt = button('tut-width-opt',
+                    n === 1 ? '1 switch' : '4 switches');
+                opt.dataset.on = st.bits === n ? '1' : '0';
+                opt.setAttribute('aria-pressed', st.bits === n ? 'true' : 'false');
+                // The one the next task wants, when it is not the one you
+                // are on. The task names it too; this is the same sentence
+                // said where the hand is going.
+                if (n === want && st.bits !== n) opt.classList.add('is-wanted');
+                opt.addEventListener('click', () => {
+                    if (st.bits === n) return;
+                    setBits(n);
+                });
+                pick.appendChild(opt);
+            });
+            rig.appendChild(pick);
+        }
+
+        if (!todo.length) rig.appendChild(find);
 
         bodyEl.appendChild(rig);
-
-        // The pulse is the instruction, on the explore step and afterwards as
-        // the stuck-hint. It points at an input the task wants moved, never at
-        // the whole answer.
-        if (task.explore) {
-            lampEls.forEach((l) => l.classList.add('is-asking'));
-        } else {
-            later(() => {
-                if (done) return;
-                const wrong = lampEls.find((l, i) =>
-                    l.dataset.want !== undefined && String(inputs[i]) !== l.dataset.want);
-                (wrong || lampEls[0]).classList.add('is-hint');
-            }, 7000);
-        }
-
-        refresh();
+        void out;
     }
 
-    // ── lesson 3: a whole number ────────────────────────────────────────────
+    /**
+     * Record where the bench is standing, bank anything that earns, redraw.
+     *
+     * One path for every control, which is what makes nine unlocks tractable:
+     * a switch, the socket and the width all do the same three things, and
+     * none of them knows what it might have just completed.
+     */
+    /**
+     * Add one to the top row, and let it carry.
+     *
+     * Wrapping at 15 rather than stopping there, because the roll from 1111
+     * back to 0000 is the carry running off the end of the row, which is
+     * worth seeing and is also how the board's overflow bonus happens.
+     */
+    /**
+     * The width the apparatus allows, and the one the stage needs.
+     *
+     * Counting is four switches, so the counting stage simply IS four
+     * switches and the width control is not offered during it: one switch
+     * cannot roll over, and a player asked to count to 15 on a bench showing
+     * a single lamp has been given a task and withheld the apparatus for it.
+     *
+     * Returns whether it moved, because a bench that has just grown is
+     * standing somewhere new and that is an observation. It used to happen
+     * inside renderBench, where it could not be -- a redraw must not write to
+     * the log -- so the bench came up at 0000 and reported nothing seen with
+     * 0000 in front of it.
+     */
+    function fitWidth(gear) {
+        const was = bench.bits;
+        if (!gear.canWiden) bench.bits = 1;
+        else if (gear.stepper) bench.bits = ROW_CELLS;
+        return bench.bits !== was;
+    }
 
     /**
-     * Lesson three, taught without sentences.
+     * Stand the bench at a width.
      *
-     * The goal is the ghosted numeral the lamps lesson uses, so "which gate
-     * turns 5 and 3 into 6?" is just a 6 to aim at. The gate buttons pulse
-     * until one is tried, and a wrong pick is not told off: the result and the
-     * column working appear for whatever was picked, which is more use than a
-     * sentence saying it was wrong, and the target stays unfilled.
-     *
-     * The per-column breakdown stays, because it is the point of the lesson
-     * and it is not prose: a gate does not know what 5 is, it runs the same
-     * one-bit rule the lesson before taught, once per column, with nothing
-     * carrying. Its caption is gone -- four boxes each reading `1 (+) 0 = 1`
-     * under a weight do not need a line of text introducing them.
+     * Narrowing clears what is no longer on screen. A cell left set behind
+     * the narrow view would come back the next time the bench widened, and a
+     * switch that turns itself on while nobody is looking is the worst thing
+     * a teaching rig can do.
      */
-    function renderNumber() {
-        const current = lesson();
-        const task = current.tasks[step];
-        const bits = current.bits;
-        const unary = task.b === null || task.b === undefined;
-        let done = false;
-
-        setQuiet(true);
-
-        const rig = el('div', 'tut-number');
-
-        // The goal, as a number rather than a question.
-        let targetEl = null;
-        if (!task.explore) {
-            targetEl = el('div', 'tut-target');
-            targetEl.appendChild(el('span', 'tut-target-value', String(task.want)));
-            rig.appendChild(targetEl);
-        }
-
-        function bitRow(value, label, role) {
-            const r = el('div', 'tut-bitrow tut-bitrow-' + role);
-            r.appendChild(el('span', 'tut-bitrow-label', label));
-            const cells = el('span', 'tut-bitrow-cells');
-            for (const ch of bitsOf(value, bits)) {
-                const cell = el('span', 'tut-bitcell', ch);
-                cell.dataset.on = ch;
-                cells.appendChild(cell);
-            }
-            r.appendChild(cells);
-            r.appendChild(el('span', 'tut-bitrow-dec', value === null ? '' : String(value)));
-            return r;
-        }
-
-        const work = el('div', 'tut-work');
-        const weights = el('div', 'tut-bitrow tut-bitrow-weights');
-        weights.appendChild(el('span', 'tut-bitrow-label', ''));
-        const wcells = el('span', 'tut-bitrow-cells');
-        weightsFor(bits).forEach((w) => wcells.appendChild(el('span', 'tut-bitcell is-weight', String(w))));
-        weights.appendChild(wcells);
-        weights.appendChild(el('span', 'tut-bitrow-dec', ''));
-        work.appendChild(weights);
-        work.appendChild(bitRow(task.a, '', 'a'));
-        if (!unary) work.appendChild(bitRow(task.b, '', 'b'));
-
-        const opRow = el('div', 'tut-bitrow tut-bitrow-op');
-        const opLabel = el('span', 'tut-bitrow-label', '?');
-        opRow.appendChild(opLabel);
-        opRow.appendChild(el('span', 'tut-bitrow-cells', '────'));
-        opRow.appendChild(el('span', 'tut-bitrow-dec', ''));
-        work.appendChild(opRow);
-
-        const resultRow = bitRow(0, '', 'result');
-        resultRow.classList.add('is-pending');
-        work.appendChild(resultRow);
-        rig.appendChild(work);
-
-        const cols = el('div', 'tut-cols');
-        rig.appendChild(cols);
-
-        function showColumns(gate) {
-            cols.innerHTML = '';
-            columnWork(gate, task.a, unary ? null : task.b, bits).forEach((c) => {
-                const item = el('div', 'tut-col');
-                item.dataset.on = String(c.result);
-                item.appendChild(el('span', 'tut-col-weight', String(c.weight)));
-                item.appendChild(el('span', 'tut-col-sum', c.b === null
-                    ? GATE_SYMBOL[gate] + ' ' + c.a + ' = ' + c.result
-                    : c.a + ' ' + GATE_SYMBOL[gate] + ' ' + c.b + ' = ' + c.result));
-                cols.appendChild(item);
+    function setBits(n) {
+        const st = bench;
+        st.bits = n;
+        if (n === 1) {
+            cellsAt(ROW_CELLS).slice(0, ROW_CELLS - 1).forEach((i) => {
+                st.a[i] = 0;
+                st.b[i] = 0;
             });
         }
+        sfx('spawn');
+        settle();
+    }
 
-        function showResult(gate) {
-            const value = applyGate(gate, task.a, unary ? null : task.b, bits);
-            opLabel.textContent = GATE_SYMBOL[gate];
-            resultRow.classList.remove('is-pending');
-            const cells = resultRow.querySelector('.tut-bitrow-cells');
-            cells.innerHTML = '';
-            for (const ch of bitsOf(value, bits)) {
-                const cell = el('span', 'tut-bitcell', ch);
-                cell.dataset.on = ch;
-                cells.appendChild(cell);
-            }
-            resultRow.querySelector('.tut-bitrow-dec').textContent = String(value);
-            return value;
-        }
+    function stepRow() {
+        const st = bench;
+        const next = (rowValue(st.a, ROW_CELLS) + 1) % (maxFor(ROW_CELLS) + 1);
+        cellsAt(ROW_CELLS).forEach((i, k) => {
+            st.a[i] = (next >> (ROW_CELLS - 1 - k)) & 1;
+        });
+        sfx('move');
+        settle('step');
+    }
 
-        const picker = el('div', 'tut-gates');
-        if (unary) picker.dataset.only = 'not';
-        const gateEls = [];
+    /**
+     * Hold to keep counting.
+     *
+     * THE REPEAT CANNOT LIVE ON THE BUTTON. Every step calls settle, settle
+     * calls renderBench, and renderBench rebuilds the whole rig -- so the
+     * element the finger is on is destroyed by its own first tick, and a
+     * timer owned by it dies with it or, worse, keeps a detached node alive.
+     * Holding it up here means the loop never touches the DOM at all and
+     * simply does not care how many times the bench is redrawn under it.
+     *
+     * Released on pointerup ANYWHERE, including outside the button and
+     * outside the window, because a pointerup the button never hears is a
+     * row that counts for ever.
+     */
+    let stepDelay = null;
+    let stepRepeat = null;
 
-        function finish(value) {
-            if (done) return;
-            done = true;
-            clearStepTimers();
-            gateEls.forEach((b) => b.classList.remove('is-asking', 'is-hint'));
-            if (targetEl) targetEl.classList.add('is-met');
-            rig.classList.add('is-solved');
-            // The game's own rule, stated by being paid: a gate is worth the
-            // decimal value of its result.
-            award(value, rig.querySelector('.tut-work'));
+    function startStepping() {
+        stopStepping();
+        stepRow();
+        stepDelay = setTimeout(() => {
+            stepRepeat = setInterval(stepRow, 150);
+        }, 400);
+    }
+
+    function stopStepping() {
+        if (stepDelay) clearTimeout(stepDelay);
+        if (stepRepeat) clearInterval(stepRepeat);
+        stepDelay = null;
+        stepRepeat = null;
+    }
+
+    function settle(via) {
+        const st = bench;
+        const gear = apparatus(progress.lessons);
+        const fresh = observe(st.log, {
+            bits: st.bits,
+            rows: gear.rows,
+            gate: st.gate,
+            a: rowValue(st.a, st.bits),
+            b: rowValue(st.b, st.bits),
+            out: benchOut(st, gear),
+            via: via || null,
+        });
+
+        const earned = newlyFound(st.log, progress.lessons);
+        earned.forEach((id) => {
+            const d = discoveryById(id);
+            complete(id);
             sfx('merge');
             buzz('solved');
-            later(advance, 1200);
-        }
-
-        GATE_ORDER.forEach((name) => {
-            // NOT takes one operand, so it is not an answer to a two-tile
-            // question and the other three are not answers to a one-tile one.
-            if (unary !== (name === 'NOT')) return;
-            const btn = button('tut-gate');
-            btn.dataset.gate = name.toLowerCase();
-            btn.appendChild(el('span', 'tut-gate-glyph', GATE_SYMBOL[name]));
-            btn.appendChild(el('span', 'tut-gate-name', name));
-            btn.addEventListener('click', () => {
-                if (done) return;
-                gateEls.forEach((b) => b.classList.remove('is-picked', 'is-asking', 'is-hint'));
-                btn.classList.add('is-picked');
-                const value = showResult(name);
-                showColumns(name);
-                sfx('move');
-                if (task.explore || value === task.want) finish(value);
-            });
-            gateEls.push(btn);
-            picker.appendChild(btn);
+            announce(d);
         });
-        rig.appendChild(picker);
-        bodyEl.appendChild(rig);
+        if (earned.length) setScore(runScore + GATE_BONUS * earned.length);
 
-        if (task.explore) {
-            gateEls.forEach((b) => b.classList.add('is-asking'));
-        } else {
-            later(() => {
-                if (done) return;
-                const right = gateEls.find((b) => b.dataset.gate === String(task.answer).toLowerCase());
-                if (right) right.classList.add('is-hint');
-            }, 9000);
+        /**
+         * NEW APPARATUS ARRIVES ON A CLEARED BENCH.
+         *
+         * `max` is "make 15", so earning it leaves the row holding 1111 --
+         * and what it grants is the socket, with NOT in it. The bench then
+         * computed NOT 1111 = 0000 and handed over `over`, the TENTH
+         * discovery, "NOT the biggest number there is, and watch it fall to
+         * nothing", before the player had reached the fifth and without them
+         * touching anything. The climax of the bench, for free, as a side
+         * effect of the task just completed.
+         *
+         * The general fault is that a newly socketed gate was reporting on a
+         * number the player set for a different purpose, so clearing is the
+         * general fix rather than a special case for 15. Only when something
+         * is actually granted, which is what `unlocks` means: finding `six`
+         * grants nothing and disturbs nothing.
+         *
+         * Serendipity survives. Setting 1111 under NOT still earns `over`
+         * whenever the player does it; it just has to be them doing it.
+         */
+        if (grantsApparatus(earned)) {
+            st.a = [0, 0, 0, 0];
+            st.b = [0, 0, 0, 0];
         }
+
+        // A discovery can grow the bench, and the grown bench is somewhere it
+        // has not been. Recorded here rather than left for the player's next
+        // tap, so the meter above the switches agrees with the switches.
+        const grown = apparatus(progress.lessons);
+        if (fitWidth(grown) || earned.length) {
+            observe(st.log, {
+                bits: st.bits,
+                rows: grown.rows,
+                gate: st.gate,
+                a: rowValue(st.a, st.bits),
+                b: rowValue(st.b, st.bits),
+                out: benchOut(st, grown),
+            });
+        }
+
+        void fresh;
+        renderBench();
+    }
+
+    /** What a discovery just bolted on, said out loud and briefly. */
+    function announce(d) {
+        if (!d) return;
+        // One at a time. Two discoveries can land within a second of each
+        // other early on, and the banners are fixed to the same spot, so
+        // they stacked and the second half-covered the first: the reward
+        // for the faster find was having it obscured by the next one.
+        const standing = screen.querySelector('.tut-unlock');
+        if (standing) standing.remove();
+        const banner = el('div', 'tut-unlock');
+        banner.appendChild(el('span', 'tut-unlock-found', 'found: ' + d.text));
+        if (d.unlocks) {
+            banner.appendChild(el('span', 'tut-unlock-gained', 'the bench gains ' + d.unlocks));
+        }
+        screen.appendChild(banner);
+        later(() => banner.remove(), 3400);
     }
 
     // ── lesson 4: the real board ────────────────────────────────────────────
@@ -1203,6 +1401,7 @@
 
             /** Put a step's board down, with the height bonus suppressed. */
             loadStep(cells) {
+                this._arrivals.clear();
                 this.board = cells.map((r) => r.slice());
                 this.previousBoard = Array(this.size).fill().map(() => Array(this.size).fill(0));
                 this.score = 0;
@@ -1256,6 +1455,25 @@
             boardLesson.loadStep(s.board);
         }
 
+        // Let the player finish reading before replacing this step's board.
+        // Recheck after the event: leaving the lesson also dismisses its card.
+        function afterMath(action, delay) {
+            const board = boardLesson;
+            const stillHere = () => boardLesson === board && strip.classList.contains('active');
+            setTimeout(() => {
+                if (!stillHere()) return;
+                if (document.querySelector('.math-card')) {
+                    const dismissed = () => {
+                        document.removeEventListener('boole:math-dismissed', dismissed);
+                        setTimeout(() => { if (stillHere()) action(); }, 0);
+                    };
+                    document.addEventListener('boole:math-dismissed', dismissed);
+                } else {
+                    action();
+                }
+            }, delay);
+        }
+
         /**
          * Judge the move by what it did, not by which way it went.
          *
@@ -1276,7 +1494,7 @@
                     stripNudge('nothing moved that way: try ' + s.hint);
                 } else {
                     stripNudge('that slid them apart; putting it back');
-                    setTimeout(show, 800);
+                    afterMath(show, 800);
                 }
                 return;
             }
@@ -1287,9 +1505,9 @@
             buzz('solved');
             at++;
             if (at < current.steps.length) {
-                setTimeout(show, 900);
+                afterMath(show, 900);
             } else {
-                setTimeout(() => {
+                afterMath(() => {
                     teardownBoard();
                     screen.classList.add('active');
                     complete(current.id);
@@ -1391,6 +1609,9 @@
             if (picker) {
                 picker.dataset.from = 'lore';
                 picker.classList.add('active');
+                // The reel in there measures itself when the screen it lives
+                // on becomes visible; a display:none modal reports zeroes.
+                document.dispatchEvent(new CustomEvent('boole:mode-picker-open'));
             }
         });
         nextBtn.parentNode.replaceChild(fresh, nextBtn);
@@ -1401,37 +1622,58 @@
 
     function renderLesson() {
         const current = lesson();
-        // Whatever the last step armed dies with it: a hint that fires over
-        // the next screen, or a stale auto-advance, skips a step nobody saw.
         clearStepTimers();
         setQuiet(false);
         bodyEl.innerHTML = '';
         leadEl.textContent = current.lead;
         renderDots();
-        nextBtn.textContent = 'next →';
-
-        if (current.kind === 'lamps') renderLamps();
-        else if (current.kind === 'onebit') renderOneBit();
-        else if (current.kind === 'number') renderNumber();
-        else if (current.kind === 'board') renderBoardLesson();
+        setArrowLabel(nextBtn, 'next →');
+        renderBoardLesson();
 
         const panel = screen.querySelector('.tutorial-content');
         if (panel) panel.scrollTop = 0;
     }
 
-    /** Open at the first unfinished lesson, or at the start if all are done. */
-    function open(lessonId) {
-        if (!screen) build();
-        if (lessonId && lessonById(lessonId)) {
-            index = LESSONS.findIndex((l) => l.id === lessonId);
-        } else {
-            const first = LESSONS.findIndex((l) => !isDone(l.id));
-            index = first === -1 ? 0 : first;
-        }
+    /** Hand off from the bench to the one lesson that is still a lesson. */
+    function startBoard() {
+        index = LESSONS.findIndex((l) => l.id === 'board');
         step = 0;
-        setScore(0);
         screen.classList.add('active');
         renderLesson();
+    }
+
+    /**
+     * Open the bench.
+     *
+     * There is no "first unfinished lesson" to open at any more, because
+     * there are no lessons to be unfinished: what has been found persists
+     * and the apparatus is derived from it, so the bench simply comes up
+     * however far along it was. `open('board')` is the one exception and
+     * exists for the hand-off at the end and for the tests.
+     */
+    function open(which) {
+        if (!screen) build();
+        setScore(0);
+        if (which === 'board') {
+            startBoard();
+            return;
+        }
+        // A fresh log each time. What was FOUND is saved; where the switches
+        // happened to be is not worth restoring, and a table showing rows
+        // ticked from a session the player does not remember is worse than
+        // an empty one.
+        bench = benchState();
+        screen.classList.add('active');
+        // settle, not renderBench, so the opening state goes into the log the
+        // same way every other state does. A returning player at the counting
+        // stage was shown 0000 on the switches beside "0 of 16 seen", which is
+        // the meter disagreeing with the apparatus in front of it -- the same
+        // fault the widen already had, arriving by a different door, because a
+        // DRAW cannot write to the log and only a draw was happening here.
+        //
+        // Nothing can be earned by it: every check needs either two states or
+        // a number the bench does not open on.
+        settle();
     }
 
     /**
@@ -1463,6 +1705,7 @@
         const wasOpen = isOpen() || (strip && strip.classList.contains('active'));
         if (!wasOpen) return;
         screen.classList.remove('active');
+        stopStepping();
         teardownBoard();
         emit('primer-closed', { done: progress.lessons.length, total: LESSONS.length });
     }
@@ -1475,6 +1718,23 @@
         if (e.key === 'Escape' && isOpen()) close();
     });
 
+    // ON THE DOCUMENT, not on the button, for the reason startStepping
+    // explains: the button is destroyed and rebuilt by its own first tick.
+    // `pointercancel` matters as much as `pointerup` here -- a touch that
+    // turns into a scroll is cancelled rather than released, and that is the
+    // common way to let go of a button on a phone.
+    ['pointerup', 'pointercancel'].forEach((name) => {
+        document.addEventListener(name, stopStepping);
+    });
+    // A pointer released outside the window reports neither, so this is the
+    // backstop that keeps a held row from counting on unattended.
+    window.addEventListener('blur', stopStepping);
+
+    // The bench's own log, for the tests and for looking at what a session
+    // actually recorded. The checks are pure functions over this, so being
+    // able to read it is the difference between debugging a discovery and
+    // guessing at one.
+    root.BooleTutorial.bench = () => bench;
     root.BooleTutorial.open = open;
     root.BooleTutorial.close = close;
     root.BooleTutorial.isOpen = isOpen;

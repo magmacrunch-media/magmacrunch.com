@@ -374,6 +374,67 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
+/* A toast you can press. It is raised the moment something worth reading
+   happens, so it is the one place the explanation can be offered without
+   anybody going to look for it. The hint is spelled out rather than implied
+   by a tint, for the reason .codex-opener already concedes above: on a touch
+   screen a hover state announces nothing. */
+.codex-toast.codex-opener {
+    cursor: pointer;
+}
+
+.codex-toast-more {
+    display: block;
+    margin-top: 5px;
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.codex-toast.codex-opener:active {
+    transform: translateY(2px);
+}
+
+/* ---- the mark on a gate tile ---- */
+
+/* A gate tile opens this codex, and without a mark nothing says so. The
+   comment on .codex-opener above already concedes the problem: a tap target
+   whose only affordance is a hover tint announces nothing on a touch screen,
+   and the board is the one place in the game that is only ever touched.
+
+   A question mark rather than a glow or a pulse. The board is busy during a
+   move and anything animated competes with the tiles that are actually
+   sliding; a small static "?" is legible at a glance and says the one thing
+   that needs saying.
+
+   SCOPED TO #gameBoard on purpose. The same .gate-tile markup draws the
+   worked examples on the how-to-play screen and the gate chips in the
+   codex's own pages, and neither of those is tappable. Marking them would be
+   advertising a door that is not there. */
+#gameBoard .gate-tile {
+    cursor: pointer;
+}
+
+#gameBoard .gate-tile::after {
+    content: '?';
+    position: absolute;
+    right: 3px;
+    bottom: 2px;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: normal;
+    /* White, because .gate-tile already sets its glyph to #fff and the four
+       gate colours were chosen against that. 0.7 rather than the 0.5 a
+       decoration would take: this is the only thing telling the player the
+       tile can be asked, so it has to be seen on the gold NOT as well as on
+       the teal XOR. */
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    /* The tile is the tap target, not the mark. closest() would find the
+       tile either way; this keeps the hit area honest. */
+    pointer-events: none;
+}
+
 /* ---- unlock toast ---- */
 
 .codex-toast {

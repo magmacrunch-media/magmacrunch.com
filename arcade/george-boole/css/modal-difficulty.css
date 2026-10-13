@@ -407,3 +407,173 @@
         0 3px 0 #0f0f1e,
         0 0 20px rgba(0, 255, 255, 0.7) !important;
 }
+
+/* =============================================
+   CLASSIC, AS A REEL
+   Seven of the nine modes on this screen differed only by a number, which is
+   one ordered axis and the shape a spinner suits. A column of near-identical
+   buttons says the opposite: that the options are unlike each other.
+
+   GAUNTLET stays a button below it, because it is not a width, and LEARN is
+   off this screen entirely for the same reason plus one more: it is already
+   a primary button on the menu.
+   ============================================= */
+
+.mode-rail {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 0 8px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #00ffff;
+}
+
+.mode-rail em {
+    font-style: normal;
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.mode-reel-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.mode-reel {
+    height: 210px;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    /* Half a slot top and bottom, so the first and last can reach the
+       middle of the window rather than stopping short of it. */
+    padding: 70px 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mode-reel::-webkit-scrollbar {
+    display: none;
+}
+
+.mode-reel:focus-visible {
+    outline: 3px dashed #ff00ff;
+    outline-offset: 4px;
+}
+
+.mode-slot {
+    height: 70px;
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    opacity: 0.3;
+    transform: scale(0.84);
+    /* steps(), like everything else that moves in this game. */
+    transition: opacity 0.15s steps(3), transform 0.15s steps(3);
+}
+
+.mode-slot.is-centre {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.mode-slot b {
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: var(--mode-accent, #ffffff);
+    text-shadow: 2px 2px 0 #0a0a14;
+}
+
+.mode-slot span {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* The window, so the centre reads as SELECTED rather than merely bigger, and
+   the fades above and below so the reel reads as continuing past it. */
+.mode-window {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 70px;
+    height: 70px;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 3px var(--mode-accent, #00ffff);
+}
+
+.mode-window::before,
+.mode-window::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 26px;
+    pointer-events: none;
+}
+
+.mode-window::before {
+    top: -70px;
+    background: linear-gradient(180deg, rgba(10, 10, 20, 0.85), transparent);
+}
+
+.mode-window::after {
+    bottom: -70px;
+    background: linear-gradient(0deg, rgba(10, 10, 20, 0.85), transparent);
+}
+
+/* EVERY WIDTH WEARS ITS OWN THEME, on the slot as well as the window.
+   Each mode already switches the whole board's palette when it starts, so
+   the colour is information the picker had and was not showing: with it on
+   the slots the reel is a strip of the seven looks you can play in, and
+   spinning it previews the mode rather than only naming it.
+
+   The window takes the centred one's colour too, so the selection and the
+   thing selected agree.
+
+   These are the themes' own signatures rather than tile colours lifted
+   wholesale: a value picked to read against a gameboy board is not always
+   legible on this panel. */
+.mode-slot[data-theme="gameboy"], .mode-window[data-theme="gameboy"] { --mode-accent: #9bbc0f; }
+.mode-slot[data-theme="nes"],     .mode-window[data-theme="nes"]     { --mode-accent: #e45c5c; }
+.mode-slot[data-theme="snes"],    .mode-window[data-theme="snes"]    { --mode-accent: #b39ddb; }
+.mode-slot[data-theme="genesis"], .mode-window[data-theme="genesis"] { --mode-accent: #4fc3f7; }
+.mode-slot[data-theme="arcade"],  .mode-window[data-theme="arcade"]  { --mode-accent: #ff4fd8; }
+.mode-slot[data-theme="neogeo"],  .mode-window[data-theme="neogeo"]  { --mode-accent: #ffd54f; }
+.mode-slot[data-theme="ps1"],     .mode-window[data-theme="ps1"]     { --mode-accent: #80cbc4; }
+
+.mode-start {
+    display: block;
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 16px;
+    border: 0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #8a2be2 0%, #5a1a9a 100%);
+    cursor: pointer;
+    box-shadow: 0 0 0 3px #0a0a14, 0 5px 0 3px #0a0a14;
+}
+
+.mode-start:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 3px #0a0a14, 0 0 0 3px #0a0a14;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mode-slot {
+        transition: none;
+    }
+
+    .mode-reel {
+        scroll-behavior: auto;
+    }
+}

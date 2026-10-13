@@ -1,8 +1,7 @@
 /* =============================================
    SHOW THE MATH, AND WHERE EVERY POINT CAME FROM
    Drawn by js/math-overlay.js. Everything here sits in a fixed layer above
-   the board that never takes a touch, so it can never get in the way of the
-   next swipe.
+   the board. Labels pass touches through; the math card waits for Continue.
    ============================================= */
 
 .math-layer {
@@ -70,10 +69,20 @@
 .math-card[data-gate="not"] { --math-accent: #ffd700; }
 .math-card[data-overflow="true"] { --math-accent: #ff6b6b; }
 
-.math-card.is-leaving {
-    opacity: 0;
-    transition: opacity 0.2s steps(4);
+.math-card { pointer-events: auto; }
+.math-dismiss {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 8px;
+    border: 2px solid var(--math-accent);
+    color: #fff;
+    background: #17172a;
+    font: 9px 'Press Start 2P', monospace;
+    cursor: pointer;
 }
+.math-dismiss:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 .math-row {
     display: flex;
