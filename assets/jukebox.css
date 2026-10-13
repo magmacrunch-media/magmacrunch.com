@@ -23,43 +23,47 @@
     user-select: none;
 }
 
-/* ── FLOATING BUTTON (collapsed) ──
-   A pill, not a square: the disc on its own does not say "jukebox" to a first
-   visit. Width is content-driven so the label sets it. ── */
 /* ── COLLAPSED PILL (in the nav) ──
-   A pill, not a square: the disc on its own does not say "jukebox" to a first
-   visit. Width is content-driven so the label sets it, capped at the gap so
-   the readout truncates. 32px of the 48px bar, so it reads as sitting in the
-   nav rather than covering it. ── */
+   Nav furniture, not a widget sitting in the nav. It carried a 2px rose
+   border, a dark fill and a 12px glow until 2026-10-12, which made it the only
+   boxed, lit element in a masthead that is otherwise flat text: the brand, the
+   eight section links and the search are all unboxed. That chrome is what
+   pulled the eye, not the label, and it did it at every width - so stripping
+   the frame is what calms it down, and dropping the label (tried in 79ddd5c4,
+   reverted 2026-09-26) was never the fix. The label is dimmed instead, and
+   lifts on hover.
+
+   Capped at 320px, which is the other half. .mcj is flex: 1 1 auto, so a
+   playing track grew this pill to the whole gap between the brand and the
+   links - 758px at a 1440px window, measured, and still ellipsing the longest
+   title. A now-playing readout belongs in the bar as a line of text, not as a
+   banner across it. The cap is below the ~370px the longest title would want,
+   so that line still truncates; it is meant to.
+
+   Height is 32px of the 48px bar, so it reads as sitting in the nav rather
+   than covering it. ── */
 .mcj-bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     height: 32px;
-    max-width: 100%;
+    max-width: 320px;
     min-width: 0;
-    padding: 0 14px 0 10px;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(255,255,255,0.015) 3px,
-            rgba(255,255,255,0.015) 4px
-        ),
-        var(--black, #080808);
-    border: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
+    padding: 0 8px;
     border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 0 12px var(--nav-glow, rgba(255, 61, 110, 0.3));
-    transition: transform 0.15s, box-shadow 0.15s, border-color 0.2s;
 }
 
-.mcj-bar:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 18px var(--nav-glow, rgba(255, 61, 110, 0.5));
-    border-color: var(--yellow, #ffe03a);
+/* No border or glow left to light up, so the hover lives on the contents.
+   Yellow is the same hover accent the old border used. */
+.mcj-bar:hover .mcj-bar-label {
+    opacity: 1;
+    color: var(--yellow, #ffe03a);
+}
+
+.mcj-bar:hover .mcj-mini-vinyl {
+    opacity: 1;
 }
 
 .mcj-bar:focus-visible {
@@ -72,14 +76,19 @@
    Track titles here run to 76 characters and the gap shrinks with the
    window, so it ellipses rather than colliding with the links. */
 .mcj-bar-label {
-    font-size: 8px;
+    font-size: 7px;
     letter-spacing: 0.1em;
     line-height: 1;
     white-space: nowrap;
     color: var(--nav-accent, var(--rose, #ff3d6e));
+    /* 7px and 0.55 to sit at the weight of .nav-links a, which is 7px at full
+       opacity in --white: close enough to read as part of the bar, dim enough
+       not to compete with the eight links for the eye. */
+    opacity: 0.55;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: opacity 0.15s, color 0.15s;
 }
 
 /* Expanded, the header says "// JUKEBOX //" and the window carries the track
@@ -90,8 +99,13 @@
 
 /* ── VINYL DISC (in the pill) ── */
 .mcj-mini-vinyl {
-    width: 20px;
-    height: 20px;
+    /* 16px, down from 20px with the frame gone: the pill is no longer a button
+       the disc has to fill, and the grooves are repeating gradients at 1-2px,
+       so going much below this muddies them into a gray dot. */
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    transition: opacity 0.15s;
     border-radius: 50%;
     border: 1px solid #444;
     background:

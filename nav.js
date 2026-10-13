@@ -381,7 +381,7 @@ window.NAV_CONFIG = {
     if (!document.querySelector('link[href*="jukebox.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = root + 'assets/jukebox.css?v=76382dd2';
+        link.href = root + 'assets/jukebox.css?v=38c699bc';
         cssReady = new Promise((resolve) => {
             link.addEventListener('load', resolve, { once: true });
             link.addEventListener('error', resolve, { once: true });
@@ -396,7 +396,7 @@ window.NAV_CONFIG = {
         if (!document.querySelector('script[src*="jukebox.js"]')) {
             window.__jukeboxReady = cssReady.then(() => new Promise((resolve) => {
                 const script = document.createElement('script');
-                script.src = root + 'assets/jukebox.js?v=9cd924df';
+                script.src = root + 'assets/jukebox.js?v=e3795c24';
                 script.onload = resolve;
                 script.onerror = resolve;
                 document.body.appendChild(script);
