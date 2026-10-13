@@ -1,3 +1,22 @@
+/* THE PRE-2026-09-22 TITLE SCREEN, for the website build only.
+ *
+ * site/package.mjs copies this over css/modal-title.css, so the browser
+ * version keeps the title screen as it was before three changes that the app
+ * keeps: the publisher mark moving above the name rather than sitting beside
+ * it (aa64090), the drifting gate glyphs being made visible (bcd77fc), and the
+ * portrait and title drifting out of phase rather than bobbing as one block
+ * (184f5e1).
+ *
+ * This is web/css/modal-title.css at 2f07043 with one difference: the American
+ * spelling from 1ca1adc is kept, because that commit touched only comments here
+ * and reverting the look should not revert the words.
+ *
+ * It is a COPY and will not follow web/ as that file changes. If the title
+ * screen is edited in web/ and the website should get that edit, it has to be
+ * made here too -- or this override deleted, which is the better answer the day
+ * the two title screens stop being a deliberate difference.
+ */
+
 /* =============================================
    TITLE SCREEN
    ============================================= */
@@ -83,21 +102,10 @@
     right: 0;
     bottom: calc(var(--safe-bottom, 0px) + 16px);
     z-index: 1;
-    /* Stacked here as well as on the link, and that is not redundant: the
-       two builds have different flex parents. On the website the <a> below
-       wraps the mark and the name, so it is the container that matters.
-       package.mjs UNWRAPS that <a> for the app -- dropping the element, not
-       just the href -- so in the bundle the image and the span are direct
-       children of this rule and it is the one doing the laying out. A rule
-       written only on .title-publisher-link changes the website and leaves
-       the app alone, silently, because the selector matches nothing there.
-       (makemecookies keeps the class on a span and does not have this
-       trap; the two pipelines differ on exactly this line.) */
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 9px;
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     letter-spacing: 2px;
@@ -119,18 +127,11 @@
 }
 
 /* On the website this is a link home. package.mjs unwraps it for the app,
-   where the credits carry the links instead.
-
-   The mark sits ABOVE the name rather than beside it: stacked, it reads as
-   a signature block rather than as a line of text with a bullet in front of
-   it, and the logo gets room to be a shape instead of sharing 32px of
-   height with the words. makemecookies carries the same mark and was
-   changed to match on the same day. */
+   where the credits carry the links instead. */
 .title-publisher-link {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 9px;
     color: inherit;
     text-decoration: none;
     pointer-events: auto;
@@ -320,15 +321,6 @@ body .title-screen .title-subtitle {
     display: inline-block;
     margin-bottom: 24px;
     animation: titleFloat 4s ease-in-out infinite;
-    /* Out of step with .title-main, which runs the same 4s float. They are
-       siblings rather than nested, so the transforms never compounded, but
-       they started together and so moved as one rigid block sliding up and
-       down -- which is the opposite of the drift the animation is named for.
-       A NEGATIVE delay starts it mid-cycle instead of holding still for 1.3s
-       first, so there is no pause and no jump on load. 1.3s is not a third of
-       the period by accident: it puts the portrait near the top of its travel
-       when the title is near the middle. */
-    animation-delay: -1.3s;
 }
 
 .title-portrait {
@@ -358,22 +350,13 @@ body .title-screen .title-subtitle {
     );
     opacity: 0;
     pointer-events: none;
-    /* 7s against the portrait's 4s float, deliberately coprime-ish: at 4s the
-       glint was phase-locked to the bob and fired at the same point of every
-       one, which is what made a random-looking flash feel like a metronome.
-       These two now only realign every 28s.
-
-       The keyframe percentages moved with the duration to keep the flash the
-       length it was. It was visible from 85% to 95% of 4s, about 0.4s; at 7s
-       the same percentages would have stretched it to 0.7s, which is a slow
-       wipe rather than a glint. 91% to 97% of 7s is 0.42s. */
-    animation: glint 7s ease-in-out infinite;
+    animation: glint 4s ease-in-out infinite;
 }
 
 @keyframes glint {
-    0%, 91%, 100% { opacity: 0; transform: translateX(-30%); }
-    94% { opacity: 1; transform: translateX(30%); }
-    97% { opacity: 0; transform: translateX(50%); }
+    0%, 85%, 100% { opacity: 0; transform: translateX(-30%); }
+    90% { opacity: 1; transform: translateX(30%); }
+    95% { opacity: 0; transform: translateX(50%); }
 }
 
 /* ---- FLOATING GATES ---- */
@@ -406,18 +389,11 @@ body .title-screen .title-subtitle {
         opacity: 0;
         transform: translateY(100vh) rotate(0deg);
     }
-    /* 0.8, not 0.3, and the difference is a multiplication that was easy to
-       miss: the colors above are already rgba(..., 0.3), so an 0.3 here put
-       the glyphs on screen at an effective 0.09 alpha. On a phone that is two
-       faint marks in a corner rather than an atmosphere -- they read as
-       something left behind rather than something drifting. 0.8 against the
-       colors' own 0.3 lands at about 0.24, which is visible without
-       competing with the binary rain or the title. */
     10% {
-        opacity: 0.8;
+        opacity: 0.3;
     }
     90% {
-        opacity: 0.8;
+        opacity: 0.3;
     }
     100% {
         opacity: 0;
