@@ -82,6 +82,7 @@ const PAGES = [
   { id: 'about', title: 'ABOUT', subtitle: 'magmacrunch media', color: '#FF3D6E' },
   { id: 'guestbook', title: 'GUESTBOOK', subtitle: 'sign the guestbook', color: '#39FF6E' },
   { id: 'donate', title: 'DONATE', subtitle: 'support magmacrunch media', color: '#FF3D6E' },
+  { id: 'email-list', title: 'EMAIL LIST', subtitle: 'hear about it first', color: '#FF3D6E' },
 
   // Arcade collection indexes
   { id: 'arcade-board-games', title: 'BOARD GAMES', subtitle: 'chess / checkers / backgammon / parchisi / chinese checkers', color: '#00F5FF' },

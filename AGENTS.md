@@ -471,6 +471,7 @@ Every other game under `arcade/` is authored in this repo as normal.
 - `docs/ops/chat-system.md` — arcade chat: SharedWorker architecture, handshake gate, rate limits, rooms, services.json, deploy
 - `docs/ops/chat-presence-widget-changes.md` — arcade chat presence: what the online count means, and the widget changes queued for adenosine
 - `docs/ops/scores-counter.md` — high-score system and site hit counter: architecture, game IDs, deploy
+- `docs/ops/email-list.md` - the email signup: why Apps Script, how it differs from the guestbook, deploying the script, what single opt-in costs before the first send
 - `docs/ops/mcp-server.md` — remote MCP server on MC1: setup, tools, service management, troubleshooting
 - `docs/ops/pi-deployment.md` — Raspberry Pi setup, venv recovery, admin dashboard, systemd services/ports
 - `docs/ops/ci-bots.md` — GitHub Actions workflows, self-hosted MC1 runner, Pi cron bots, SSH keys

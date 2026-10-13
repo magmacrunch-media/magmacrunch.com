@@ -4,7 +4,7 @@
     "c": "page",
     "u": "/index.html",
     "d": "An independent record label and creative collective. Music, film, video games, web tools, writing, and an archive of the people who made them.",
-    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise magmacrunch media is an independent record label and creative collective, founded in 2023 across Pennsylvania, California and New Hampshire. We release our own music, films, video games, web tools and writing, and we keep an archive of the people who made them. More about us . music releases & jukebox visual film & collage archive who played what arcade browser games press experimental writing ware tools & toys about who we are guestbook say hi"
+    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise magmacrunch media is an independent record label and creative collective, founded in 2023 across Pennsylvania, California and New Hampshire. We release our own music, films, video games, web tools and writing, and we keep an archive of the people who made them. More about us . music releases & jukebox visual film & collage archive who played what arcade browser games press experimental writing ware tools & toys about who we are guestbook say hi email list hear about it first"
   },
   {
     "t": "about",
@@ -19,6 +19,13 @@
     "u": "/home/guestbook.html",
     "d": "sign the guestbook",
     "b": "guestbook — magmacrunch media home › guestbook // guestbook // say hi ✦ leave a note ✦ you were here __ (`/\\ `=\\/\\ __...--~~~~~-._ _.-~~~~~--...__ `=\\/\\ \\ / \\\\ `=\\/ V \\\\ //_\\___--~~~~~~-._ | _.-~~~~~~--...__\\\\ // ) (..----~~~~._\\ | /_.~~~~----.....__\\\\ ===( INK )==========\\\\|//==================== __ejm\\___/________dwb`---`____________________________________________ [ send ] // entries // loading entries..."
+  },
+  {
+    "t": "email list",
+    "c": "page",
+    "u": "/home/email-list.html",
+    "d": "get a note when something comes out",
+    "b": "email list — magmacrunch media home › email list // email list // leave an address ✦ hear about it first ,----------------------------------------, |\\ /| | \\ / | | \\ / | | `--------------------------------' | | | | ONE (1) EMAIL LIST | | | '----------------------------------------' your email website [ sign me up ] // the deal // We have not worked out what this is yet. There is no newsletter today. This is a list of people to tell when there is one, or when a record, a game or a film comes out. Rarely. Nobody here wants to write a weekly email and you would not want to read it. Your address, ..."
   },
   {
     "t": "music",

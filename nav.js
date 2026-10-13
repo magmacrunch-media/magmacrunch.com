@@ -14,7 +14,8 @@ window.NAV_CONFIG = {
         { label: 'about', href: 'home/about.html', items: [
             { href: 'home/about.html', label: 'about' },
             { href: 'home/donate.html', label: 'donate' },
-            { href: 'home/guestbook.html', label: 'guestbook' }
+            { href: 'home/guestbook.html', label: 'guestbook' },
+            { href: 'home/email-list.html', label: 'email list' }
         ]},
         { label: 'music', href: 'music/', items: [
             { href: 'music/jukebox/', label: 'jukebox' },
