@@ -159,6 +159,17 @@ jobs:
       # there without adding one here used to turn this job red on main with a
       # message blaming a missing web/ rather than a missing step, which is how
       # four games in a row landed before anyone connected the two.
+      # george-boole is the one game whose browser version is DERIVED rather
+      # than committed: its web/ is the complete game and site/package.mjs
+      # drops the LEARN primer and the gate codex to make the browser build.
+      # site/www/ is gitignored there, so a fresh checkout genuinely has none
+      # and the stamp check below would report a missing directory. See that
+      # repo's docs/two-builds.md. Any other game that grows a webDir in
+      # scripts/games.mjs needs a step like this one.
+      - name: Build george-boole's browser version
+        working-directory: game-repos/george-boole
+        run: node site/package.mjs
+
       - name: Check the game repos' cache-busters
         env:
           GAME_REPOS: ${{ github.workspace }}/game-repos

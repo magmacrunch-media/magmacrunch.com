@@ -4,6 +4,16 @@ Every file in `arcade/george-boole/` is a copy. The source of truth is the
 [`george-boole`](https://github.com/magmacrunch-media/george-boole) repository, in its
 `web/` folder.
 
+This game's browser version is **derived**, not its `web/` folder: `web/` is the
+complete game and the App Store build is what ships all of it. So the order is
+to edit `web/`, then in that repository run:
+
+```
+node site/package.mjs
+```
+
+and only then the sync target below. See that repo's `docs/two-builds.md`.
+
 Edits made here are **silently destroyed** the next time anyone runs:
 
 ```

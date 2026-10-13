@@ -17,7 +17,7 @@ import { cpSync, existsSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { GAMES, webCandidates } from './games.mjs';
+import { GAMES, webBuild, webCandidates, webSubdir } from './games.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -34,7 +34,7 @@ const { repo, other } = GAMES[game];
 // way the Wii Makefile's MAGNOLIA= override does for the engine. It names one
 // game's checkout, so it replaces the candidate list rather than extending it.
 const candidates = process.env.GAME_SRC
-  ? [join(process.env.GAME_SRC, 'web')]
+  ? [join(process.env.GAME_SRC, webSubdir(repo))]
   : webCandidates(repo, ROOT);
 
 const src = candidates.find((dir) => existsSync(join(dir, 'index.html')));
@@ -46,6 +46,11 @@ if (!src) {
   console.error(`No web version for ${repo}. Looked in:`);
   for (const dir of candidates) console.error(`  ${dir}`);
   console.error(`Is the ${repo} repo checked out? Set GAME_SRC=<path to it> to look elsewhere.`);
+  const build = webBuild(repo);
+  if (build) {
+    console.error(`\n${repo}'s browser version is DERIVED and gitignored there, so a fresh`);
+    console.error(`checkout has none until it is built. In that repo, run:\n\n    ${build}\n`);
+  }
   process.exit(1);
 }
 
@@ -58,13 +63,28 @@ cpSync(src, dest, { recursive: true });
 // Anyone who opens this directory is one file away from learning that editing
 // it is pointless, which the game's own README cannot tell them -- from inside
 // the mirror, the mirror looks like the source.
+const build = webBuild(repo);
+const buildStep = build
+  ? `
+
+This game's browser version is **derived**, not its \`web/\` folder: \`web/\` is the
+complete game and the App Store build is what ships all of it. So the order is
+to edit \`web/\`, then in that repository run:
+
+\`\`\`
+${build}
+\`\`\`
+
+and only then the sync target below. See that repo's \`docs/two-builds.md\`.`
+  : '';
+
 writeFileSync(
   join(dest, 'GENERATED.md'),
   `# Generated — do not edit here
 
 Every file in \`arcade/${game}/\` is a copy. The source of truth is the
 [\`${repo}\`](https://github.com/magmacrunch-media/${repo}) repository, in its
-\`web/\` folder.
+\`web/\` folder.${buildStep}
 
 Edits made here are **silently destroyed** the next time anyone runs:
 
@@ -81,4 +101,4 @@ That repository also holds ${other}
 `,
 );
 
-console.log(`arcade/${game}/ regenerated from ${repo}/web/`);
+console.log(`arcade/${game}/ regenerated from ${repo}/${webSubdir(repo)}/`);

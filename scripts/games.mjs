@@ -30,7 +30,19 @@ const WII_PORT =
   "once and carried to both versions.";
 
 export const GAMES = {
-  'george-boole': { repo: 'george-boole', other: WII_PORT },
+  // The one game whose browser version is NOT its web/ folder. web/ there is
+  // the complete game, including the LEARN primer and the gate codex, and the
+  // App Store build is what ships those: site/package.mjs derives the browser
+  // version from web/ by dropping them, the way ios/package.mjs derives the
+  // app. webBuild is the command that produces it and is only ever PRINTED
+  // here, never run -- this repo copies directories, it does not build other
+  // people's repos.
+  'george-boole': {
+    repo: 'george-boole',
+    other: WII_PORT,
+    webDir: 'site/www',
+    webBuild: 'node site/package.mjs',
+  },
   'moonlight-drift': { repo: 'moonlight-drift', other: WII_PORT },
   'jovian-humanitarian-conflict': {
     repo: 'jovian-humanitarian-conflict',
@@ -116,7 +128,27 @@ export function webCandidates(repo, root) {
   const roots = [];
   if (process.env.GAME_REPOS) roots.push(join(process.env.GAME_REPOS, repo));
   roots.push(join(base, '..', repo), join(base, '..', '..', 'games', repo));
-  return roots.map((dir) => join(dir, 'web'));
+  return roots.map((dir) => join(dir, webSubdir(repo)));
+}
+
+/** What a game calls the folder holding its browser build. `web` unless said. */
+export function webSubdir(repo) {
+  return entryFor(repo)?.webDir ?? 'web';
+}
+
+/**
+ * The command that produces it, for games where it is derived rather than
+ * committed. Printed in the two failure messages and nowhere else: a derived
+ * directory is gitignored in its own repo, so a fresh checkout genuinely does
+ * not have one and the honest answer is to say which command makes it.
+ */
+export function webBuild(repo) {
+  return entryFor(repo)?.webBuild ?? null;
+}
+
+/** GAMES is keyed by arcade folder; the callers here have a repo name. */
+function entryFor(repo) {
+  return Object.values(GAMES).find((g) => g.repo === repo) ?? null;
 }
 
 /** The first of those that actually holds an index.html, or null. */

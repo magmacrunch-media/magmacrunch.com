@@ -99,7 +99,11 @@ sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-d
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
 
-sync-george-boole: ## Regenerate arcade/george-boole/ from the george-boole repo's web/
+# Not from web/, unlike every other game here: george-boole's web/ is the
+# complete game and its browser version is derived from it. Run
+# `node site/package.mjs` in that repo first; this target fails by name with
+# that command if the directory is missing. See its docs/two-builds.md.
+sync-george-boole: ## Regenerate arcade/george-boole/ from the george-boole repo's site/www/
 	node scripts/sync-game.mjs george-boole
 	npm run --silent build:adenosine
 

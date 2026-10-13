@@ -76,8 +76,6 @@
     <link rel="stylesheet" href="css/gates.css?v=fefddded">
     <link rel="stylesheet" href="css/side-panels.css?v=81928961">
     <link rel="stylesheet" href="css/math-overlay.css?v=a78ab338">
-    <link rel="stylesheet" href="css/codex.css?v=d19a71d9">
-    <link rel="stylesheet" href="css/tutorial.css?v=878b89f6">
 </head>
 <body>
     <a href="../puzzles/" class="mc-back">puzzles</a>
@@ -205,7 +203,6 @@
                      while playing. -->
                 <div class="rules-row">
                     <span class="rule-link" id="howToPlayLink">full rules <span class="ui-arrow">&rarr;</span></span>
-                    <span class="rule-link" id="stripCodexLink">gate codex <span class="ui-arrow">&rarr;</span></span>
                     <span class="rule-link" id="stripCreditsLink">credits <span class="ui-arrow">&rarr;</span></span>
                 </div>
             </div>
@@ -254,8 +251,6 @@
                     <span style="color: rgba(255,255,255,0.6);">(A &or; A = A)</span>
                 </div>
 
-                <!-- Opened by js/codex.js, as is each gate above. -->
-                <div class="full-rules-link" id="sidePanelCodex">gate codex <span class="ui-arrow">&rarr;</span></div>
             </div>
         </div>
     </div>
@@ -330,19 +325,7 @@
                  the same size: LEARN and PLAY. Everything that was already
                  here is still here, underneath, in the order somebody reaches
                  for it. -->
-            <div class="menu-primary">
-                <button class="menu-btn menu-learn" id="menuLearn" type="button">
-                    <span class="menu-btn-label">LEARN</span>
-                    <!-- This has now been wrong in both directions, which
-                         is the thing to notice rather than the wording: it
-                         said "binary from scratch" while LEARN opened the
-                         board, and "four taught moves" while LEARN opened
-                         the bench. A label naming what is behind the door
-                         goes stale every time the door is re-hung, so this
-                         one names what a player GETS, which is the same
-                         either way. The mode list carries the same words. -->
-                    <span class="menu-btn-sub">binary, by hand</span>
-                </button>
+            <div class="menu-primary is-solo">
                 <button class="menu-btn menu-play" id="loreContinue" type="button">
                     <span class="menu-btn-label">PLAY</span>
                     <span class="menu-btn-sub">pick a mode</span>
@@ -520,10 +503,6 @@
                  .difficulty-btn[data-difficulty], so declaring none is what
                  keeps it out of that path rather than a name checked
                  against a list somewhere. -->
-            <button class="difficulty-btn learn-mode" id="modeLearn" type="button">
-                <span class="diff-label">LEARN</span>
-                <span class="diff-subtitle">binary, by hand</span>
-            </button>
 
             <button class="difficulty-btn endless" data-difficulty="endless" data-target="999999" data-theme="matrix">
                 <span class="diff-label">GAUNTLET</span>
@@ -1092,9 +1071,7 @@
     <script src="js/scoring.js?v=36b0bed2"></script>
     <script src="js/game.js?v=f8e89cd7"></script>
     <script src="js/math-overlay.js?v=43a84ae2"></script>
-    <script src="js/codex.js?v=1710c6a1"></script>
     <script src="js/rules-pages.js?v=5eb81e1f"></script>
-    <script src="js/tutorial.js?v=ea04db38"></script>
     <script src="js/main.js?v=4bfe70af"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
