@@ -27,7 +27,13 @@
     "location block in the nginx conf.",
     "",
     "'dashboard_only' is for units that exist on the Pi but are neither started",
-    "nor probed. Only admin/server.py reads it. arcade-private is here rather than",
+    "nor probed. Only admin/server.py reads it. arcade-chat joined it on",
+    "2026-10-12, when the arcade's chat widget was retired: no page loads it any",
+    "more, chat now lives inside each multiplayer game relayed by that game's",
+    "own server, and the MULTIPLAYER ONLINE dot that was its last consumer now",
+    "probes a game server instead. The unit is disabled on the Pi; it stays",
+    "listed so the dashboard can still draw and restart it if chat ever returns,",
+    "since _load_services reads both arrays into VALID_UNITS. arcade-private is here rather than",
     "in 'services' for two reasons, both of which have to be fixed before it could",
     "move: private/server.py takes no --port (it reads config.json), so start-all's",
     "'python3 <exec> --port <port>' would fail argparse and never start it; and",
@@ -77,17 +83,6 @@
       "path": "/stud",
       "unit": "arcade-stud",
       "icon": "🂡"
-    },
-    {
-      "id": "chat",
-      "name": "Chat",
-      "kind": "chat",
-      "dir": ".",
-      "exec": "chat-server.py",
-      "port": 8768,
-      "path": "/",
-      "unit": "arcade-chat",
-      "icon": "💬"
     },
     {
       "id": "chess",
@@ -176,6 +171,15 @@
       "path": null,
       "unit": "arcade-private",
       "icon": "🔒"
+    },
+    {
+      "id": "chat",
+      "name": "Chat",
+      "kind": "chat",
+      "port": 8768,
+      "path": null,
+      "unit": "arcade-chat",
+      "icon": "💬"
     }
   ]
 }
