@@ -65,11 +65,21 @@ window.CounterClient = (function () {
     // the '@' is credentials.
     //
     // So this deliberately does NOT mirror those copies byte for byte, and must
-    // not be harmonised back to them. Both carry the gap: adenosine-chat.js,
-    // whose widget is retired and loads nowhere in this repo, and
-    // adenosine-multiplayer.js, whose MP._hostOf feeds both _isAllowed and
-    // _scheme and IS live across the multiplayer games. '' on an unparseable
-    // value, which matches no allowlist entry.
+    // not be harmonised back to them.
+    //
+    // adenosine-multiplayer.js was the live one, its MP._hostOf feeding both
+    // _isAllowed and _scheme across the multiplayer games, and it was fixed the
+    // same way on 2026-10-12: the vendored bundle reads the hostname off the
+    // URL parser now, and is held there by a MIN_VERSION floor in
+    // scripts/sync-adenosine.mjs and by arcade/tests/test-multiplayer-host.js.
+    // That one therefore AGREES with this function rather than drifting from
+    // it, which is why it is named here as settled rather than as a warning.
+    //
+    // adenosine-chat.js still carries the gap, and is why this note stays. Its
+    // widget is retired and loads nowhere in this repo, so it is dormant rather
+    // than fixed, and anything that revives it needs the parser form first.
+    //
+    // '' on an unparseable value, which matches no allowlist entry.
     function _hostOf(addr) {
         var s = String(addr);
         if (!/^wss?:\/\//.test(s)) s = 'ws://' + s;
