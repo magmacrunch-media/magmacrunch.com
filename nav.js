@@ -589,7 +589,23 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         });
         document.querySelectorAll('style[' + SPA + ']').forEach(e => stale.push(e));
         // Template-injected <style> tags from the outgoing page (no data-spa).
-        document.querySelectorAll('head style:not([' + SPA + '])').forEach(e => stale.push(e));
+        //
+        // MathJax's own stylesheet is NOT one of them, and removing it breaks
+        // maths for the rest of the session. MathJax injects #MJX-CHTML-styles
+        // and adds to it lazily, a rule at a time, as it first meets each
+        // construct. Sweeping it out here detaches the element, so every
+        // insertRule() after that throws "Cannot read properties of null" into
+        // MathJax's own warning handler and the rule is lost for good: after one
+        // SPA hop the sheet carries 264 rules against 297 on a cold load, and
+        // the 33 missing ones are mjx-under, mjx-munder, mjx-over and mjx-mover.
+        // Maths still TYPESETS -- the container count is identical -- so it
+        // looks fine until a formula uses a limit, an overline or a stacked
+        // accent, which then renders unstyled. Reloading rebuilt the sheet,
+        // which is what made this read as a caching problem.
+        document.querySelectorAll('head style:not([' + SPA + '])').forEach(e => {
+            if (e.id && e.id.startsWith('MJX-')) return;
+            stale.push(e);
+        });
 
         // Add new page-specific CSS. Each sheet goes in with a non-matching
         // media so the browser downloads it (and still fires load) WITHOUT
