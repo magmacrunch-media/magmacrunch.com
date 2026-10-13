@@ -415,16 +415,22 @@ header .byline {
   /* Every pixel here is one the board does not get, and 7px is still a bar. */
   .shift-track { height: 7px; }
   #hud-rush { font-size: 9px; min-height: 10px; }
-  /* The shared chat bubble is fixed bottom-right and in landscape it covered
-     24% of SHIP - the button pressed most, and pressed in a hurry. Simply
-     moving it to the other corner just moved the problem onto FLOUR, because
-     the touch row spans the full width and reaches both corners. So park it
-     bottom-left AND reserve that corner: the cost is ~3px per button, spread
-     across five, instead of a quarter of one of them being dead.
-     Scoped to this page - no other arcade game puts controls on the bottom
-     edge, so the widget is left alone everywhere else. */
-  #arcadeChatWidget { right: auto; left: 8px; bottom: 8px; }
-  .touchpad, .controls { padding-left: 64px; }
+  /* No corner is reserved here, and that is a decision rather than an
+     oversight. The shared chat bubble used to be fixed bottom-right, where it
+     covered 24% of SHIP - the button pressed most, and pressed in a hurry.
+     Moving it to the other corner only moved the problem onto FLOUR, because
+     the touch row spans the full width and reaches both corners. So it was
+     parked bottom-left and that corner was reserved, with
+     `padding-left: 64px` on .touchpad and .controls.
+     The widget was retired from the arcade on 2026-10-12 and no page loads it
+     any more (docs/ops/chat-system.md), so both rules have gone and the five
+     buttons have that width back: 109px to 122px each at 667x375, and the row
+     is flush with the HUD above it again rather than indented on the left.
+     Whatever the old comment's "~3px per button" was measuring, the padding
+     really cost 64px off the row, or about 13px a button, so this is worth
+     more than it reads.
+     If anything is ever fixed to a bottom corner of this page again, reserve
+     that corner rather than moving it to the other one. */
   .tp { min-height: 42px; padding: 4px 2px; gap: 1px; }
   .tp b { font-size: 10px; }
   .tp span { font-size: 8px; }
