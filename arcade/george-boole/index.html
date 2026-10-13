@@ -263,13 +263,11 @@
              to keep them clear of the flex layout is what silently disabled
              every rule for both of them in e9d43fc. They do not disturb the
              layout from here, because both are position:absolute. -->
-        <canvas class="binary-rain" id="binaryRain"></canvas>
-        <div class="floating-gates" id="floatingGates"></div>
         <div class="title-screen-content">
-            <div class="title-portrait-wrapper">
-                <img class="title-portrait" src="img/boole-pixel.png" alt="George Boole" width="128" height="128">
-                <div class="sunglasses-glint"></div>
-            </div>
+            <!-- The id is for site/package.mjs, which drops this wrapper from the
+                 website build: the browser version has a plainer title screen,
+                 with no drawn portrait and no binary rain. The class is what the
+                 stylesheets use and is untouched. -->
             <div class="title-main">
                 <h1 class="title-large">GEORGE BOOLE</h1>
                 <h2 class="title-subtitle">HAS ENTERED THE CHAT</h2>
