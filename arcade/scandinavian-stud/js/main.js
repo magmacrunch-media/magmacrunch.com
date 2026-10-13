@@ -388,7 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showMenu() {
-        ChatWidget.disconnect();
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'none';
         }
@@ -666,7 +665,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'flex';
         }
-        ChatWidget.connect(MC_CHAT_OPTS);
 
         // Initialize game state from server
         if (data.state) {

@@ -20,6 +20,11 @@ var UI = (function() {
         Multiplayer.setOnStateUpdate(onMultiplayerStateUpdate);
         Multiplayer.setOnGameStart(onMultiplayerGameStart);
         Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
+        // Incoming room chat. MP.onChatMessage is an empty default in
+        // adenosine-multiplayer.js, so without this the server's relayed
+        // messages arrived and went nowhere: the panel showed only the
+        // local echo from sendChat, which made chat look write-only.
+        MP.onChatMessage = addChatMessage;
     }
 
     function cacheElements() {

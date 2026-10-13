@@ -18,6 +18,7 @@ var UI = (function() {
         Multiplayer.setOnStateUpdate(onMultiplayerStateUpdate);
         Multiplayer.setOnGameStart(onMultiplayerGameStart);
         Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
+        Multiplayer.setOnChatMessage(addChatMessage);
     }
 
     // Ids this game reads that BoardGameTemplate still does not emit. The lobby
@@ -69,6 +70,9 @@ var UI = (function() {
         elements.lobbyStartArea = el('lobbyStartArea');
         elements.lobbyStartBtn = el('lobbyStartBtn');
         elements.gameChat = el('gameChat');
+        elements.chatMessages = el('chatMessages');
+        elements.chatInput = el('chatInput');
+        elements.chatSendBtn = el('chatSendBtn');
     }
 
     // Bind only if the element exists. The lobby markup these games were written
@@ -81,7 +85,42 @@ var UI = (function() {
         if (el) el.addEventListener(evt, fn);
     }
 
+    // ── Chat ─────────────────────────────────────────────────────────────────
+    // Scoped to this match by the game server, not by the page. The panel's
+    // stylesheet and its show/hide were already here; only the contents and
+    // these two functions were missing, because chat was the arcade widget's
+    // job until it was retired.
+
+    function addChatMessage(from, text, color) {
+        if (!elements.chatMessages) return;
+        var div = document.createElement('div');
+        div.className = from === 'System' ? 'chat-msg system' : 'chat-msg';
+        var nameEl = document.createElement('span');
+        nameEl.className = 'chat-name';
+        nameEl.style.color = color || '#00f5ff';
+        nameEl.textContent = from + ': ';
+        div.appendChild(nameEl);
+        div.appendChild(document.createTextNode(text));
+        elements.chatMessages.appendChild(div);
+        elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+    }
+
+    function sendChat() {
+        if (!elements.chatInput) return;
+        var text = elements.chatInput.value.trim();
+        if (!text) return;
+        Multiplayer.sendChat(text);
+        // _handle_chat excludes the sender from its broadcast, so this echo is
+        // what puts your own line in the panel.
+        addChatMessage(localStorage.getItem('arcade_username') || 'You', text, '#39ff6e');
+        elements.chatInput.value = '';
+    }
+
     function setupEventListeners() {
+        on(elements.chatSendBtn, 'click', sendChat);
+        on(elements.chatInput, 'keypress', function(e) {
+            if (e.key === 'Enter') sendChat();
+        });
         on(elements.startGameBtn, 'click', startLocalGame);
         on(elements.onlineBtn, 'click', openLobby);
         on(elements.newGameBtn, 'click', startLocalGame);
@@ -113,7 +152,6 @@ var UI = (function() {
     function startLocalGame() {
         isMultiplayer = false;
         Multiplayer.quit();
-        ChatWidget.disconnect();
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
         elements.gameChat.style.display = 'none';
@@ -126,7 +164,6 @@ var UI = (function() {
     function showMenu() {
         isMultiplayer = false;
         Multiplayer.quit();
-        ChatWidget.disconnect();
         elements.startScreen.style.display = 'flex';
         elements.gameScreen.style.display = 'none';
         elements.gameChat.style.display = 'none';
@@ -215,7 +252,6 @@ var UI = (function() {
         hideGameOver();
         isMultiplayer = true;
         applyServerState(state);
-        ChatWidget.connect(MC_CHAT_OPTS);
     }
 
     function onMultiplayerGameEnd(won, winnerName, winnerSide) {

@@ -2,10 +2,61 @@
 
 ## Arcade chat system
 
-The chat widget provides a floating real-time chat on nearly every arcade page.
-It uses a SharedWorker (`shared/chat-worker.js`) to hold a single WebSocket
+### RETIRED from the arcade, 2026-10-12. The server still runs.
+
+**No page in this repository loads the widget any more**, so
+`shared/adenosine-chat.js`, `shared/chat-worker.js` and `shared/chat-widget.css`
+are unreferenced and `chat-server.py` on 8768 has no clients. Everything below
+describes how it worked and is kept because the server is still deployed and the
+reasoning is still worth having; read it as history, not as the current state.
+Confirm with `grep -rl adenosine-chat.js --include=*.html .` before believing
+either way.
+
+Why it went, since the reasons are the useful part:
+
+- **It was one global room on every page it appeared on.** Two matches of the
+  same game shared a chat, and so did a chess game and a cribbage game. The
+  widget has rooms, and the three games that tried to use them guarded the call
+  on `typeof Chat !== 'undefined'` while calling `ChatWidget`. `Chat` never
+  existed here, so room scoping never once ran.
+- **Chat belongs to the game server, and six games already had it.**
+  `server_base.py`'s `_handle_chat` takes the room from the connection and
+  broadcasts only to it, so cross-match leakage is impossible by construction.
+  SORRY, chess, scandinavian-stud and cribbage reach it through the shared
+  client's `sendChat`; aggravation and parchisi send `type:'chat'` themselves.
+- **Nothing was using it.** Global history lived in memory and died on every
+  restart, and a push to `main` restarts every `arcade-*` unit.
+
+Two consequences worth knowing:
+
+- **`arcade-chat` is still in `services` in `services.json`**, so `start-all.sh`
+  starts it and the health bot TCP-probes it every half hour and alerts when it
+  is down. That is now an alert path for a service with no clients. Moving it to
+  `dashboard_only`, or retiring the unit, is a decision nobody has taken.
+- **`arcade/index.html` still loads `shared/chat-server.js`** and no widget. Its
+  `MC_CHAT_OPTS` is what the MULTIPLAYER ONLINE probe dials, so the status dot on
+  the arcade index depends on 8768 answering. Retiring the unit breaks that dot.
+
+- **backgammon, checkers and chinese-checkers now have no chat at all.** They
+  never had working match chat to lose: no chat UI in the page and a receive
+  handler with no send path. Giving them chat means copying cribbage, a panel
+  plus `sendChat` plus `MP.onChatMessage`, not reviving any of this.
+
+### How it worked
+
+The chat widget provided a floating real-time chat on nearly every arcade page.
+It used a SharedWorker (`shared/chat-worker.js`) to hold a single WebSocket
 connection across page navigations — preventing duplicate users when navigating
 between games.
+
+**One defect was never fixed, and matters if it is ever revived.** The page
+posts `{_worker:"connect"}` after `new SharedWorker(...)` has already triggered
+`onconnect`, and both paths send the cached `history` when the socket is open.
+`addMessage` appends with no dedup, so every historical message rendered twice
+on any reload inside the worker's 3s idle window, or in a second tab. The same
+double delivery runs `sendSavedCredentials()` twice, which is the
+`set_name`-twice case the presence notes below describe as a source of ghost
+roster entries. The fix belongs in the adenosine repo, not here.
 
 **The widget is generated, the server is not.** `shared/adenosine-chat.js`,
 `shared/chat-worker.js` and `shared/chat-widget.css` are synced from the

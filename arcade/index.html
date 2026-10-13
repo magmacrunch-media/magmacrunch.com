@@ -219,7 +219,7 @@
     &copy; 2026 <span>magmacrunch media</span>
 </footer>
 
-<script src="../nav.js?v=7ed1a268"></script>
+<script src="../nav.js?v=87ac8334"></script>
 <script src="../animations/coin.js?v=9ec2c0b9"></script>
 <script src="gamecard-previews.js?v=11abd888"></script>
 <script>
@@ -250,12 +250,16 @@
 </script>
 <script src="../animations/server.js?v=7557c1d2"></script>
 
-<!-- chat-server.js alone, with no widget. MC_CHAT_OPTS is the one place
-     that decides which host is the chat backend, and the status probe
-     below dials it to light the MULTIPLAYER ONLINE dot. The widget itself
-     is gone from this page: a hub listing solo games is not a shared
-     present moment, and chat now loads only on the multiplayer games. -->
-<script src="shared/chat-server.js?v=2efa8028"></script>
+<!-- mp-server.js, for the status probe below and nothing else. No widget:
+     a hub listing solo games is not a shared present moment, and chat now
+     lives inside each multiplayer game, relayed by that game's own server.
+
+     This used to load chat-server.js and dial MC_CHAT_OPTS, which made the
+     MULTIPLAYER ONLINE dot a report on the CHAT server. Once the widget was
+     retired that was the only thing still keeping 8768 load-bearing, and it
+     was answering the wrong question besides: mpServerFor() resolves the very
+     host:port a game connects to, so the dot now reports on multiplayer. -->
+<script src="shared/mp-server.js?v=f66f285b"></script>
 <script>
 // ─────────────────────────────────────────────────────────
 // SERVER STATUS
@@ -267,18 +271,22 @@
 
     function checkStatus() {
         try {
-            // MC_CHAT_OPTS (shared/chat-server.js) is the one place that decides
-            // which host is the chat backend. This block used to re-derive it: a
-            // second copy of the LAN/dev/public rules to keep in step, which had
+            // mpServerFor (shared/mp-server.js) is the one place that decides
+            // which host:port a game's socket reaches, and it is what the games
+            // themselves use. This block used to re-derive the host: a second
+            // copy of the LAN/dev/public rules to keep in step, which had
             // already drifted (it answered 'magmacrunch.duckdns.org' for a LAN
-            // page, and forced https: onto a plain-http dev server). It also
-            // honored ?server= with no allowlist — the exact control
-            // chat-server.js applies so a crafted link cannot aim the page at
-            // someone else's host.
-            var chatUrl = window.location.protocol + '//' + MC_CHAT_OPTS.server;
+            // page, and forced https: onto a plain-http dev server).
+            //
+            // chess stands for all nine. Reaching it proves the path a player
+            // actually takes: nginx, the Pi, and a game server answering. Any
+            // response counts, including the 426 that server_base.py's
+            // make_reject_request returns to plain HTTP on a WebSocket port,
+            // which is the same thing the old chat probe relied on.
+            var probeUrl = window.location.protocol + '//' + mpServerFor('chess', 8769);
             var controller = new AbortController();
             var timeout = setTimeout(function() { controller.abort(); }, 5000);
-            fetch(chatUrl, { mode: 'no-cors', signal: controller.signal })
+            fetch(probeUrl, { mode: 'no-cors', signal: controller.signal })
                 .then(function() {
                     clearTimeout(timeout);
                     statusDot.className = 'mp-status-dot online';

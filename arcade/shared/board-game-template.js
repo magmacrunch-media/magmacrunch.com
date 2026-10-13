@@ -38,6 +38,11 @@ window.BoardGameTemplate = (function () {
      *   extraStart  — HTML string injected after start-buttons
      *   gameHeader  — extra stat items HTML (beyond default TURN)
      *   gameBody    — HTML injected inside game-layout (after board-area)
+     *   chat        (boolean) fill #gameChat with a working chat panel.
+     *                 Off by default: chess has its own #chatPanel using
+     *                 the same #chatMessages and #chatInput ids, and two
+     *                 of each would leave getElementById answering with
+     *                 whichever came first in the document.
      *   gameControls — array of { id, label } (default: NEW GAME + MENU)
      *   instructions — HTML string for instructions modal body
      *   credits     — HTML string for credits modal body
@@ -54,6 +59,7 @@ window.BoardGameTemplate = (function () {
             { id: 'helpBtn', label: 'HOW TO PLAY' },
             { id: 'creditsBtn', label: 'CREDITS' }
         ];
+        var chat = cfg.chat === true;
         var gameControls = cfg.gameControls || [
             { id: 'newGameBtn', label: 'NEW GAME' },
             { id: 'menuBtn', label: 'MENU' }
@@ -122,14 +128,30 @@ window.BoardGameTemplate = (function () {
         html += '      <div id="boardContainer" class="board-container"></div>\n';
         html += '    </div>\n';
         html += gameBody;
+        // In-game chat panel, shown only during a multiplayer match. checkers and
+        // backgammon toggle its display; an unguarded reference to it used to abort
+        // startLocalGame() before the board was ever drawn, which is why the
+        // container is emitted even when it stays empty.
+        //
+        // It belongs INSIDE game-layout: .game-chat is a fixed 220px column and
+        // game-layout is the flex row the stylesheet calls "Board + Chat". It used
+        // to be emitted after message-area, where that width meant nothing.
+        if (chat) {
+            html += '    <div id="gameChat" class="game-chat" style="display: none;">\n';
+            html += '      <div class="chat-header">// CHAT //</div>\n';
+            html += '      <div id="chatMessages" class="chat-messages"></div>\n';
+            html += '      <div class="chat-input">\n';
+            html += '        <input type="text" id="chatInput" placeholder="Type a message..." maxlength="200" autocomplete="off">\n';
+            html += '        <button id="chatSendBtn">SEND</button>\n';
+            html += '      </div>\n';
+            html += '    </div>\n';
+        } else {
+            html += '    <div id="gameChat" class="game-chat" style="display: none;"></div>\n';
+        }
         html += '  </div>\n\n';
         html += '  <div class="message-area">\n';
         html += '    <div id="gameMessage" class="game-message">Select a piece to move</div>\n';
         html += '  </div>\n\n';
-        // In-game chat panel, shown only during a multiplayer match. checkers and
-        // backgammon toggle its display; an unguarded reference to it used to abort
-        // startLocalGame() before the board was ever drawn.
-        html += '  <div id="gameChat" class="game-chat" style="display: none;"></div>\n\n';
         html += '  <div class="game-controls">\n' + controlsHtml + '  </div>\n';
         html += '</div>\n';
 
