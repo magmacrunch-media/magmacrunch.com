@@ -35,9 +35,11 @@ window.CounterClient = (function () {
     // unrestricted ?counter-server= still gives away is the visit itself --
     // the page load gets counted by, and the fact of it disclosed to, whatever
     // host the link named -- and on an https: page it was a mixed-content
-    // ws:// besides. Same shape, lower stakes, same control. arcade/index.html
-    // carries the same note at its status probe, which had this bug and was
-    // fixed for the same reason; nav.js loads this on every page.
+    // ws:// besides. Same shape, lower stakes, same control, and nav.js loads
+    // this on every page. arcade/index.html's status probe had the same bug and
+    // was fixed for the same reason, though its note went with the probe when
+    // that moved to mpServerFor() on 2026-10-12; the reasoning survives in
+    // chat-server.js and in the ops doc.
     //
     // Permitted hosts mirror chat's: loopback, the page's own hostname, and the
     // backend this branch would have dialled anyway. Anything else is ignored
@@ -52,17 +54,22 @@ window.CounterClient = (function () {
     })();
 
     // The host the socket will REALLY open, read off the URL parser rather than
-    // by splitting the string. chat's copy of this splits on '/' and then ':',
-    // which hands back the wrong answer for a value carrying userinfo:
+    // by splitting the string. The hostOf this was modelled on splits on '/'
+    // and then ':', which hands back the wrong answer for a value carrying
+    // userinfo:
     //
     //   ?counter-server=magmacrunch.duckdns.org:8783@evil.example.com
     //
     // splits to 'magmacrunch.duckdns.org', passes an allowlist holding that
     // name, and then connects to evil.example.com, because everything before
-    // the '@' is credentials. So this deliberately does NOT mirror
-    // arcade/shared/adenosine-chat.js byte for byte -- do not harmonise it back
-    // to that version, which has the gap. '' on an unparseable value, which
-    // matches no allowlist entry.
+    // the '@' is credentials.
+    //
+    // So this deliberately does NOT mirror those copies byte for byte, and must
+    // not be harmonised back to them. Both carry the gap: adenosine-chat.js,
+    // whose widget is retired and loads nowhere in this repo, and
+    // adenosine-multiplayer.js, whose MP._hostOf feeds both _isAllowed and
+    // _scheme and IS live across the multiplayer games. '' on an unparseable
+    // value, which matches no allowlist entry.
     function _hostOf(addr) {
         var s = String(addr);
         if (!/^wss?:\/\//.test(s)) s = 'ws://' + s;
