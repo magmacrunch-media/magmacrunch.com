@@ -37,7 +37,7 @@ const GAMES = [
   { name: 'checkers', path: 'checkers', lobby: { open: '#onlineBtn' } },
   { name: 'chess', path: 'chess', lobby: { open: '#multiplayerBtn' } },
   { name: 'chinese-checkers', path: 'chinese-checkers', lobby: { open: '#onlineBtn' } },
-  { name: 'cribbage', path: 'cribbage', lobby: { open: '#multiplayerBtn' }, chat: true },
+  { name: 'cribbage', path: 'cribbage', lobby: { open: '#multiplayerBtn' } },
   { name: 'fifteen-puzzle', path: 'fifteen-puzzle' },
   { name: 'george-boole', path: 'george-boole' },
   { name: 'klotski', path: 'klotski' },
@@ -62,8 +62,32 @@ const BOT_NAME = 'SmokeBot';
 const hasLobby = (g) => Boolean(g.lobby);
 
 /**
+ * NO GAME DECLARES `chat: true` ANY MORE, so everything below it here --
+ * CHAT_PORT, checkChat(), the chatChecked and chatSkipped fields -- is
+ * deliberately inert. cribbage was the last one, and it was dropped when the
+ * floating widget was retired from the arcade on 2026-10-12 and its three
+ * generated files were deleted (docs/ops/chat-system.md).
+ *
+ * Dropping the flag rather than the machinery is the point. With no game
+ * declaring it, `GAMES.some(hasChat)` is false, so 8768 is never probed, the
+ * check never runs and no skip line is printed: the off state this flag system
+ * already had, reached the way it was designed to be reached. Had the flag been
+ * left on cribbage instead, checkChat would have run against a page with no
+ * widget and failed on `#arcadeChatWidget never mounted` whenever
+ * chat-server.py happened to be up -- a red suite blaming a game for a widget
+ * somebody else removed, which is exactly what happened to tetris once already
+ * and is described two paragraphs down.
+ *
+ * Re-declaring it needs the widget back on the page first, and that needs
+ * @magmacrunch/adenosine-chat 0.6.1 or newer: the vendored 0.6.0 carried the
+ * userinfo allowlist bypass, and this check hands a page `?server=` directly,
+ * which is the parameter that bypass turned against the visitor. See
+ * arcade/tests/test-chat-retired.js, which fails if the assets return.
+ *
+ * What the flag meant, kept because reviving it is otherwise a rediscovery:
+ *
  * `chat: true` runs the floating chat widget check on that page. Declared on one
- * game rather than all 24 that load the widget: it is the same widget and the
+ * game rather than all 24 that loaded the widget: it was the same widget and the
  * same backend everywhere, so checking it once is the honest amount of coverage
  * and 24 sockets to the chat server is not.
  *

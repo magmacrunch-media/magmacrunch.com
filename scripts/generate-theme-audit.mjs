@@ -106,7 +106,6 @@ function scanAllFiles() {
     'archive/by-label/**/*.css',
     'templates/*.css',
     'arcade/shared/arcade-base.css',
-    'arcade/shared/chat-widget.css',
     'home/*.css',
     'music/**/*.css',
     'press/**/*.css',

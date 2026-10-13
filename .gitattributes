@@ -49,8 +49,6 @@
 # Normalising it means changing both repos together, not this one in passing.
 
 arcade/shared/adenosine-*.js             text eol=lf
-arcade/shared/chat-worker.js             text eol=lf
-arcade/shared/chat-widget.css            text eol=lf
 arcade/shared/cards/cards.css            text eol=lf
 arcade/shared/chips/chip-animation.css   text eol=lf
 arcade/shared/multiplayer/lobby.css      text eol=lf

@@ -130,7 +130,25 @@ Source repo: `~/Documents/game_dev/adenosine` (the canonical working copy). Pack
 npm as `@magmacrunch/adenosine-*`; the website consumes them as dependencies, so
 never hand-edit the files in `arcade/shared/adenosine-*.js`.
 
-### arcade chat system
+### arcade chat system (RETIRED 2026-10-12, read as history)
+
+The floating widget is gone from the arcade. Four files are **deleted**:
+`adenosine-chat.js` (listed below under its old name `chat-widget.js`),
+`chat-widget.css`, `chat-worker.js`, and the hand-written `chat-server.js`.
+`multiplayer/` in the same tree is untouched and still live. `chat-server.py`
+on 8768 still runs and has no clients.
+
+`chat` is also de-registered from `scripts/sync-adenosine.mjs`, so
+`npm run build:adenosine` cannot bring the files back, and
+`arcade/tests/test-chat-retired.js` fails if anything here is pasted into a
+page.
+
+The short reason it went is that it was one global room on every page it
+appeared on, and match chat belongs to each game's own server instead, which
+takes the room from the connection and so cannot leak across matches. **If you
+want chat in a game, copy cribbage: a panel, `sendChat`, `MP.onChatMessage`.**
+The longer reason, including the userinfo allowlist bypass in the 0.6.0 bundle
+that made removal urgent rather than tidy, is in `docs/ops/chat-system.md`.
 
 ```
 arcade/shared/
@@ -156,7 +174,9 @@ Page B ──postMessage──┘
 - **Which servers it reports on** — `shared/services.json`, the same list `start-all.sh`, `scripts/bot-check-services.sh` and `admin/server.py` read.
 - **Logging** — connections/disconnections with IP, rate limit hits, high connection rate warnings. View via `journalctl -u arcade-chat` or admin dashboard LOGS tab.
 
-**Usage (in any game page):**
+**Usage (in any game page) -- DEAD, these four files no longer exist. Pasting
+this is the mistake the section header warns about; see the revival checklist
+in `docs/ops/chat-system.md`:**
 ```html
 <link rel="stylesheet" href="../shared/chat-widget.css">
 <script src="../shared/adenosine-chat.js"></script>

