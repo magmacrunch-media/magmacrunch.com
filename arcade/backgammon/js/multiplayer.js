@@ -10,6 +10,7 @@ var Multiplayer = (function() {
     var onStateUpdate = null;
     var onGameStart = null;
     var onGameEnd = null;
+    var onChatMessage = null;
     var _roomCode = null;
 
     function connect() {
@@ -133,7 +134,14 @@ var Multiplayer = (function() {
         }
     };
 
-    MP.onChatMessage = function(from, text, color) {};
+    MP.onChatMessage = function(from, text, color) {
+        // Per-match chat, relayed by this game's own server. server_base.py's
+        // _handle_chat takes the room from the connection, so a message cannot
+        // reach another match. This used to read "Chat handled by shared
+        // framework", meaning the arcade's global widget, which put every match
+        // on the site into one room and never scoped itself to this one.
+        if (onChatMessage) onChatMessage(from, text, color);
+    };
 
     MP.onError = function(text) {
         console.error('[MP] Error:', text);
@@ -162,6 +170,9 @@ var Multiplayer = (function() {
     function setOnStateUpdate(cb) { onStateUpdate = cb; }
     function setOnGameStart(cb) { onGameStart = cb; }
     function setOnGameEnd(cb) { onGameEnd = cb; }
+    function setOnChatMessage(cb) { onChatMessage = cb; }
+
+    function sendChat(text) { MP.sendChat(text); }
 
     return {
         connect: connect,
@@ -178,6 +189,8 @@ var Multiplayer = (function() {
         setOnStateUpdate: setOnStateUpdate,
         setOnGameStart: setOnGameStart,
         setOnGameEnd: setOnGameEnd,
+        setOnChatMessage: setOnChatMessage,
+        sendChat: sendChat,
     };
 
 })();

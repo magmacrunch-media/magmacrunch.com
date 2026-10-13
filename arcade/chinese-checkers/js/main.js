@@ -37,6 +37,9 @@
     var lobbyPlayerList = document.getElementById('lobbyPlayerList');
     var lobbyStartArea = document.getElementById('lobbyStartArea');
     var lobbyStartBtn = document.getElementById('lobbyStartBtn');
+    var chatMessages = document.getElementById('chatMessages');
+    var chatInput = document.getElementById('chatInput');
+    var chatSendBtn = document.getElementById('chatSendBtn');
 
     // ── State ────────────────────────────────────────────────────────────────
     var hoverPos = null;
@@ -48,6 +51,7 @@
         Renderer.init(boardCanvas);
         setupEventListeners();
         setupMultiplayer();
+        Multiplayer.setOnChatMessage(addChatMessage);
         setupPlayerCountSelector();
         showStartScreen();
     }
@@ -68,7 +72,42 @@
     }
 
     // ── Event Listeners ──────────────────────────────────────────────────────
+    // ── Chat ─────────────────────────────────────────────────────────────────
+    // Scoped to this match by the game server, not by the page. The panel's
+    // stylesheet and its show/hide were already here; only the contents and
+    // these two functions were missing, because chat was the arcade widget's
+    // job until it was retired.
+
+    function addChatMessage(from, text, color) {
+        if (!chatMessages) return;
+        var div = document.createElement('div');
+        div.className = from === 'System' ? 'chat-msg system' : 'chat-msg';
+        var nameEl = document.createElement('span');
+        nameEl.className = 'chat-name';
+        nameEl.style.color = color || '#00f5ff';
+        nameEl.textContent = from + ': ';
+        div.appendChild(nameEl);
+        div.appendChild(document.createTextNode(text));
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendChat() {
+        if (!chatInput) return;
+        var text = chatInput.value.trim();
+        if (!text) return;
+        Multiplayer.sendChat(text);
+        // _handle_chat excludes the sender from its broadcast, so this echo is
+        // what puts your own line in the panel.
+        addChatMessage(localStorage.getItem('arcade_username') || 'You', text, '#39ff6e');
+        chatInput.value = '';
+    }
+
     function setupEventListeners() {
+        if (chatSendBtn) chatSendBtn.addEventListener('click', sendChat);
+        if (chatInput) chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendChat();
+        });
         // Start screen buttons
         startGameBtn.addEventListener('click', function() {
             startNewGame(selectedPlayerCount, true);
