@@ -63,6 +63,48 @@ export const CSS_REF_RE = new RegExp(
   `url\\(\\s*(['"]?)([^'")]+?\\.(?:${ASSET_EXT}))(\\?[^'")]*)?\\1\\s*\\)`, 'gi');
 
 /**
+ * A stamped `.src` or `.href` assignment in JavaScript, which is how nav.js
+ * loads the jukebox and the search widget:
+ *
+ *   script.src = root + 'assets/jukebox.js?v=e3795c24';
+ *
+ * Captures (href, query) like HTML_REF_RE, so every caller's capture handling
+ * is the HTML one. The optional `root + ` is why the attribute pattern never
+ * saw these: it wants the quoted string immediately after the `=`.
+ *
+ * ── Why it demands an ASSIGNMENT rather than any quoted path ──
+ *
+ * JavaScript has no syntax that marks a string as a URL, so a looser pattern
+ * reads prose and test data as references. Both exist here and both would fail.
+ * arcade/george-boole/sw.js carries "css/base.css?v=c634b661" inside a comment
+ * explaining why its precache list was deleted, and the two tests/test-sw.js
+ * build fake URLs stamped OLDSTAMP, NEWSTAMP and abc12345 to assert on. The
+ * last of those is eight hex and names a file that exists, so no rule about the
+ * shape of a stamp can separate it from a real one. The assignment can, and it
+ * is also the DOM API spelling of the src=/href= this already trusts in HTML.
+ *
+ * ── Why it demands a STAMP ──
+ *
+ * A relative URL set from a script resolves against the DOCUMENT, not the
+ * script, and which document loads a script is not knowable from the script.
+ * arcade/solitaire/js/game.js sets 'images/card-back.jpg', which exists at
+ * arcade/solitaire/images/ and not beside the script, so resolving these the
+ * way a stylesheet's url() is resolved would report a file that is perfectly
+ * fine as missing. Stamped references do not have that problem, because a
+ * cache-buster is written by loader code that has already computed a site root;
+ * see resolveJsRef. Unstamped ones are left to the check-links workflow, which
+ * is where reachability lives.
+ */
+export const JS_REF_RE = new RegExp(
+  `\\.\\s*(?:src|href)\\s*=\\s*(?:[^;'"]*\\+\\s*)?['"]([^'"]+?\\.(?:${ASSET_EXT}))(\\?[^'"]*)['"]`, 'g');
+
+/** Which reference pattern a source file is read with. */
+export const refKind = (path) =>
+  path.endsWith('.css') ? 'css' : path.endsWith('.js') ? 'js' : 'html';
+
+export const RE_FOR = { html: HTML_REF_RE, css: CSS_REF_RE, js: JS_REF_RE };
+
+/**
  * A reference a checker cannot resolve to one fixed path, and must not guess
  * at. `${...}` is a JS template literal inside an inline <script> — the archive
  * pages build gallery markup that way — and a scheme like data:, blob: or
@@ -95,6 +137,16 @@ export const isDigestStamp = (stamp) => /^[0-9a-f]{8}$/.test(stamp);
  */
 export const resolveRef = (href, source) => posix.normalize(
   href.startsWith('/') ? href.slice(1) : posix.join(posix.dirname(source), href));
+
+/**
+ * Where a stamped reference in a script points: from the repo root, never from
+ * the script. The reasoning is at JS_REF_RE. In short, the script does not know
+ * which document will load it, and the loader code that writes a stamp is
+ * working from a site root already, so root-relative is the form actually
+ * written. nav.js is the whole of it today, and `root + 'assets/jukebox.js'`
+ * means assets/jukebox.js from the root whatever depth the page sits at.
+ */
+export const resolveJsRef = (href) => posix.normalize(href.replace(/^\//, ''));
 
 // Only trees git does not track: node_modules, and the four .gitignore entries
 // that hold HTML. Everything deployed is checked, archive/ included — its ten
@@ -137,14 +189,15 @@ export const GENERATED = new Set(['visual/tv/channels.js']);
  * silently convert a CRLF page to LF and bury a one-token change under a
  * whole-file diff.
  */
-export function rewriteStampsIn(text, isCss, entries) {
-  const re = isCss ? CSS_REF_RE : HTML_REF_RE;
+export function rewriteStampsIn(text, kind, entries) {
+  const isCss = kind === 'css';
+  const re = RE_FOR[kind] ?? HTML_REF_RE;
   const wanted = new Map(entries.map(e => [e.href, e.actual]));
   let changed = 0;
 
   const after = text.replace(re, (match, ...groups) => {
     // HTML captures (href, query); CSS captures (quote, href, query).
-    const [href, query] = re === CSS_REF_RE ? [groups[1], groups[2]] : [groups[0], groups[1]];
+    const [href, query] = isCss ? [groups[1], groups[2]] : [groups[0], groups[1]];
     const actual = wanted.get(href);
     if (actual === undefined) return match;
 
@@ -169,7 +222,7 @@ export function rewriteStampsIn(text, isCss, entries) {
 
 /** rewriteStampsIn() on a file in place, returning how many stamps changed. */
 export function rewriteStamps(source, entries) {
-  const { text, changed } = rewriteStampsIn(readFileSync(source, 'utf8'), source.endsWith('.css'), entries);
+  const { text, changed } = rewriteStampsIn(readFileSync(source, 'utf8'), refKind(source), entries);
   if (changed) writeFileSync(source, text);
   return changed;
 }
