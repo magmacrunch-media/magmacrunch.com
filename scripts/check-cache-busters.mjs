@@ -46,11 +46,17 @@
  * workflow already follows those, and it knows about redirects and the
  * generated archive stubs, which this does not.
  *
- * Two kinds of match are stepped over rather than resolved. A `?v=` in a JS
- * string is usually a YouTube video id, never a cache-buster. And the archive
- * gallery pages build markup inside template literals, so a src can read
- * `${thumbUrl}` or `about:blank` — references to no fixed path, which this must
- * not guess at. isUnresolvable() holds both rules.
+ * The archive gallery pages build markup inside template literals, so a src can
+ * read `${thumbUrl}` or `about:blank`, references to no fixed path, which this
+ * must not guess at. isUnresolvable() holds that rule.
+ *
+ * This paragraph also used to say a `?v=` in a JS string was stepped over as
+ * probably a YouTube video id. The rule is real and it was never this one: a
+ * watch?v= URL has no asset extension, so the patterns already exclude it, and
+ * what actually happened is that no .js file was read at all. Four live stamps
+ * in nav.js sat uncovered for as long as the check has existed, and two of them
+ * were wrong for nine days. Scripts are read since 2026-10-13, for stamped
+ * .src/.href assignments only; JS_REF_RE has the reasoning.
  *
  * Stamps that are not 8 hex are a different convention — a hand-bumped serial,
  * `?v=11` — and cannot be verified against content. Those are counted and named
@@ -75,10 +81,11 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 
 import {
-  digest, HTML_REF_RE, CSS_REF_RE, isUnresolvable, isRemote, stampOf, isDigestStamp,
-  resolveRef, rewriteStamps, SKIP_DIRS, GENERATED,
+  digest, HTML_REF_RE, CSS_REF_RE, JS_REF_RE, isUnresolvable, isRemote, stampOf,
+  isDigestStamp, refKind, resolveRef, resolveJsRef, rewriteStamps, SKIP_DIRS, GENERATED,
 } from './lib/cache-busters.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -130,11 +137,15 @@ const missing = [];
 const unverifiable = [];
 
 /** Resolve one reference found in `source`, and record what is wrong with it. */
-function inspect(href, query, source) {
+function inspect(href, query, source, kind = refKind(source)) {
   if (isUnresolvable(href)) return;
   if (isRemote(href)) return;                              // someone else's asset
 
-  const target = join(ROOT, resolveRef(href, rel(source)));
+  // A script's relative reference is resolved from the root rather than from
+  // the script. See resolveJsRef, and JS_REF_RE for why.
+  const target = join(ROOT, kind === 'js'
+    ? resolveJsRef(href)
+    : resolveRef(href, rel(source)));
 
   if (GENERATED.has(rel(target))) return;
 
@@ -174,6 +185,19 @@ for (const sheet of filesUnder(ROOT, ['.css'])) {
   for (const [, , href, query] of css.matchAll(CSS_REF_RE)) inspect(href, query, sheet);
 }
 
+// Scripts, for stamped .src/.href assignments only. JS_REF_RE says why it is
+// that narrow. These had no cover at all until 2026-10-13, and nav.js holds
+// every one of them: the jukebox pair and the search pair. c40766b3 edited both
+// jukebox files, moved 531 stamps in the same commit, and left those two behind
+// precisely because nothing read a .js file looking for a reference, so the site
+// served a nine-day-old widget to anyone holding it in cache.
+//
+// Note `.mjs` does not end with `.js`, so scripts/ is not walked by this.
+for (const script of filesUnder(ROOT, ['.js'])) {
+  const js = readFileSync(script, 'utf8');
+  for (const [, href, query] of js.matchAll(JS_REF_RE)) inspect(href, query, script, 'js');
+}
+
 // rewriteStamps() in the lib does the editing, so this and the pre-commit hook
 // cannot disagree about what a repaired reference looks like.
 if (FIX && stale.length) {
@@ -201,6 +225,37 @@ if (FIX && stale.length) {
 
   console.log(`\n${fixed} stale stamp(s) updated in ${byFile.size} file(s).`);
   stale.length = 0;
+
+  // ── Repairing can stale something else, so repair until it stops ──
+  //
+  // A source can also be an asset. A stylesheet carries url() stamps AND is
+  // stamped by the pages that load it; since 2026-10-13 nav.js is the same,
+  // holding four stamps and being named by 269 pages. Repairing one changes its
+  // digest, which stales every stamp pointing at it.
+  //
+  // Every `actual` above was computed in the scan, before any file was written,
+  // so a single pass does not leave the tree unfinished: it leaves it WRONG. The
+  // pages get the digest the asset had while it was still broken. Breaking one
+  // jukebox stamp in nav.js and running --fix once rewrote 265 pages to a digest
+  // nav.js no longer had, and reported success.
+  //
+  // So re-run until a pass finds nothing. check-staged-stamps.mjs already runs
+  // its repairs to a fixed point and says why; this is the same rule for the
+  // working tree. The bound is there because a pattern that rewrites to a value
+  // it will not then match would otherwise loop for ever, which is a bug in the
+  // rewriting rather than a tree that needs more passes, and should say so.
+  const round = Number(process.env.MC_CACHEBUST_ROUND ?? '0');
+  if (round >= 5) {
+    console.error('\nFAIL -- stamps still moving after 5 --fix rounds. A rewrite is not\n' +
+                  'landing on a value the next scan accepts; that is a rule bug, not a\n' +
+                  'tree that needs another pass.');
+    process.exit(1);
+  }
+  const again = spawnSync(process.execPath, [fileURLToPath(import.meta.url), '--fix'], {
+    stdio: 'inherit',
+    env: { ...process.env, MC_CACHEBUST_ROUND: String(round + 1) },
+  });
+  process.exit(again.status ?? 1);
 }
 
 if (checked === 0) {

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>email list - magmacrunch media</title>
+    <meta property="og:title" content="email list - magmacrunch media">
+    <meta property="og:description" content="get a note when something comes out">
+    <meta property="og:image" content="https://magmacrunch.com/og/email-list.png?v=1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:site_name" content="magmacrunch media">
+    <meta property="og:locale" content="en_US">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../style.css?v=53e9e146">
+    <link rel="stylesheet" href="email-list.css">
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <span class="current">email list</span>
+    </div>
+
+    <h1 class="page-title">// email list //</h1>
+    <p class="page-subtitle">leave an address ✦ hear about it first</p>
+
+    <pre class="ascii-art">
+    .----------------------------.
+    |\                          /|
+    | \________________________/ |
+    |                            |
+    |        E-MAIL LIST         |
+    |                            |
+    '----------------------------'
+    </pre>
+
+    <div class="list-wrap">
+
+        <!-- SIGNUP -->
+        <div class="form-container">
+            <label class="form-label" for="email">your email</label>
+            <input type="email" id="email" name="email" placeholder="you@somewhere.net"
+                   maxlength="254" autocomplete="email" inputmode="email"
+                   spellcheck="false">
+
+            <!-- Honeypot. Hidden from people, and checked on the server as
+                 well, where a submission carrying it is recorded with status
+                 `spam` rather than discarded. Not type="hidden", because a bot
+                 that fills only visible-ish text inputs is exactly the one
+                 this catches.
+
+                 THE NAME IS LOAD-BEARING. This was `website` for one day and
+                 it broke real signups: browsers and password managers autofill
+                 a field called website, url, email, name, phone or address no
+                 matter what autocomplete says, so a genuine visitor's form was
+                 submitted with the honeypot already filled and their signup was
+                 thrown away while the page told them it had worked. Any rename
+                 must stay clear of every real contact-field name.
+
+                 autocomplete="off" is kept, but it is advisory and was exactly
+                 what failed, so it is not what makes this safe. The name is. -->
+            <div class="hp" aria-hidden="true">
+                <label for="referral_code">referral code</label>
+                <input type="text" id="referral_code" name="referral_code"
+                       tabindex="-1" autocomplete="off">
+            </div>
+
+            <button class="submit-btn" id="submitBtn" type="button">[ sign me up ]</button>
+            <div class="submit-status" id="submitStatus"></div>
+        </div>
+
+        <!-- WHAT YOU ARE AGREEING TO -->
+        <div class="terms">
+            <div class="terms-header">// the deal //</div>
+            <ul>
+                <li>
+                    <b>Coming soon.</b> Sign up for a future newsletter and email content by magmacrunch media.
+                    No spam, no ads, no tracking, and no sharing of your email address.
+                </li>
+                <li><b>Unsubscribe anytime.</b> Write to
+                    <a href="mailto:info@magmacrunch.com?subject=unsubscribe">info@magmacrunch.com</a>
+                    and you are off it. Every mail we eventually send will say
+                    so too.</li>
+            </ul>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js?v=a1127215"></script>
+<script>
+    // ── Google Apps Script backend ──
+    //
+    // The code behind this URL is scripts/email-list.gs in this repo, and
+    // docs/ops/email-list.md has the deployment steps. It is write-only: there
+    // is no GET that returns the list, which is the whole difference between
+    // this and the guestbook sitting next to it.
+    //
+    // Empty until the script is deployed. The form then offers the mailto
+    // route instead of pretending to work -- a signup that silently goes
+    // nowhere is worse than no form, because the visitor believes they are on
+    // the list.
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw5T0vo0w8fYDEMIRSaBm2pqHZJe2upWKXCyokjZUQYTKZkU-nERGXiz0XW9ZfV5OuiA/exec';
+
+    const emailEl  = document.getElementById('email');
+    const hpEl     = document.getElementById('referral_code');
+    const btnEl    = document.getElementById('submitBtn');
+    const statusEl = document.getElementById('submitStatus');
+
+    function setStatus(text, kind) {
+        statusEl.textContent = text;
+        statusEl.className = 'submit-status' + (kind ? ' ' + kind : '');
+    }
+
+    // Deliberately loose, and the same shape the server applies. The browser's
+    // own type="email" check is looser still and neither can tell a real
+    // address from a plausible one, so this only turns away what is clearly
+    // not one.
+    function looksLikeEmail(value) {
+        return value.length <= 254 && /^[^@\s,;]+@[^@\s,;.]+(\.[^@\s,;.]+)+$/.test(value);
+    }
+
+    function submitSignup() {
+        const email = emailEl.value.trim();
+
+        if (!email) {
+            setStatus('! an address goes here', 'error');
+            emailEl.focus();
+            return;
+        }
+        if (!looksLikeEmail(email)) {
+            setStatus("! that does not look like an address", 'error');
+            emailEl.focus();
+            return;
+        }
+
+        btnEl.disabled = true;
+        setStatus('sending...');
+
+        // FormData, not JSON, on purpose: it keeps this a CORS simple request
+        // so the browser sends no preflight. Apps Script has no doOptions and
+        // cannot answer one.
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('source', location.pathname);
+        formData.append('referral_code', hpEl.value);
+
+        fetch(SCRIPT_URL, { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    emailEl.value = '';
+                    // Said the same way whether the address was new or already
+                    // on the list, because the server answers the same way.
+                    setStatus('✦ you are on the list', 'ok');
+                    btnEl.textContent = '[ done ]';
+                    return;
+                }
+                btnEl.disabled = false;
+                if (data.error === 'bad_email') {
+                    setStatus("! that address was refused", 'error');
+                } else if (data.error === 'rate_limited' || data.error === 'busy') {
+                    setStatus('! too many at once, try again in a minute', 'error');
+                } else {
+                    setStatus('! could not add you, please try again', 'error');
+                }
+            })
+            .catch(() => {
+                btnEl.disabled = false;
+                setStatus('! could not reach the list, please try again', 'error');
+            });
+    }
+
+    if (SCRIPT_URL) {
+        btnEl.addEventListener('click', submitSignup);
+        emailEl.addEventListener('keydown', ev => {
+            if (ev.key === 'Enter') submitSignup();
+        });
+    } else {
+        emailEl.disabled = true;
+        btnEl.disabled = true;
+        emailEl.placeholder = 'not open yet';
+        statusEl.innerHTML = 'the form is not live yet. email ' +
+            '<a href="mailto:info@magmacrunch.com?subject=email%20list">info@magmacrunch.com</a>' +
+            ' to be added by hand';
+        statusEl.className = 'submit-status pending';
+    }
+</script>
+
+</body>
+</html>

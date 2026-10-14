@@ -158,6 +158,29 @@
             opacity: 0.72;
         }
 
+        /* ── EMAIL LIST LINE ──
+           Set like .home-intro rather than like a card, because it is a
+           request and not a destination. See the comment at the markup. */
+        .home-mail {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--mc-text-dim, #8a7a8a);
+            text-align: center;
+            max-width: 52ch;
+            margin: 36px 0 0;
+            animation: fadeUp 0.6s 0.5s ease both;
+        }
+        .home-mail a {
+            color: var(--mc-lava-amber);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,124,31,0.4);
+        }
+        .home-mail a:hover {
+            color: var(--mc-cereal-cyan);
+            border-bottom-color: var(--mc-cereal-cyan);
+        }
+
         @media (max-width: 640px) {
             main { padding: 48px 18px 48px; }
             .home-intro { font-size: 13px; line-height: 1.7; margin-top: 32px; }
@@ -165,6 +188,7 @@
             .nav-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .nav-card { padding: 12px 10px; }
             .card-sub { font-size: 11px; }
+            .home-mail { font-size: 12.5px; margin-top: 28px; }
         }
     </style>
 </head>
@@ -220,12 +244,24 @@
             guestbook<span class="card-sub">say hi</span></a>
     </div>
 
+    <!-- EMAIL LIST ──
+         Its own line rather than a ninth card. The grid above is four columns
+         for exactly eight cards, and the comment on .nav-cards says why: an
+         uneven wrap reads as a mistake. A ninth would sit alone on a third row,
+         and on the two-column mobile layout any odd count orphans one. It is
+         also not the same kind of thing as the cards, which name places to go;
+         this asks for something. -->
+    <p class="home-mail">
+        <a href="home/email-list.html">join the email list</a> and we will tell
+        you when a record, a game or a film comes out.
+    </p>
+
 </main>
 
 <footer>
     &copy; 2026 <span>magmacrunch media</span>
 </footer>
 
-<script src="nav.js?v=6c4c94a8"></script>
+<script src="nav.js?v=a1127215"></script>
 </body>
 </html>

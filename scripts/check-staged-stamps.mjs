@@ -74,8 +74,9 @@ import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  digestContent, HTML_REF_RE, CSS_REF_RE, isUnresolvable, isRemote, stampOf, isDigestStamp,
-  resolveRef, rewriteStampsIn, rewriteStamps, isWalked, GENERATED,
+  digestContent, HTML_REF_RE, CSS_REF_RE, JS_REF_RE, isUnresolvable, isRemote, stampOf,
+  isDigestStamp, refKind, RE_FOR, resolveRef, resolveJsRef, rewriteStampsIn, rewriteStamps,
+  isWalked, GENERATED,
 } from './lib/cache-busters.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -126,7 +127,10 @@ function readIndex(paths) {
 }
 
 // The same pages check-cache-busters.mjs walks, as the commit has them.
-const pages = [...oidOf.keys()].filter(p => /\.(?:html|css)$/.test(p) && isWalked(p));
+// .js joins .html and .css so the hook and CI read the same references. If it
+// did not, an edit to assets/jukebox.css would pass here and fail
+// check-cache-busters, which is the disagreement this script exists to prevent.
+const pages = [...oidOf.keys()].filter(p => /\.(?:html|css|js)$/.test(p) && isWalked(p));
 if (pages.length === 0) {
   // A pass over nothing is not a pass: an index with no pages in it means this
   // is reading the wrong index or the wrong repo, not that the commit is clean.
@@ -151,13 +155,15 @@ function isClean(page) {
 
 /** Every local reference in a page, resolved. */
 function refsOf(page) {
-  const isCss = page.endsWith('.css');
+  const kind = refKind(page);
+  const isCss = kind === 'css';
   const refs = [];
-  for (const m of text.get(page).matchAll(isCss ? CSS_REF_RE : HTML_REF_RE)) {
-    // HTML captures (href, query); CSS captures (quote, href, query).
+  for (const m of text.get(page).matchAll(RE_FOR[kind])) {
+    // HTML and JS capture (href, query); CSS captures (quote, href, query).
     const [href, query] = isCss ? [m[2], m[3]] : [m[1], m[2]];
     if (isUnresolvable(href) || isRemote(href)) continue;
-    const target = resolveRef(href, page);
+    // A script resolves from the root, not from itself. See resolveJsRef.
+    const target = kind === 'js' ? resolveJsRef(href) : resolveRef(href, page);
     if (GENERATED.has(target)) continue;
     refs.push({ page, href, stamp: stampOf(query), target });
   }
@@ -204,7 +210,7 @@ for (let round = 1; ; round++) {
       held.set(page, entries);
       continue;
     }
-    text.set(page, rewriteStampsIn(text.get(page), page.endsWith('.css'), entries).text);
+    text.set(page, rewriteStampsIn(text.get(page), refKind(page), entries).text);
     if (!repaired.has(page)) repaired.set(page, new Map());
     for (const e of entries) {
       const seen = repaired.get(page).get(e.href);

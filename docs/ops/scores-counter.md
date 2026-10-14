@@ -71,6 +71,7 @@ Every page (nav.js) ──WebSocket──▶ counter-server.py ──file I/O─
 
 - **Server** (`arcade/counter/counter-server.py`) — WebSocket on port 8783, persists count to JSON
 - **Client** (`assets/counter-client.js`) — shared library loaded by nav.js on every page
+- **Which host the client dials** is decided only by `_getWsUrl()` in that file: `localhost`/`127.0.0.1` pages talk to the Pi on the LAN, everything public goes through nginx on `magmacrunch.duckdns.org`. Its allowlist is a security control, the same one `MC_CHAT_OPTS` carries for chat (see [chat-system.md](chat-system.md) under "Which host the widget dials"): an unrestricted `?counter-server=` override would let a crafted link have every visitor's page load counted by, and the fact of their visit disclosed to, a host of the sender's choosing. Permitted hosts are loopback, the page's own hostname and the backend for that branch; anything else is ignored and the default stands. The host is read off the URL parser rather than by splitting the string, because a value carrying userinfo (`allowed.host:8783@attacker.example`) splits to the allowed name and connects somewhere else. Do not re-derive the host anywhere else.
 - **Display** (`assets/counter.css`) — retro LED digit styling for the guestbook page
 - **Storage** (`arcade/counter/count.json`) — `{"count": N}`
 

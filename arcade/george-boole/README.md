@@ -347,8 +347,7 @@ Format: `#1  ABC  247 pts  [8-BIT]` (on overall board)
 
 - **Based on**: 2048 by Gabriele Cirulli
 - **Mechanics by**: Boolean algebra & bitwise operations
-- **Developed by**: Jake McCoy
-- **Published by**: magmacrunch media
+- **Developed and published by**: magmacrunch media
 - **Music**: "George Boole has entered the chat" by Juanito Thompson
 - **SFX**: Custom analog synthesizer recordings (coming soon!)
 - **Font**: Press Start 2P by CodeMan38

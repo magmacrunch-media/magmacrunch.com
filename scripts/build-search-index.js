@@ -151,6 +151,7 @@ function parseMainPages() {
     { file: 'index.html', title: 'Home', desc: 'magmacrunch media homepage' },
     { file: 'home/about.html', title: 'About', desc: 'About magmacrunch media' },
     { file: 'home/guestbook.html', title: 'Guestbook', desc: 'Sign the guestbook' },
+    { file: 'home/email-list.html', title: 'Email list', desc: 'Get a note when something comes out' },
     { file: 'music/index.html', title: 'Music Hub', desc: 'Music landing page' },
     { file: 'music/distributed-music/index.html', title: 'Distributed Music', desc: 'Stream and download releases' },
     { file: 'music/jukebox/index.html', title: 'Jukebox', desc: 'Audio jukebox player' },

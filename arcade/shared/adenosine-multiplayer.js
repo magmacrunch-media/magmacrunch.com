@@ -198,8 +198,33 @@ var AdMP = (() => {
     // RFC1918. Note 172 is only private from 172.16 to 172.31 — a bare /^172\./
     // also swallows public addresses such as 172.217.14.5.
     _PRIVATE: /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/,
+    // The host the socket will REALLY open, read off the URL parser rather than
+    // by splitting the string. Splitting on '/' and then ':' takes the text
+    // before the first colon, which is the wrong answer for a value carrying
+    // userinfo:
+    //
+    //   ?server=relay.example.net:443@evil.example.org
+    //
+    // splits to 'relay.example.net', passes an allowlist holding that name, and
+    // then connects to evil.example.org, because everything before the '@' is
+    // credentials rather than a host. Nothing had to be misconfigured for that
+    // to work: the page's own hostname is always allowed, so naming it as the
+    // userinfo was enough on every install, and _PRIVATE below made it cheaper
+    // still, since an RFC1918 literal in the userinfo position passed with no
+    // allowlist entry at all.
+    //
+    // This is the parser the WebSocket constructor itself uses, so the name
+    // checked against the allowlist is the name dialled, and the name _scheme()
+    // reads is that same name rather than the credentials in front of it. A
+    // value that will not parse gives '', and '' is on no allowlist.
     _hostOf(addr) {
-      return String(addr).replace(/^wss?:\/\//, "").split("/")[0].split(":")[0];
+      const raw = String(addr);
+      const s = /^wss?:\/\//.test(raw) ? raw : "ws://" + raw;
+      try {
+        return new URL(s).hostname;
+      } catch {
+        return "";
+      }
     },
     _isAllowed(addr) {
       const host = MP._hostOf(addr);

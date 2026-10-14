@@ -391,7 +391,7 @@
       reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you
       walk on it. The landscape is <strong>surveyed, not sculpted</strong>.</p>
 
-    <p>There is no procedural generation and no terrain editor, because the ground is not the
+    <p>There's no procedural generation and no terrain editor, because the ground is not the
       engine's to invent. Sibling to <a href="../magnolia/">magnolia</a>, the other C99 engine
       here, and to <a href="../hologram/">hologram</a>, which solves the opposite problem. Built
       for Block Island Simulator, which is the island below.</p>
@@ -420,7 +420,7 @@
           <h3>the island at range</h3>
           <p>Chunked level of detail across the whole island at 1:1. 110,440 trees stand where the
             lidar measured them, drawn instanced in a single draw call and tinted onto the ground
-            itself once they are too far away to draw. LOD is a tenfold triangle reduction overall:
+            itself once they're too far away to draw. LOD is a tenfold triangle reduction overall:
             1.87 M in the worst measured view against 18.7 M with every tile at full resolution.
             <span class="counts">761,344 terrain triangles &middot; 1,395 trees &middot; 2,988 shrub clumps</span></p>
         </div>
@@ -445,7 +445,7 @@
           <h3>water, and where it meets land</h3>
           <p>The sheltered shores, the marina and the sea's edge in one frame. Water depth, the
             tide and the shoreline are the hardest thing in the engine to get right, which is why
-            this view is one of the eight: it is a place something once went wrong, and it is
+            this view is one of the eight: it's a place something once went wrong, and it's
             photographed every build so it cannot go wrong again unnoticed.
             <span class="counts">1,048,832 terrain triangles &middot; 190,194 paving &middot; 650 trees</span></p>
         </div>
@@ -470,7 +470,7 @@
   <hr class="petal-rule">
 
   <div class="features">
-    <h2>what is in it</h2>
+    <h2>what's in it</h2>
     <div class="feat-grid">
       <div class="feat-item">
         <strong>terrain</strong>
@@ -534,7 +534,7 @@
 DAFFODIL_TILE_METRES    512.0f
 DAFFODIL_POST_METRES    2.0f</code></pre>
 
-    <p>There is no height scale constant and no decode step: reading a tile is one <code>fread</code>
+    <p>There's no height scale constant and no decode step: reading a tile is one <code>fread</code>
       into a <code>float*</code>. A scale constant is a thing two languages can disagree about, and
       this way they cannot. The <code>+1</code> in the sample count is load-bearing too, because it
       makes adjacent tiles share their edge row exactly.</p>
@@ -566,8 +566,7 @@ DAFFODIL_POST_METRES    2.0f</code></pre>
   <div class="src-note">
     <div class="src-note-box">
       <div class="src-note-label">// source access //</div>
-      <p>daffodil is developed in-house and is not publicly distributed. This page and the frames
-        above are the public account of it.</p>
+      <p>daffodil is developed in-house and is not publicly distributed.</p>
       <p>For source access, licensing, or anything else, email
         <a href="mailto:info@magmacrunch.com?subject=daffodil">info@magmacrunch.com</a>.</p>
     </div>
@@ -577,6 +576,6 @@ DAFFODIL_POST_METRES    2.0f</code></pre>
       &copy; 2026 <span>magmacrunch media</span>
   </footer>
 
-  <script src="../../nav.js?v=6c4c94a8"></script>
+  <script src="../../nav.js?v=a1127215"></script>
 </body>
 </html>

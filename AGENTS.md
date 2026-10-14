@@ -323,6 +323,55 @@ single commit with `git commit --no-verify`.
 
 Runner internals, Python interpreter selection, and what each suite covers: `docs/ops/testing.md`.
 
+### The three shared assets are stamped on every page that loads them
+
+`nav.js`, `style.css` and `assets/archive.css` carry a `?v=` on every reference
+to them: 738 in all, across 278 distinct pages -- 275 load `nav.js`, 278
+`style.css`, 185 `assets/archive.css`. Until 2026-09-17 all but 33 of those were
+bare, and GitHub Pages serves them `Cache-Control: max-age=600` -- so for ten
+minutes after any deploy a returning visitor kept running the old file while the
+deployed one was correct.
+
+Check that with `node scripts/check-cache-busters.mjs`, which prints how many
+stamped references it verified, rather than by grepping `style.css?v=` -- several
+arcade games have a `style.css` of their own, and a grep on the filename counts
+those too.
+
+**That is not hypothetical, and it is the reason to keep them stamped.** The
+outside-tap close in `7ff99136` read as broken when checked on the live site:
+the page's own script load came back `transferSize: 0` out of cache, 41436 bytes
+against the deployed 42501, while a fetch of the same URL showed the new code.
+Resource timing is what settles this kind of doubt -- a fetch proves what is
+deployed, `performance.getEntriesByType('resource')` proves what the page
+actually ran.
+
+**What it costs**: editing any of the three makes hundreds of stamps stale at
+once, so `npm run fix:cachebust` is part of that edit and the commit carries
+those pages with it. The pathspec rule above and the pre-commit gate both apply,
+which means a one-line `nav.js` change is a 261-file commit.
+
+**What it does not fix**: the HTML is served `max-age=600` as well, and nothing
+in the repo can change that -- Pages does not take cache headers. A visitor can
+still see a page up to ten minutes old. What is gone is the *mismatch*: fresh
+HTML can no longer pair with a stale script, which was the failure that said
+nothing on screen.
+
+Doing this for a fourth asset is a decision, not a chore.
+`check-cache-busters.mjs --fix` deliberately will not add a stamp -- "adding
+stamps is a judgement about caching that belongs to whoever writes the tag" --
+and two things have to be checked by hand first:
+
+- **Generated arcade folders.** Stamping a copy that `make sync-<repo>` deletes
+  and recopies is silently undone. Resolve the list from `scripts/games.mjs`,
+  not from the table below. None of those folders loads the site nav, which is
+  why these three were safe.
+- **`GLOBAL_CSS_PATTERNS` in nav.js.** The SPA decides which sheets survive a
+  page swap through `isGlobal()`, and `style.css` and `assets/archive.css` are
+  both in that list. It tests `href.includes(...)`, so a query after the
+  filename still matches -- but an equality test there would have dropped the
+  site stylesheet on every SPA navigation, and `archive.css` styles bare `main`,
+  so the symptom would have been a page losing its layout mid-hop.
+
 ---
 
 ## Adding a new arcade game
@@ -471,6 +520,7 @@ Every other game under `arcade/` is authored in this repo as normal.
 - `docs/ops/chat-system.md` — arcade chat: SharedWorker architecture, handshake gate, rate limits, rooms, services.json, deploy
 - `docs/ops/chat-presence-widget-changes.md` — arcade chat presence: what the online count means, and the widget changes queued for adenosine
 - `docs/ops/scores-counter.md` — high-score system and site hit counter: architecture, game IDs, deploy
+- `docs/ops/email-list.md` - the email signup: why Apps Script, how it differs from the guestbook, deploying the script, what single opt-in costs before the first send
 - `docs/ops/mcp-server.md` — remote MCP server on MC1: setup, tools, service management, troubleshooting
 - `docs/ops/pi-deployment.md` — Raspberry Pi setup, venv recovery, admin dashboard, systemd services/ports
 - `docs/ops/ci-bots.md` — GitHub Actions workflows, self-hosted MC1 runner, Pi cron bots, SSH keys

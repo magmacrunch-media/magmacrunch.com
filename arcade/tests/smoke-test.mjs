@@ -91,16 +91,19 @@ const hasLobby = (g) => Boolean(g.lobby);
  * same backend everywhere, so checking it once is the honest amount of coverage
  * and 24 sockets to the chat server is not.
  *
- * It sits on a game nothing else points `?server=` at. Both
- * adenosine-multiplayer and adenosine-chat read that one parameter, so a page
- * whose lobby ALSO needs a local server could only point one of them at it.
+ * `checkChat` below is therefore unreachable. It is left for whoever
+ * finishes the retirement to delete, along with chat-server.py, the
+ * `arcade-chat` unit and the `chat` entry in shared/services.json, which
+ * all still exist.
  *
- * That is narrower than "a game with no lobby", which is what this said until
- * 2026-10-13, and the difference matters: only a lobby declaring a `port`
- * claims the parameter, and six of the nine lobby games declare none. The
- * wider rule cost this check its home when chat was restricted to the
- * multiplayer games, because it left no page with chat and no lobby at all --
- * CI went red on tetris, whose widget had just been removed under it.
+ * It is kept as a comment rather than deleted outright because the flag moved
+ * twice in one day while the widget was being withdrawn under it, and both
+ * moves went red in CI: first on tetris when 83370480 restricted chat to the
+ * multiplayer games, then on cribbage when 228458ba removed the last of it.
+ * Neither of those commits touched this file. If chat ever comes back, the
+ * constraint on where this can live is that both adenosine-multiplayer and
+ * adenosine-chat read the same `?server=` parameter, so the page carrying it
+ * cannot also need a local multiplayer server.
  */
 const hasChat = (g) => Boolean(g.chat);
 
