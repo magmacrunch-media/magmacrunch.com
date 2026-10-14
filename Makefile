@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -131,6 +131,12 @@ sync-pay2play: ## Regenerate arcade/pay2play/ from the pay2play repo's web/
 
 sync-jovian-humanitarian-conflict: ## Regenerate arcade/jovian-humanitarian-conflict/ from its repo's web/
 	node scripts/sync-game.mjs jovian-humanitarian-conflict
+	npm run --silent build:adenosine
+
+# web/ there carries server.py and its tests beside the client, because the
+# Pi's arcade-sorry.service runs from arcade/SORRY/. The sync copies both.
+sync-sorry: ## Regenerate arcade/SORRY/ from the sorry repo's web/
+	node scripts/sync-game.mjs SORRY
 	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────

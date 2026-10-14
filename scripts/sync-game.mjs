@@ -80,7 +80,7 @@ and only then the sync target below. See that repo's \`docs/two-builds.md\`.`
 
 writeFileSync(
   join(dest, 'GENERATED.md'),
-  `# Generated — do not edit here
+  `# Generated: do not edit here
 
 Every file in \`arcade/${game}/\` is a copy. The source of truth is the
 [\`${repo}\`](https://github.com/magmacrunch-media/${repo}) repository, in its

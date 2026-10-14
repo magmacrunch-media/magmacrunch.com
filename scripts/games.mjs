@@ -82,6 +82,17 @@ export const GAMES = {
       'planned -- so as with jovian-humanitarian-conflict, this sync is currently\n' +
       'the only thing crossing repos.',
   },
+  // Extracted 2026-10-14 with its history. Unlike the others its folder holds
+  // a SERVER as well as the client -- server.py, rule_engine.py, start.sh --
+  // because the Pi's arcade-sorry.service runs from arcade/SORRY/, so the repo
+  // keeps that shape and this sync delivers both halves.
+  SORRY: {
+    repo: 'sorry',
+    other:
+      'CI that runs the rule engine and server tests\n' +
+      "against this repo's arcade/shared/. There is no second version yet; the\n" +
+      'repo exists so the move onto adenosine has somewhere to happen.',
+  },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };
