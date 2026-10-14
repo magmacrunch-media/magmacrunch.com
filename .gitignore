@@ -59,3 +59,12 @@ archive/_corrections.*
 # Where ci.yml checks the four game repos out for check:gamestamps. Only CI
 # makes this, but running those steps by hand should not offer to commit it.
 game-repos/
+
+# The pre-push hook llm-worktree.sh installs. This repo sets core.hooksPath
+# to .githooks, which is TRACKED (pre-commit lives there), so that script's
+# hook lands somewhere git watches instead of the .git/hooks it would use in
+# a repo that leaves the setting alone. It execs a guard by absolute path
+# under dev\, so it belongs to this machine and must never be committed.
+# Same reasoning as .claude/ above: .git/info/exclude is local and a fresh
+# clone would have no protection.
+/.githooks/pre-push
