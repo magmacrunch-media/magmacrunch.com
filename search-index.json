@@ -4,7 +4,7 @@
     "c": "page",
     "u": "/index.html",
     "d": "An independent record label and creative collective. Music, film, video games, web tools, writing, and an archive of the people who made them.",
-    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise magmacrunch media is an independent record label and creative collective, founded in 2023 across Pennsylvania, California and New Hampshire. We release our own music, films, video games, web tools and writing, and we keep an archive of the people who made them. More about us . music releases & jukebox visual film & collage archive who played what arcade browser games press experimental writing ware tools & toys about who we are guestbook say hi email list hear about it first"
+    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise magmacrunch media is an independent record label and creative collective, founded in 2023 across Pennsylvania, California and New Hampshire. We release our own music, films, video games, web tools and writing, and we keep an archive of the people who made them. More about us . music releases & jukebox visual film & collage archive who played what arcade browser games press experimental writing ware tools & toys about who we are guestbook say hi join the email list and we will tell you when a re..."
   },
   {
     "t": "about",
@@ -21,11 +21,11 @@
     "b": "guestbook — magmacrunch media home › guestbook // guestbook // say hi ✦ leave a note ✦ you were here __ (`/\\ `=\\/\\ __...--~~~~~-._ _.-~~~~~--...__ `=\\/\\ \\ / \\\\ `=\\/ V \\\\ //_\\___--~~~~~~-._ | _.-~~~~~~--...__\\\\ // ) (..----~~~~._\\ | /_.~~~~----.....__\\\\ ===( INK )==========\\\\|//==================== __ejm\\___/________dwb`---`____________________________________________ [ send ] // entries // loading entries..."
   },
   {
-    "t": "email list",
+    "t": "email list - magmacrunch media",
     "c": "page",
     "u": "/home/email-list.html",
     "d": "get a note when something comes out",
-    "b": "email list — magmacrunch media home › email list // email list // leave an address ✦ hear about it first ,----------------------------------------, |\\ /| | \\ / | | \\ / | | `--------------------------------' | | | | ONE (1) EMAIL LIST | | | '----------------------------------------' your email website [ sign me up ] // the deal // We have not worked out what this is yet. There is no newsletter today. This is a list of people to tell when there is one, or when a record, a game or a film comes out. Rarely. Nobody here wants to write a weekly email and you would not want to read it. Your address, ..."
+    "b": "email list - magmacrunch media home › email list // email list // leave an address ✦ hear about it first .----------------------------. |\\ /| | \\________________________/ | | | | E-MAIL LIST | | | '----------------------------' your email referral code [ sign me up ] // the deal // Coming soon. Sign up for a future newsletter and email content by magmacrunch media. No spam, no ads, no tracking, and no sharing of your email address. Unsubscribe anytime. Write to info@magmacrunch.com and you are off it. Every mail we eventually send will say so too."
   },
   {
     "t": "music",
@@ -1957,14 +1957,14 @@
     "c": "tool",
     "u": "/ware/crunch-c/",
     "d": "learn C memory management without segfaults",
-    "b": "crunch-c — magmacrunch media crunch-c learn C memory management without segfaults Every memory error is caught and explained. No segfaults. No undefined behavior. Just C's behavior, narrated. ▶ Start the course What you'll learn Loading modules… How it works In C, memory mistakes cause segfaults, crashes and security vulnerabilities. Here the same mistakes are caught and named: quicksand at line 5, column 9 | 5 | val = p.peek(i32) | ^ this ground was scorched at line 4 (garrisoned at line 1) You learn what C does, and why it is dangerous, without the danger. The lessons run in your browser — t..."
+    "b": "crunch-c — magmacrunch media crunch-c learn C memory management without segfaults Every memory error is caught and explained. No segfaults. No undefined behavior. Just C's behavior, narrated. ▶ Start the course What you'll learn Loading modules… How it works In C, memory mistakes cause segfaults, crashes and security vulnerabilities. Here the same mistakes are caught and named: quicksand at line 5, column 9 | 5 | val = p.peek(i32) | ^ this ground was scorched at line 4 (garrisoned at line 1) You learn what C does, and why it's dangerous, without the danger. The lessons run in your browser — th..."
   },
   {
     "t": "daffodil",
     "c": "tool",
     "u": "/ware/daffodil/",
     "d": "A C99 heightfield terrain engine: real-world landscape at 1:1, measured, not invented.",
-    "b": "daffodil — magmacrunch media ← developer tools daffodil heightfield terrain engine · real-world landscape at 1:1 v0.1.0-dev PolyForm Noncommercial C99 + sokol A C99 heightfield terrain engine by magmacrunch media . daffodil draws real ground: it reads a heightfield built offline from LiDAR elevation data, reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you walk on it. The landscape is surveyed, not sculpted . There is no procedural generation and no terrain editor, because the ground is not the engine's to invent. Sibling to magnolia , the other C99 en..."
+    "b": "daffodil — magmacrunch media ← developer tools daffodil heightfield terrain engine · real-world landscape at 1:1 v0.1.0-dev PolyForm Noncommercial C99 + sokol A C99 heightfield terrain engine by magmacrunch media . daffodil draws real ground: it reads a heightfield built offline from LiDAR elevation data, reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you walk on it. The landscape is surveyed, not sculpted . There's no procedural generation and no terrain editor, because the ground is not the engine's to invent. Sibling to magnolia , the other C99 eng..."
   },
   {
     "t": "hologram",
@@ -1978,7 +1978,7 @@
     "c": "tool",
     "u": "/ware/hypnopompia/",
     "d": "the iOS shell for magmacrunch arcade games: Game Center plugin, bundle pipeline, store tooling",
-    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the store tooling, by magmacrunch media . It is to iOS what magnolia is to the Wii: the part that is the same every time. It runs no game logic. A game’s rules live in that game’s repo, once per platform. This holds what every App Store build needs and no game should have to reinvent: a plugin, a project, a pipeline and a checklist that fails loudly. contact what is here native/ The Game Center plugin and..."
+    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the store tooling, by magmacrunch media . It is to iOS what magnolia is to the Wii: the part that's the same every time. It runs no game logic. A game’s rules live in that game’s repo, once per platform. This holds what every App Store build needs and no game should have to reinvent: a plugin, a project, a pipeline and a checklist that fails loudly. contact what's here native/ The Game Center plugin and v..."
   },
   {
     "t": "magmascript",
@@ -2020,7 +2020,7 @@
     "c": "tool",
     "u": "/ware/texastoast/",
     "d": "Python RPG engine with I2C hardware abstraction for magmacrunch game systems",
-    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ A tkinter-based 2D game engine by magmacrunch media , inspired by adenosine and built for the same kind of small RPGs, but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi. Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it is absent. It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against imaginary controllers, a ..."
+    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ A tkinter-based 2D game engine by magmacrunch media , inspired by adenosine and built for the same kind of small RPGs, but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi. Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it's absent. It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against imaginary controllers, a l..."
   },
   {
     "t": "tone grating",
