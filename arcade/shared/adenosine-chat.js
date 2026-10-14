@@ -35,7 +35,13 @@ var AdChat = (() => {
       }
     })();
     function hostOf(addr) {
-      return String(addr).replace(/^wss?:\/\//, "").split("/")[0].split(":")[0];
+      var s = String(addr);
+      if (!/^wss?:\/\//.test(s)) s = "ws://" + s;
+      try {
+        return new URL(s).hostname;
+      } catch (e) {
+        return "";
+      }
     }
     function isAllowedServer(addr, extra, configured) {
       var host = hostOf(addr);
