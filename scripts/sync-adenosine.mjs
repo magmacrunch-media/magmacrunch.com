@@ -31,6 +31,51 @@ const SHARED = join(ROOT, 'arcade', 'shared');
 const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio', 'chat', 'multiplayer'];
 
 /**
+ * The oldest release whose bundle may be copied over the committed one.
+ *
+ * This is a one-way floor for a SECURITY fix, which the lockfile guard below
+ * cannot express. That guard catches a node_modules behind the lockfile; this
+ * catches a node_modules that AGREES with the lockfile and is still too old to
+ * serve, because the fix is not on npm yet.
+ *
+ * multiplayer 0.5.2 is the userinfo fix. MP._hostOf read the host by stripping
+ * the scheme and then splitting on '/' and ':', which for a value carrying
+ * userinfo returns the credentials and not the host:
+ *
+ *   ?server=magmacrunch.duckdns.org:8769@evil.example.com
+ *
+ * split to 'magmacrunch.duckdns.org', matched an allowlist holding that name,
+ * and then opened the socket to evil.example.com. _hostOf feeds _scheme() as
+ * well, so on the public https site that was a real wss: to the attacker's
+ * host rather than a mixed-content attempt the browser would have refused. The
+ * page's own hostname is always allowed, so no deployment had to be
+ * misconfigured, and the RFC1918 exemption that keeps LAN play working made
+ * ?server=192.168.1.16:8769@evil.example.com pass with no allowlist entry at
+ * all. arcade/tests/test-multiplayer-host.js holds the served bundle to it.
+ *
+ * The committed bundle is that build, vendored ahead of the npm release the
+ * way adenosine-cards was in 632b856. So node_modules is legitimately BEHIND
+ * arcade/shared/ until @magmacrunch/adenosine-multiplayer 0.5.2 is published
+ * and npm install has run. That is a known state rather than drift, and the
+ * hold below is what stops a routine `npm run build:adenosine` from quietly
+ * undoing the fix. Drop the entry once the floor is published: the sync then
+ * copies identical bytes and reports `unchanged`.
+ */
+const MIN_VERSION = { multiplayer: '0.5.2' };
+
+/** a < b, compared on major.minor.patch. No prerelease tags are used here. */
+function olderThan(a, b) {
+  const pa = String(a).split('.').map(Number);
+  const pb = String(b).split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    const x = pa[i] || 0;
+    const y = pb[i] || 0;
+    if (x !== y) return x < y;
+  }
+  return false;
+}
+
+/**
  * Extra files a package ships beside its bundle. adenosine-chat's SharedWorker
  * must sit next to the bundle that loads it: the widget resolves the worker as
  * a sibling of its own <script src>, and a SharedWorker cannot be bundled in
@@ -114,6 +159,8 @@ mkdirSync(SHARED, { recursive: true });
 const hashes = new Map();
 const missing = [];
 const stale = [];
+/** Packages whose committed bundle outranks node_modules. See MIN_VERSION. */
+const held = [];
 
 /** The version package-lock.json pins for a workspace dependency, if any. */
 function lockedVersion(pkg) {
@@ -151,6 +198,35 @@ for (const pkg of PACKAGES) {
   if (locked && locked !== version) {
     stale.push(`  @magmacrunch/adenosine-${pkg}: lockfile ${locked}, installed ${version}`);
     console.log(`  skipped   adenosine-${pkg}.js  (installed v${version}, lockfile wants v${locked})`);
+    continue;
+  }
+
+  // A MIN_VERSION floor above the installed version means arcade/shared/
+  // carries a build node_modules cannot supply yet. Keep the committed bundle
+  // and stamp from ITS bytes, so every page keeps pointing at what is actually
+  // served. Copying would reinstate the bug the floor names, and would do it
+  // on a routine sync run for some unrelated package.
+  //
+  // The whole package is held, assets and CSS with it, exactly as the lockfile
+  // guard above holds it. For multiplayer 0.5.2 that costs nothing: lobby.css
+  // is byte-identical to 0.5.1's once line endings are normalised, so there is
+  // no stylesheet update stranded behind the hold.
+  const floor = MIN_VERSION[pkg];
+  if (floor && olderThan(version, floor)) {
+    const committed = join(SHARED, `adenosine-${pkg}.js`);
+    if (!existsSync(committed)) {
+      missing.push(
+        `@magmacrunch/adenosine-${pkg} v${version} is below the v${floor} floor, ` +
+          `and arcade/shared/adenosine-${pkg}.js does not exist to hold instead`,
+      );
+      continue;
+    }
+    const keptHash = shortHash(readFileSync(committed));
+    hashes.set(pkg, keptHash);
+    held.push(`  @magmacrunch/adenosine-${pkg}: installed ${version}, floor ${floor}`);
+    console.log(
+      `  held      adenosine-${pkg}.js  v${version} < v${floor}  ?v=${keptHash}  (committed build kept)`,
+    );
     continue;
   }
 
@@ -365,3 +441,18 @@ console.log(
     `${localTagsStamped} page-local tag(s) checked across ${STAMP_ROOTS.map((d) => `${d}/`).join(' and ')}; ` +
     `${filesTouched + localFilesTouched} file(s) rewritten.`,
 );
+
+// Said last so it is the line still on screen. This is not a failure: the
+// committed bundle is NEWER than the one on npm, which is the state a security
+// fix vendored ahead of its release leaves behind, and the run above did
+// everything else it was asked to.
+if (held.length) {
+  console.log(
+    `\nHeld at the committed build, node_modules being below a MIN_VERSION floor:\n` +
+      `${held.join('\n')}\n\n` +
+      'Nothing was copied or downgraded for those, and their ?v= stamps were\n' +
+      'taken from the committed bytes. Publish the floor version, run `npm\n' +
+      'install`, then drop the MIN_VERSION entry -- the next sync copies\n' +
+      'identical bytes and reports `unchanged`.',
+  );
+}
