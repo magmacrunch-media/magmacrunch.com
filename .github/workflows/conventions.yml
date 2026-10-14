@@ -1,0 +1,58 @@
+# Calls the house conventions check, which lives in magmacrunch-media/.github.
+#
+# That host is PUBLIC, and a public repo's reusable workflows are callable from
+# every repo in the org with no token. A private host would need access granted
+# per consumer, which is 42 settings pages.
+#
+# WHY THIS REPO WANTS IT MOST. `no-em-dash.sh --install-all` refuses to clobber
+# an existing pre-commit hook, and this repo has one of its own: the `?v=`
+# cache-buster straddle guard. So the em dash rule has never been enforced here
+# at all, in the largest repo in the tree, and a hook would not have travelled
+# to a collaborator's clone anyway.
+#
+# Public repo, so these minutes are free and unlimited and this adds nothing to
+# the 2,000-minute allowance the private repos share.
+
+name: conventions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  conventions:
+    uses: magmacrunch-media/.github/.github/workflows/conventions-check.yml@main
+    with:
+      # ELEVEN workflows in this repo commit and push generated content, and
+      # without these excludes the check would fail most of that automation on
+      # text nobody here typed. Measured 2026-10-13:
+      #
+      #   search-index.json          465 lines with an em dash
+      #   archive/by-artist/         192 files with one
+      #   ware/crunch-c/lessons.js    58
+      #   theme-audit.json            40
+      #   archive/by-label/            5 files
+      #
+      # Those dashes come from MusicBrainz titles and from other repos, so they
+      # are upstream content rather than a style slip. The list is exactly the
+      # paths the self-committing workflows `git add`:
+      # backup-musicbrainz, backup-tmdb, bake-cache, generate-stubs,
+      # play-counts, rebuild-search-index, theme-audit, and the four ware/
+      # playground syncs.
+      #
+      # KEEP THIS TO REGENERATED THINGS. Excluding a hand-edited file turns the
+      # check off exactly where it is needed. If a new workflow starts
+      # committing a new path, it belongs here, and until it does the check will
+      # fail that workflow's push, which is the loud version of the right
+      # outcome rather than a surprise.
+      exclude-paths: >-
+        archive/
+        search-index.json
+        theme-audit.json
+        og/theme-audit.png
+        scripts/play-counts.json
+        scripts/archive-stubs.json
+        templates/entity-map.js
+        arcade/admin/stats/
+        ware/
