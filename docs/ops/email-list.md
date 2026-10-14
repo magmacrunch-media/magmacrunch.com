@@ -99,6 +99,56 @@ This works and the guestbook has relied on it for as long as it has existed.
 It does mean a request cannot be made `redirect: 'error'` or inspected for its
 original status.
 
+## The honeypot name is load-bearing, and got this wrong once
+
+**The field was called `website` for one day and it dropped real signups.**
+Chrome and every password manager autofill a field named `website`, `url`,
+`email`, `name`, `phone` or `address` whatever `autocomplete="off"` says, since
+that attribute is advisory. A genuine visitor submitted the form with the
+honeypot already filled by their browser, the script read it as a bot, and the
+signup was discarded while the page said "you are on the list".
+
+It is `referral_code` now, and the rule is that the name must match no autofill
+heuristic. `autocomplete="off"` is still there and is not what makes it safe.
+
+**The deeper fix is that a flagged submission is now RECORDED, with status
+`spam`, rather than discarded.** Dropping it silently is what made the bug
+invisible: there was nothing to find afterwards and the caller had been told it
+worked. A false positive now sits in the sheet where it can be seen and undone.
+
+`_record()` holds the five cases. Two of them are about safety rather than
+tidiness, and both have tests:
+
+| | |
+|---|---|
+| a genuine signup for an address sitting in `spam` | **promoted** back to `new`, which is the autofill false positive healing itself |
+| a flagged submission for an address already present | **nothing**, because otherwise anybody could mark a real subscriber as spam by submitting their address with the honeypot filled |
+
+So `spam` in that column means "this script thought it was a bot", not "this is
+a bot". Read it before the first send rather than trusting it.
+
+## Finding out where signups actually went
+
+`auditList()`, at the bottom of `scripts/email-list.gs`. Run it from the editor:
+paste the file in, save, pick it from the function dropdown, Run, and read the
+Execution log. **Saving does not change what `/exec` serves**, because a web app
+keeps serving its deployed version until somebody makes a new one, so this is
+safe to do while the form is live.
+
+It prints the bound spreadsheet's name and URL, every tab with its row count,
+and the last ten rows. That separates the three ways "I signed up and the sheet
+is blank" can happen:
+
+| what it prints | what happened |
+|---|---|
+| no bound spreadsheet | the script is standalone rather than container-bound, so nothing can ever be written. Re-create it from the sheet via Extensions -> Apps Script |
+| a `subscribers` tab with rows in it | you were looking at `Sheet1`. The script makes its own tab and never writes to the default one |
+| no `subscribers` tab at all | the rows are in a different spreadsheet, usually because the deployment was rebuilt against a new sheet |
+| the tab exists and is empty | `_sheet()` ran but nothing appended. Check Executions for a `doPost` that threw |
+
+It is editor-only on purpose. `doGet` refuses everything and `doPost` reads only
+its three form fields, so this adds no way to read the list over HTTP.
+
 ## What single opt-in costs, and when it comes due
 
 Nothing confirms that the person typing an address owns it. So the list will

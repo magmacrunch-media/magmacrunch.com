@@ -51,15 +51,26 @@
                    maxlength="254" autocomplete="email" inputmode="email"
                    spellcheck="false">
 
-            <!-- Honeypot. Hidden from people, inviting to a bot, and checked
-                 on the server as well: anything in it means the submission is
-                 dropped and success is reported anyway. Not type="hidden",
-                 because a bot that fills only visible-ish text inputs is
-                 exactly the one this catches. -->
+            <!-- Honeypot. Hidden from people, and checked on the server as
+                 well, where a submission carrying it is recorded with status
+                 `spam` rather than discarded. Not type="hidden", because a bot
+                 that fills only visible-ish text inputs is exactly the one
+                 this catches.
+
+                 THE NAME IS LOAD-BEARING. This was `website` for one day and
+                 it broke real signups: browsers and password managers autofill
+                 a field called website, url, email, name, phone or address no
+                 matter what autocomplete says, so a genuine visitor's form was
+                 submitted with the honeypot already filled and their signup was
+                 thrown away while the page told them it had worked. Any rename
+                 must stay clear of every real contact-field name.
+
+                 autocomplete="off" is kept, but it is advisory and was exactly
+                 what failed, so it is not what makes this safe. The name is. -->
             <div class="hp" aria-hidden="true">
-                <label for="website">website</label>
-                <input type="text" id="website" name="website" tabindex="-1"
-                       autocomplete="off">
+                <label for="referral_code">referral code</label>
+                <input type="text" id="referral_code" name="referral_code"
+                       tabindex="-1" autocomplete="off">
             </div>
 
             <button class="submit-btn" id="submitBtn" type="button">[ sign me up ]</button>
@@ -105,7 +116,7 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw5T0vo0w8fYDEMIRSaBm2pqHZJe2upWKXCyokjZUQYTKZkU-nERGXiz0XW9ZfV5OuiA/exec';
 
     const emailEl  = document.getElementById('email');
-    const hpEl     = document.getElementById('website');
+    const hpEl     = document.getElementById('referral_code');
     const btnEl    = document.getElementById('submitBtn');
     const statusEl = document.getElementById('submitStatus');
 
@@ -145,7 +156,7 @@
         const formData = new FormData();
         formData.append('email', email);
         formData.append('source', location.pathname);
-        formData.append('website', hpEl.value);
+        formData.append('referral_code', hpEl.value);
 
         fetch(SCRIPT_URL, { method: 'POST', body: formData })
             .then(r => r.json())
