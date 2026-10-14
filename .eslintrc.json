@@ -76,7 +76,6 @@
         "SUIT_COLORS": "readonly",
         "RANK_VALUES": "readonly",
         "MagmaCards": "readonly",
-        "ChatWidget": "readonly",
         "MP": "readonly",
         "MSG": "readonly",
         "MP_PALETTE": "readonly",
