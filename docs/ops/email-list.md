@@ -56,8 +56,14 @@ Browser work, about five minutes, and the only step that cannot be done from a
 checkout.
 
 1. Create a Google Sheet on the magmacrunch account. Name it something like
-   `magmacrunch email list`. Leave the tab alone; the script creates a
-   `subscribers` tab with its own header row on the first write.
+   `magmacrunch email list`. The script creates its own `subscribers` tab with
+   a header row on the first write, and never writes to the default tab.
+
+   **Then delete the default `Sheet1`, once `subscribers` exists.** Leaving it
+   there cost an hour on the first deployment: a spreadsheet opens on its
+   default tab, that tab is empty and always will be, and it reads exactly like
+   a form collecting nothing. Every signup had in fact landed, one tab over. An
+   empty decoy beside the real tab is worse than no tab at all.
 2. In that sheet: **Extensions -> Apps Script**. This makes a
    *container-bound* script, which is what `_sheet()` relies on: it calls
    `SpreadsheetApp.getActiveSpreadsheet()`, so there is no spreadsheet id to
