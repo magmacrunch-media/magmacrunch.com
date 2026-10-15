@@ -63,6 +63,28 @@ PALETTE = [
 SLOT_COLORS = ['red', 'blue', 'yellow', 'green']
 
 
+# Frame types a game's handle_action may return that go out as they are.
+# "system" is a top-level frame every client already routes to its chat log.
+PASSTHROUGH_FRAMES = ("game_action", "system")
+
+
+def game_frame(msg):
+    """
+    Wrap one handle_action result in the protocol's game_action envelope.
+
+    The protocol (README.md, and adenosine's MP._handle) delivers game moves as
+    {"type": "game_action", "action": {...}}, and MP routes only that type to
+    onGameAction; anything else it drops with a console warning. Every game here
+    returns bare frames instead -- card_drawn, move_made, turn_update -- and until
+    2026-10-14 they were broadcast as they were, so no MP client ever saw an
+    opponent's move. Wrapping here, once, keeps the games' return values as they
+    are and makes the wire match the protocol.
+    """
+    if msg.get("type") in PASSTHROUGH_FRAMES:
+        return msg
+    return {"type": "game_action", "action": msg}
+
+
 # ── Room ─────────────────────────────────────────────────────────────────────
 
 class Room:
@@ -450,7 +472,13 @@ class GameServer:
                         logger.warning("Rate limited: chat from %s", ip)
 
                 elif msg_type == "game_action":
-                    if ip_limiter.check((ip, "game_action"), 2, 3):
+                    # 10 per 3 s. It was 2, which silently dropped the third
+                    # action of an ordinary turn: SORRY's 2 card is draw, move,
+                    # draw again, and a Sorry! or 11 is draw, move, bump. The
+                    # drop is silent, so the game simply stalled. Two players on
+                    # one address (a household, or local testing) also share
+                    # this budget. The global 20/s cap above still bounds a flood.
+                    if ip_limiter.check((ip, "game_action"), 10, 3):
                         await self._handle_game_action(websocket, room, msg)
                     else:
                         logger.warning("Rate limited: game_action from %s", ip)
@@ -710,12 +738,9 @@ class GameServer:
         else:
             result = room.game.handle_action(name, action)
 
-        if isinstance(result, list):
-            for msg in result:
-                if msg:
-                    await room.broadcast(msg)
-        elif result:
-            await room.broadcast(result)
+        for out in (result if isinstance(result, list) else [result]):
+            if out:
+                await room.broadcast(game_frame(out))
 
     async def _handle_quit(self, websocket, room):
         """Player leaves."""

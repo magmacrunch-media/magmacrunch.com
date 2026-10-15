@@ -32,6 +32,7 @@ from server_base import (  # noqa: E402
     check_connection_rate,
     client_ip,
     connection_history,
+    game_frame,
     ip_limiter,
     origin_allowed,
     reset_limiters,
@@ -207,3 +208,23 @@ class TestResetLimiters:
         reset_limiters()
         assert not ip_limiter._windows
         assert not connection_history
+
+
+class TestGameFrame:
+    """
+    A game's handle_action returns bare frames; the wire must carry them inside
+    a game_action envelope, because that is the only type adenosine's MP routes
+    to onGameAction. Without it every opponent move was dropped client-side.
+    """
+
+    def test_a_bare_game_frame_is_wrapped(self):
+        move = {"type": "card_drawn", "card": {"value": "2"}}
+        assert game_frame(move) == {"type": "game_action", "action": move}
+
+    def test_system_text_stays_top_level(self):
+        msg = {"type": "system", "text": "Alice skipped"}
+        assert game_frame(msg) is msg
+
+    def test_an_already_wrapped_frame_is_not_wrapped_twice(self):
+        msg = {"type": "game_action", "action": {"type": "move_made"}}
+        assert game_frame(msg) is msg
