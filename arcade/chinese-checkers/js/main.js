@@ -170,8 +170,8 @@
 
         // Lobby buttons
         lobbyJoinBtn.addEventListener('click', function() {
-            var roomCode = roomCodeInput.value.trim() || null;
-            Multiplayer.joinRoom('Player', roomCode);
+            var roomCode = roomCodeInput.value.trim().toUpperCase() || null;
+            Multiplayer.joinRoom(localStorage.getItem('arcade_username') || 'Player', roomCode);
             lobbyJoinBtn.disabled = true;
             lobbyJoinBtn.textContent = 'CONNECTING...';
         });
@@ -331,12 +331,16 @@
             }
         }
 
+        var mySide = Multiplayer.getMySide();
+        Game.setOnline(mySide, state.currentTurnIdx, state.phase === 'playing');
+
         if (state.currentTurnIdx !== undefined) {
-            turnIndicator.textContent = CC.PLAYER_NAMES[state.currentTurnIdx] + "'S TURN";
+            turnIndicator.textContent = state.currentTurnIdx === mySide
+                ? 'YOUR TURN'
+                : CC.PLAYER_NAMES[state.currentTurnIdx] + "'S TURN";
             turnIndicator.style.color = CC.PLAYER_COLORS[state.currentTurnIdx];
         }
 
-        var mySide = Multiplayer.getMySide();
         if (mySide !== null) {
             goalCount.textContent = Board.countPiecesInGoal(mySide) + ' / 10';
         }
@@ -355,9 +359,9 @@
 
         if (isMultiplayerMode) {
             if (!Multiplayer.isActive()) return;
-            var currentTurn = parseInt(document.getElementById('turnIndicator').textContent.split("'")[0]);
-            var mySide = Multiplayer.getMySide();
-            if (currentTurn !== mySide) return;
+            // This parsed an integer out of "CYAN'S TURN", which is NaN, so
+            // every online click was thrown away here.
+            if (Game.getCurrentPlayer() !== Multiplayer.getMySide()) return;
         } else {
             if (state === CC.STATE.AI_TURN) return;
             if (state === CC.STATE.GAME_OVER) return;
@@ -428,7 +432,7 @@
 
                 if (validMove) {
                     Board.applyMove(validMove);
-                    Game.deselectPiece();
+                    Game.setOnline(mySide, null, true);
                     Multiplayer.sendMove(selected, [q, r, s]);
                     goalCount.textContent = Board.countPiecesInGoal(mySide) + ' / 10';
                     gameMessage.textContent = 'Waiting for opponent...';

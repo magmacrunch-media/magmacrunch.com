@@ -118,6 +118,19 @@ var Game = (function() {
         notifyStateChange();
     }
 
+    // Online the server owns the turn. This puts the state machine in the
+    // seat's hands when it is this seat's move (so selectPiece accepts its
+    // pieces) and parks it otherwise. turnIdx null means a move is in flight.
+    function setOnline(myIdx, turnIdx, playing) {
+        vsAI = false;
+        humanPlayer = myIdx;
+        currentPlayer = turnIdx;
+        selectedPiece = null;
+        legalMoves = [];
+        state = playing && turnIdx === myIdx ? CC.STATE.SELECTING : CC.STATE.WAITING;
+        notifyStateChange();
+    }
+
     // ── AI Move ──────────────────────────────────────────────────────────────
     function executeAIMove() {
         if (currentPlayer === humanPlayer) return false;
@@ -199,7 +212,8 @@ var Game = (function() {
         getHumanPlayer: getHumanPlayer,
         getGoalCounts: getGoalCounts,
         setOnStateChange: setOnStateChange,
-        setOnGameEnd: setOnGameEnd
+        setOnGameEnd: setOnGameEnd,
+        setOnline: setOnline
     };
 
 })();

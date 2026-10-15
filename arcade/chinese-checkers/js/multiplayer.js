@@ -85,14 +85,11 @@ var Multiplayer = (function() {
         mySide = null;
 
         // Determine my side from the state.sides map
-        if (state.sides) {
-            var myName = MP.getMyName();
-            for (var side in state.sides) {
-                if (state.sides[side] === myName) {
-                    mySide = parseInt(side);
-                    break;
-                }
-            }
+        // sides maps NAME to seat index here, the other way round from
+        // chess and checkers. Reading it their way never matched, so mySide
+        // stayed null and sendMove dropped every move.
+        if (state.sides && typeof state.sides[MP.getMyName()] === 'number') {
+            mySide = state.sides[MP.getMyName()];
         }
 
         console.log('[MP] Game started. My side:', mySide);
@@ -110,6 +107,10 @@ var Multiplayer = (function() {
 
     MP.onGameAction = function(msg) {
         if (msg.gameOver) {
+            // Show the last move before the result, or the losers never see it.
+            if (msg.state && onStateUpdate) {
+                onStateUpdate({ type: 'move', msg: msg });
+            }
             var winnerIdx = msg.winnerIdx;
             var won = winnerIdx === mySide;
             isActive = false;
@@ -150,7 +151,7 @@ var Multiplayer = (function() {
         if (isActive) {
             isActive = false;
             if (onGameEnd) {
-                onGameEnd(true, msg.name, null);
+                onGameEnd(true, msg.playerName, null);
             }
         }
     };
