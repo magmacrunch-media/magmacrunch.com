@@ -23,6 +23,18 @@ SLOT_COLORS = ['red', 'blue', 'green', 'yellow']
 # Entry squares on the track for each color
 COLOR_ENTRY = {'red': 5, 'blue': 22, 'green': 39, 'yellow': 56}
 
+# The last track square before each colour's home run: five before its exit.
+#
+# Until 2026-10-14 the home run opened AT the exit, on this side and in the
+# client alike, and distance was measured from the pawn's square, so a pawn
+# that had just left the yard stood zero squares from its home run and any
+# roll took it in. A game was a 5 to get out and then a walk home. Now a pawn
+# goes round the board first, as it does in Parchis, and enters on the move
+# that passes this square. js/board-config.js gives the client the same rule
+# through adenosine-race, and the two have to agree or this server refuses
+# the moves the client offers.
+HOME_ENTRY = {c: (e - 5) % TRACK_SIZE for c, e in COLOR_ENTRY.items()}
+
 # Safe squares (entry squares + 4 before entry)
 SAFE_SQUARES = [5, 1, 22, 18, 39, 35, 56, 52]
 
@@ -61,13 +73,16 @@ def advance_position(color, from_pos, steps):
 
     cur = from_pos['track']
 
-    if cur <= entry:
-        dist_to_entry = entry - cur
-    else:
-        dist_to_entry = (TRACK_SIZE - cur) + entry
+    # How far the pawn has come since it left the yard, read off its square:
+    # pawns only move forward, so the square says it all. It turns into its
+    # home run on the move that passes HOME_ENTRY, a lap of 63 squares from
+    # the exit; landing exactly on HOME_ENTRY leaves it on the track.
+    progress = (cur - entry) % TRACK_SIZE
+    lap = (HOME_ENTRY[color] - entry) % TRACK_SIZE or TRACK_SIZE
+    total = progress + steps
 
-    if steps > dist_to_entry:
-        home_steps = steps - dist_to_entry
+    if total > lap:
+        home_steps = total - lap
         if home_steps > HOME_SIZE:
             return None
         if home_steps == HOME_SIZE:

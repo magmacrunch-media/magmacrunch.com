@@ -9,7 +9,7 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from server import (
-    TRACK_SIZE, HOME_SIZE, SLOT_COLORS, COLOR_ENTRY, SAFE_SQUARES,
+    TRACK_SIZE, HOME_SIZE, SLOT_COLORS, COLOR_ENTRY, HOME_ENTRY, SAFE_SQUARES,
     advance_position, get_pawns_at_track, is_safe_square,
     check_capture, is_blockade,
     is_null, is_track, is_home, is_finished,
@@ -80,27 +80,33 @@ class TestTrackMovement:
         assert result == {'track': 15}
 
     def test_forward_wraps_around(self):
-        result = advance_position('red', {'track': 65}, 5)
+        # Blue leaves at 22, so square 65 is mid-lap for it and 65 + 5 wraps.
+        result = advance_position('blue', {'track': 65}, 5)
         assert result == {'track': 2}  # 65 + 5 = 70 % 68 = 2
 
-    def test_forward_to_entry(self):
-        # Red entry is at 5. From track 2, 3 steps reaches entry
-        result = advance_position('red', {'track': 2}, 3)
-        assert result == {'track': 5}
+    # Red leaves the yard at 5 and its home run opens after square 0, five
+    # before its exit. These used to read the opposite way: the home run
+    # opened AT the exit, so a pawn leaving the yard went straight in.
 
-    def test_forward_past_entry(self):
-        # Red entry is at 5. From track 3, 4 steps = 2 to entry + 2 into home
-        result = advance_position('red', {'track': 3}, 4)
-        assert result == {'home': 2}
+    def test_leaving_the_exit_stays_on_the_track(self):
+        result = advance_position('red', {'track': 5}, 3)
+        assert result == {'track': 8}
+
+    def test_landing_on_home_entry_stays_on_the_track(self):
+        result = advance_position('red', {'track': 66}, 2)
+        assert result == {'track': 0}
+
+    def test_passing_home_entry_turns_in(self):
+        result = advance_position('red', {'track': 66}, 3)
+        assert result == {'home': 1}
 
     def test_forward_exact_home(self):
-        # Red entry is at 5. From track 3, 10 steps = 2 to entry + 8 home = finished
-        result = advance_position('red', {'track': 3}, 10)
+        # From home entry, 8 more steps finish.
+        result = advance_position('red', {'track': 0}, 8)
         assert result == 'finished'
 
     def test_forward_overshoot_home(self):
-        # Red entry is at 5. From track 3, 11 steps = overshoot
-        result = advance_position('red', {'track': 3}, 11)
+        result = advance_position('red', {'track': 0}, 9)
         assert result is None
 
 
@@ -137,10 +143,27 @@ class TestMovementEdgeCases:
 
     def test_all_colors_can_reach_home(self):
         for color in SLOT_COLORS:
+            home_entry = HOME_ENTRY[color]
+            # From home entry, 8 steps should reach home
+            result = advance_position(color, {'track': home_entry}, 8)
+            assert result == 'finished', f"{color} couldn't reach home from its home entry"
+
+    def test_no_color_goes_home_from_its_exit(self):
+        # The old rule: any roll from the exit square went into the home run.
+        for color in SLOT_COLORS:
             entry = COLOR_ENTRY[color]
-            # From entry, 8 steps should reach home
-            result = advance_position(color, {'track': entry}, 8)
-            assert result == 'finished', f"{color} couldn't reach home from entry"
+            for steps in range(1, 13):
+                result = advance_position(color, {'track': entry}, steps)
+                assert result == {'track': (entry + steps) % TRACK_SIZE}, f"{color} +{steps}"
+
+    def test_a_full_lap_is_63_squares_then_the_home_run(self):
+        for color in SLOT_COLORS:
+            pos = {'track': COLOR_ENTRY[color]}
+            for _ in range(63):
+                pos = advance_position(color, pos, 1)
+                assert is_track(pos)
+            assert pos == {'track': HOME_ENTRY[color]}
+            assert advance_position(color, pos, 1) == {'home': 1}
 
     def test_each_color_has_different_entry(self):
         entries = list(COLOR_ENTRY.values())
