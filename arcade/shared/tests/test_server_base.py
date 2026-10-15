@@ -29,6 +29,7 @@ from server_base import (  # noqa: E402
     LOOPBACK,
     PUBLIC_ORIGINS,
     RateLimiter,
+    Room,
     check_connection_rate,
     client_ip,
     connection_history,
@@ -228,3 +229,30 @@ class TestGameFrame:
     def test_an_already_wrapped_frame_is_not_wrapped_twice(self):
         msg = {"type": "game_action", "action": {"type": "move_made"}}
         assert game_frame(msg) is msg
+
+
+class TestUniqueName:
+    """
+    Games key seats by player name, so two "Player"s in one room were one seat
+    and the second could never move. The room hands out a distinct name.
+    """
+
+    def room_with(self, *names):
+        room = Room("ABCD", None)
+        for i, n in enumerate(names):
+            room.player_names[object()] = n
+        return room
+
+    def test_a_free_name_is_kept(self):
+        assert self.room_with("Alice").unique_name("Bob") == "Bob"
+
+    def test_a_taken_name_gets_a_number(self):
+        assert self.room_with("Player").unique_name("Player") == "Player 2"
+
+    def test_numbers_count_past_the_taken_ones(self):
+        room = self.room_with("Player", "Player 2")
+        assert room.unique_name("Player") == "Player 3"
+
+    def test_the_suffixed_name_still_fits_twenty_characters(self):
+        long = "x" * 20
+        assert len(self.room_with(long).unique_name(long)) <= 20

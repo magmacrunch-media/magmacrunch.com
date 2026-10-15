@@ -118,6 +118,24 @@ class Room:
             for i, p in enumerate(self.players)
         ]
 
+    def unique_name(self, name):
+        """
+        The name this connection will be known by in this room.
+
+        Every game keys its seats by player name (chess's sides map, the turn
+        order of the race games), so two people both called "Player" -- the
+        default when nobody has set an arcade username -- were one seat, and the
+        second could never move. The welcome frame carries the name back and MP
+        takes its own name from it, so a client sees the suffix with no change.
+        """
+        taken = set(self.player_names.values())
+        if name not in taken:
+            return name
+        n = 2
+        while f"{name[:17]} {n}" in taken:
+            n += 1
+        return f"{name[:17]} {n}"
+
     def get_taken_colors(self):
         return list(self.used_colors)
 
@@ -507,11 +525,12 @@ class GameServer:
 
     async def _handle_join(self, websocket, msg):
         """Join a room (creates new room if none specified)."""
-        name = msg.get("name", "Player")[:20]
+        name = str(msg.get("name") or "Player")[:20]
         color = msg.get("color")
         room_code = msg.get("room")
 
         room = self._get_or_create_room(room_code)
+        name = room.unique_name(name)
 
         if room.player_count >= room.max_players:
             await websocket.send(json.dumps({"type": "rejected", "reason": "Room is full"}))
@@ -558,10 +577,11 @@ class GameServer:
 
     async def _handle_spectate(self, websocket, msg):
         """Join as spectator."""
-        name = msg.get("name", "Spectator")[:20]
+        name = str(msg.get("name") or "Spectator")[:20]
         room_code = msg.get("room")
 
         room = self._get_or_create_room(room_code)
+        name = room.unique_name(name)
         room.spectators.add(websocket)
         room.player_names[websocket] = name
 
@@ -582,9 +602,12 @@ class GameServer:
 
     async def _handle_create_room(self, websocket, msg):
         """Create a new room with a specific code."""
-        name = msg.get("name", "Player")[:20]
+        name = str(msg.get("name") or "Player")[:20]
         color = msg.get("color")
-        room_code = msg.get("room", "").upper()[:4]
+        # `or ""`, not a .get default: MP.createRoom(name, color, null) sends
+        # "room": null to ask for a generated code, and None.upper() raised and
+        # dropped the socket, so cribbage's Create Room never made a room.
+        room_code = (msg.get("room") or "").upper()[:4]
 
         if not room_code:
             room_code = self._generate_code()
@@ -614,15 +637,16 @@ class GameServer:
 
     async def _handle_join_room(self, websocket, msg):
         """Join an existing room by code."""
-        name = msg.get("name", "Player")[:20]
+        name = str(msg.get("name") or "Player")[:20]
         color = msg.get("color")
-        room_code = msg.get("room", "").upper()
+        room_code = (msg.get("room") or "").upper()
 
         if room_code not in self.rooms:
             await websocket.send(json.dumps({"type": "rejected", "reason": "Room not found"}))
             return None, None
 
         room = self.rooms[room_code]
+        name = room.unique_name(name)
 
         if room.player_count >= room.max_players:
             await websocket.send(json.dumps({"type": "rejected", "reason": "Room is full"}))
