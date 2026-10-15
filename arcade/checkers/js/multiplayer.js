@@ -112,6 +112,10 @@ var Multiplayer = (function() {
 
     MP.onGameAction = function(msg) {
         if (msg.gameOver) {
+            // Show the winning move before the result, or the loser never sees it.
+            if (msg.state && onStateUpdate) {
+                onStateUpdate({ type: 'move', msg: msg });
+            }
             var winnerSide = msg.winnerSide;
             var won = winnerSide === mySide;
             isActive = false;
@@ -152,7 +156,7 @@ var Multiplayer = (function() {
         if (isActive) {
             isActive = false;
             if (onGameEnd) {
-                onGameEnd(true, msg.name, null);
+                onGameEnd(true, msg.playerName, null);
             }
         }
     };

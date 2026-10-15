@@ -12,6 +12,8 @@ var Game = (function() {
     var moveHistory = [];
     var onStateChange = null;
     var onGameEnd = null;
+    // Online, the server rules on turns and on the result. See setOnline().
+    var online = false;
 
     // ── Initialization ───────────────────────────────────────────────────────
     function init() {
@@ -103,6 +105,17 @@ var Game = (function() {
             promoted: result.promoted
         });
 
+        // Online the move is shown at once and the server's next state decides
+        // whose turn it is and whether anybody won.
+        if (online) {
+            selectedPiece = null;
+            legalMoves = [];
+            currentPlayer = CK.AI;
+            state = CK.STATE.WAITING;
+            notifyStateChange();
+            return true;
+        }
+
         // Check for win
         var winner = Board.getWinner();
         if (winner) {
@@ -186,11 +199,16 @@ var Game = (function() {
             currentPlayer = CK.PLAYER;
             state = CK.STATE.SELECTING;
         } else {
+            // WAITING, not AI_TURN: main.js runs the local AI on AI_TURN, so an
+            // online opponent's turn used to play a phantom AI move on this
+            // board until the real one arrived.
             currentPlayer = CK.AI;
-            state = CK.STATE.AI_TURN;
+            state = online ? CK.STATE.WAITING : CK.STATE.AI_TURN;
         }
         notifyStateChange();
     }
+
+    function setOnline(flag) { online = !!flag; }
 
     // ── State Change Notification ────────────────────────────────────────────
     function setOnStateChange(cb) { onStateChange = cb; }
@@ -226,6 +244,7 @@ var Game = (function() {
         setOnStateChange: setOnStateChange,
         setOnGameEnd: setOnGameEnd,
         _internalSetTurn: _internalSetTurn,
+        setOnline: setOnline,
     };
 
 })();

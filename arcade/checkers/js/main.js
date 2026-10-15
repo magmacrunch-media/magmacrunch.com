@@ -151,6 +151,7 @@ var UI = (function() {
     // ── Local Game ───────────────────────────────────────────────────────────
     function startLocalGame() {
         isMultiplayer = false;
+        Game.setOnline(false);
         Multiplayer.quit();
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
@@ -251,7 +252,35 @@ var UI = (function() {
         elements.gameChat.style.display = 'flex';
         hideGameOver();
         isMultiplayer = true;
+        Game.setOnline(true);
         applyServerState(state);
+    }
+
+    // Board and the move generator only ever move CK.PLAYER pieces up the
+    // board, and online the server's red is exactly that. Black's seat sees the
+    // server board turned through 180 degrees with the colours swapped, which
+    // makes its own pieces CK.PLAYER pieces moving up, and the opening position
+    // is symmetric under it. Until 2026-10-14 black got the board as sent, so
+    // none of its pieces could be selected and the game could not get past
+    // red's first move. flip() maps a square either way, being its own inverse.
+    function seatIsBlack() {
+        return isMultiplayer && Multiplayer.getMySide() === 'black';
+    }
+
+    function flip(sq) {
+        if (!seatIsBlack()) return sq;
+        return { row: CK.BOARD_SIZE - 1 - sq.row, col: CK.BOARD_SIZE - 1 - sq.col };
+    }
+
+    function boardForSeat(board) {
+        if (!seatIsBlack()) return board;
+        var n = CK.BOARD_SIZE;
+        var out = [];
+        for (var r = 0; r < n; r++) {
+            out.push([]);
+            for (var c = 0; c < n; c++) out[r].push(-board[n - 1 - r][n - 1 - c] || 0);
+        }
+        return out;
     }
 
     function onMultiplayerGameEnd(won, winnerName, winnerSide) {
@@ -259,14 +288,14 @@ var UI = (function() {
     }
 
     function applyServerState(state) {
-        // Apply board from server
-        Board.setState(state.board);
+        // Apply board from server, turned to this seat
+        Board.setState(boardForSeat(state.board));
 
         // Set whose turn it is
         var mySide = Multiplayer.getMySide();
         var currentSide = state.currentTurnSide;
 
-        if (currentSide === mySide) {
+        if (currentSide === mySide && state.phase === 'playing') {
             Game._internalSetTurn('player');
         } else {
             Game._internalSetTurn('opponent');
@@ -315,8 +344,9 @@ var UI = (function() {
         for (var r = 0; r < CK.BOARD_SIZE; r++) {
             for (var c = 0; c < CK.BOARD_SIZE; c++) {
                 var p = board[r][c];
-                if (p === CK.PLAYER_PIECE || p === CK.PLAYER_KING) redCount++;
-                if (p === CK.AI_PIECE || p === CK.AI_KING) blackCount++;
+                var red = seatIsBlack() ? Board.isAIPiece(p) : Board.isPlayerPiece(p);
+                if (red) redCount++;
+                else if (p !== CK.EMPTY) blackCount++;
             }
         }
         counts.innerHTML =
@@ -365,7 +395,8 @@ var UI = (function() {
             var isPlayer = Board.isPlayerPiece(piece);
             var isKing = Board.isKing(piece);
 
-            pieceEl.className = 'piece ' + (isPlayer ? 'player' : 'ai');
+            // The classes are colours: .player is red, .ai is black.
+            pieceEl.className = 'piece ' + (isPlayer !== seatIsBlack() ? 'player' : 'ai');
             if (isKing) pieceEl.classList.add('king');
 
             // Highlight movable pieces
@@ -428,8 +459,8 @@ var UI = (function() {
                 if (move) {
                     Game.executeMove(row, col);
                     Multiplayer.sendMove(
-                        { row: selectedPiece.row, col: selectedPiece.col },
-                        { row: row, col: col }
+                        flip({ row: selectedPiece.row, col: selectedPiece.col }),
+                        flip({ row: row, col: col })
                     );
                 }
             } else {
@@ -528,7 +559,7 @@ var UI = (function() {
         if (won) {
             elements.gameOverTitle.textContent = 'YOU WIN!';
             elements.gameOverTitle.className = 'game-over-title win';
-            elements.gameOverMessage.textContent = 'Congratulations! You defeated ' + winnerName + '!';
+            elements.gameOverMessage.textContent = 'Congratulations! You won the match!';
         } else {
             elements.gameOverTitle.textContent = 'DEFEAT';
             elements.gameOverTitle.className = 'game-over-title lose';
