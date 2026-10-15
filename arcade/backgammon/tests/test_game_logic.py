@@ -364,19 +364,31 @@ class TestGameClass:
 
     def test_accept_double(self, game):
         state = game.get_state()
+        other = 'Bob' if state['currentTurn'] == 'Alice' else 'Alice'
         game.handle_action(state['currentTurn'], {"type": "double"})
-        if game.phase == 'doubling':
-            result = game.handle_action(state['currentTurn'], {"type": "accept_double"})
-            assert result is not None
-            assert game.doubling_cube == 2
+        assert game.phase == 'doubling'
+        result = game.handle_action(other, {"type": "accept_double"})
+        assert result is not None
+        assert game.doubling_cube == 2
+        # The cube belongs to whoever accepted it
+        assert game.doubling_owner != state['currentTurnSide']
+
+    def test_the_doubler_cannot_answer_their_own_double(self, game):
+        state = game.get_state()
+        game.handle_action(state['currentTurn'], {"type": "double"})
+        assert game.handle_action(state['currentTurn'], {"type": "accept_double"}) is None
+        assert game.handle_action(state['currentTurn'], {"type": "reject_double"}) is None
+        assert game.phase == 'doubling'
 
     def test_reject_double(self, game):
         state = game.get_state()
+        other = 'Bob' if state['currentTurn'] == 'Alice' else 'Alice'
         game.handle_action(state['currentTurn'], {"type": "double"})
-        if game.phase == 'doubling':
-            result = game.handle_action(state['currentTurn'], {"type": "reject_double"})
-            assert result is not None
-            assert result['gameOver'] is True
+        assert game.phase == 'doubling'
+        result = game.handle_action(other, {"type": "reject_double"})
+        assert result is not None
+        assert result['gameOver'] is True
+        assert result['winnerSide'] == state['currentTurnSide']
 
 
 # ── Board Integrity ───────────────────────────────────────────────────────────

@@ -25,15 +25,18 @@ BG.HOME_AI = 25;      // Virtual point 25 = AI's home
 // ── Initial Position (standard backgammon) ────────────────────────────────────
 // [point] = { count, owner } — using 1-indexed points for clarity
 // Positive = player, Negative = AI
+// The player moves down to 0 and bears off from 1-6, so its back checkers
+// start on 24. Owners were swapped until 2026-10-14, giving each side the
+// other's layout. server.py carries the same table.
 BG.INITIAL_POSITION = {
-    1:  { count: 2, owner: BG.PLAYER },
-    6:  { count: 5, owner: BG.AI },
-    8:  { count: 3, owner: BG.AI },
-    12: { count: 5, owner: BG.PLAYER },
-    13: { count: 5, owner: BG.AI },
-    17: { count: 3, owner: BG.PLAYER },
-    19: { count: 5, owner: BG.PLAYER },
-    24: { count: 2, owner: BG.AI }
+    1:  { count: 2, owner: BG.AI },
+    6:  { count: 5, owner: BG.PLAYER },
+    8:  { count: 3, owner: BG.PLAYER },
+    12: { count: 5, owner: BG.AI },
+    13: { count: 5, owner: BG.PLAYER },
+    17: { count: 3, owner: BG.AI },
+    19: { count: 5, owner: BG.AI },
+    24: { count: 2, owner: BG.PLAYER }
 };
 
 // ── Board Array Representation ────────────────────────────────────────────────

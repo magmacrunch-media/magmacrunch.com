@@ -109,6 +109,11 @@
     box-shadow: 0 0 15px var(--bg-highlight-glow);
 }
 
+/* The tray, when bearing off is a legal destination */
+.off-area.highlighted {
+    box-shadow: 0 0 15px var(--bg-highlight-glow);
+}
+
 /* ── Checkers ───────────────────────────────────────────────────────────────── */
 .checkers {
     position: relative;

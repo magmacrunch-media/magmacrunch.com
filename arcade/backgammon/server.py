@@ -25,15 +25,19 @@ ARRAY_SIZE = 28
 NUM_POINTS = 24
 
 # Initial position (1-indexed points)
+# PLAYER moves down to 0 and bears off from 1-6, so its two back checkers
+# start on 24. The owners here were swapped until 2026-10-14, which gave each
+# side the other's layout: two checkers already home and 208 pips to run
+# instead of 167.
 INITIAL_POSITION = {
-    1:  (2, PLAYER),
-    6:  (5, AI),
-    8:  (3, AI),
-    12: (5, PLAYER),
-    13: (5, AI),
-    17: (3, PLAYER),
-    19: (5, PLAYER),
-    24: (2, AI),
+    1:  (2, AI),
+    6:  (5, PLAYER),
+    8:  (3, PLAYER),
+    12: (5, AI),
+    13: (5, PLAYER),
+    17: (3, AI),
+    19: (5, AI),
+    24: (2, PLAYER),
 }
 
 # Move types
@@ -443,11 +447,15 @@ class BackgammonGame:
         }
 
     def _handle_accept_double(self, player_name):
+        # Only the player the double was offered to answers it. Either seat
+        # used to be able to, including the doubler, and the cube then went to
+        # the doubler, because double() takes the side that DOUBLED and was
+        # being handed the side that accepted.
         side = self._get_side(player_name)
-        if side is None or self.phase != 'doubling':
+        if side is None or self.phase != 'doubling' or side == self.current_turn:
             return None
 
-        self.doubling_cube, self.doubling_owner = double(self.doubling_cube, self.doubling_owner, side)
+        self.doubling_cube, self.doubling_owner = double(self.doubling_cube, self.doubling_owner, self.current_turn)
         self.phase = 'playing'
 
         return {
@@ -459,7 +467,7 @@ class BackgammonGame:
 
     def _handle_reject_double(self, player_name):
         side = self._get_side(player_name)
-        if side is None or self.phase != 'doubling':
+        if side is None or self.phase != 'doubling' or side == self.current_turn:
             return None
 
         # The player who rejected loses

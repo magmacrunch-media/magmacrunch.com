@@ -11,6 +11,15 @@ var UI = (function() {
     var diceAnimationInterval = null;
     var isMultiplayer = false;
 
+    // Online turn. The server offers a whole turn as one of state.moves, a
+    // list of move sequences, and takes back the index of the one played. The
+    // page picks it one checker at a time: `played` is the steps made so far,
+    // and a step is legal when some sequence starts with played plus it.
+    // Until 2026-10-14 the page never set its turn from the server, so no
+    // checker could be selected online, and a click sent the first sequence
+    // that merely CONTAINED the step, playing the rest of the turn unasked.
+    var mp = { combos: [], played: [], myTurn: false, state: null };
+
     // ── Initialize ───────────────────────────────────────────────────────────
     function init() {
         cacheElements();
@@ -262,9 +271,107 @@ var UI = (function() {
         showMultiplayerGameOver(won, winnerName);
     }
 
+    // Board, the renderer and the move rules all treat BG.PLAYER as the side
+    // moving down to 0, drawn in cyan along the bottom. The server's 'ai' seat
+    // gets its board turned around with the signs swapped, so it plays as
+    // BG.PLAYER too. mirror() maps a board index either way.
+    function seatIsAi() {
+        return isMultiplayer && Multiplayer.getMySide() === BG.AI;
+    }
+
+    function mirror(p) {
+        if (!seatIsAi()) return p;
+        if (p >= 0 && p <= 25) return 25 - p;
+        if (p === BG.OFF_PLAYER) return BG.OFF_AI;
+        if (p === BG.OFF_AI) return BG.OFF_PLAYER;
+        return p;
+    }
+
+    function boardForSeat(board) {
+        var out = [];
+        for (var i = 0; i < board.length; i++) out[mirror(i)] = seatIsAi() ? (-board[i] || 0) : board[i];
+        return out;
+    }
+
+    function sameStep(a, b) {
+        return a.from === b.from && a.to === b.to;
+    }
+
+    // The next steps open to this seat, each with a sequence it belongs to.
+    function stepOptions() {
+        var out = [];
+        if (!mp.myTurn) return out;
+        var n = mp.played.length;
+        for (var i = 0; i < mp.combos.length; i++) {
+            var c = mp.combos[i];
+            if (c.length <= n) continue;
+            var ok = true;
+            for (var j = 0; j < n; j++) {
+                if (!sameStep(c[j], mp.played[j])) { ok = false; break; }
+            }
+            if (ok) out.push({ index: i, move: c[n] });
+        }
+        return out;
+    }
+
+    // Play one step locally; send the turn once no sequence goes further.
+    function playStep(move) {
+        Board.applyMove(move);
+        mp.played.push(move);
+        if (stepOptions().length) {
+            renderBoard();
+            setMessage('Move another checker');
+            return;
+        }
+        for (var i = 0; i < mp.combos.length; i++) {
+            var c = mp.combos[i];
+            if (c.length !== mp.played.length) continue;
+            var ok = true;
+            for (var j = 0; j < c.length; j++) {
+                if (!sameStep(c[j], mp.played[j])) { ok = false; break; }
+            }
+            if (ok) {
+                mp.myTurn = false;
+                Multiplayer.sendMove(i);
+                renderBoard();
+                setMessage('Waiting for opponent...');
+                return;
+            }
+        }
+    }
+
+    function canDoubleOnline() {
+        var s = mp.state;
+        if (!s || !mp.myTurn || mp.played.length || s.phase !== 'playing') return false;
+        if (s.doublingCube >= 64) return false;
+        return s.doublingOwner === null || s.doublingOwner === Multiplayer.getMySide();
+    }
+
+    // The player offered a double answers it here. There was no way to, so a
+    // double offered online stalled the game for good.
+    function showDoubleAnswer(cube) {
+        setMessage('Opponent doubles to ' + cube * 2 + '. ');
+        [['ACCEPT', Multiplayer.sendAcceptDouble], ['DECLINE (FORFEIT)', Multiplayer.sendRejectDouble]].forEach(function(b) {
+            var btn = document.createElement('button');
+            btn.className = 'start-btn';
+            btn.textContent = b[0];
+            btn.style.margin = '0 4px';
+            btn.addEventListener('click', function() { b[1](); setMessage('Answer sent'); });
+            elements.message.appendChild(btn);
+        });
+    }
+
     function applyServerState(state) {
-        // Apply board from server
-        Board.setState(state.board);
+        // Apply board from server, turned to this seat
+        Board.setState(boardForSeat(state.board));
+        mp.state = state;
+        mp.played = [];
+        mp.combos = (state.moves || []).map(function(combo) {
+            return combo.map(function(m) {
+                return { from: mirror(m.from), to: mirror(m.to), type: m.type, die: m.die };
+            });
+        });
+        clearSelection();
 
         // Update dice display
         if (state.dice) {
@@ -272,8 +379,9 @@ var UI = (function() {
             updateDieDisplay(elements.die2, state.dice[1]);
         }
 
-        // Update doubling cube
-        updateDoublingCube(state.doublingOwner, state.doublingCube);
+        // Doubling cube owner, in this seat's terms
+        var cubeOwner = state.doublingOwner;
+        if (cubeOwner && seatIsAi()) cubeOwner = cubeOwner === BG.AI ? BG.PLAYER : BG.AI;
 
         // Update stakes display
         elements.scoreValue.textContent = state.doublingCube || 1;
@@ -282,24 +390,27 @@ var UI = (function() {
         var mySide = Multiplayer.getMySide();
         var currentSide = state.currentTurnSide;
 
+        mp.myTurn = currentSide === mySide && state.phase === 'playing';
+        updateDoublingCube(cubeOwner, state.doublingCube);
+        // The server rolls for both seats; the button is a local-game control.
+        elements.rollBtn.disabled = true;
+
         if (currentSide === mySide) {
             elements.turnIndicator.textContent = 'YOUR TURN';
             elements.turnIndicator.style.color = BG.COLORS.checkerPlayer;
             setMessage('Select a checker to move');
-            elements.rollBtn.disabled = false;
         } else {
             elements.turnIndicator.textContent = 'OPPONENT\'S TURN';
             elements.turnIndicator.style.color = BG.COLORS.checkerAi;
             setMessage('Waiting for opponent...');
-            elements.rollBtn.disabled = true;
         }
 
-        // Update game phase
+        // Update game phase. The doubler is the side to move; the other answers.
         if (state.phase === 'doubling') {
             if (currentSide === mySide) {
-                setMessage('Opponent wants to double! Accept or reject.');
-            } else {
                 setMessage('Waiting for opponent to accept double...');
+            } else {
+                showDoubleAnswer(state.doublingCube);
             }
         }
 
@@ -377,6 +488,13 @@ var UI = (function() {
                 '<div class="off-count">' + Board.getOffCount(BG.AI) + '/15</div>' +
             '</div>';
         container.appendChild(offAreas);
+
+        // The tray is where a checker goes when it bears off. Nothing could be
+        // clicked for that, so no human could bear off, online or against the
+        // AI, and only the AI could ever finish a game.
+        var tray = offAreas.querySelector('.player-off');
+        tray.style.cursor = 'pointer';
+        tray.addEventListener('click', function() { handlePointClick(0); });
     }
 
     function createPoint(num, position, value) {
@@ -491,6 +609,11 @@ var UI = (function() {
         var point = parseInt(e.target.dataset.point);
         var currentPlayer = Game.getCurrentPlayer();
 
+        if (isMultiplayer) {
+            if (Board.getState()[point] > 0 && stepOptions().length) selectChecker(point);
+            return;
+        }
+
         if (currentPlayer !== BG.PLAYER) return;
         if (Game.getState() !== BG.STATE.MOVING) return;
 
@@ -504,23 +627,18 @@ var UI = (function() {
         var currentPlayer = Game.getCurrentPlayer();
 
         if (isMultiplayer) {
-            // In multiplayer, send the move to the server
-            if (selectedChecker === null) return;
-            var state = Multiplayer.getMySide ? Multiplayer.getMySide() : null;
-            // Find the move index
-            var moves = Game.getMovesRemaining();
-            for (var i = 0; i < moves.length; i++) {
-                for (var j = 0; j < moves[i].length; j++) {
-                    if (moves[i][j].from === selectedChecker && moves[i][j].to === point) {
-                        Multiplayer.sendMove(i);
+            var options = stepOptions();
+            if (selectedChecker !== null) {
+                for (var k = 0; k < options.length; k++) {
+                    if (options[k].move.from === selectedChecker && options[k].move.to === point) {
                         clearSelection();
+                        playStep(options[k].move);
                         return;
                     }
                 }
             }
             // If no move found, try selecting a checker on this point
-            var board = Board.getState();
-            if (board[point] > 0) {
+            if (point > 0 && point < 25 && Board.getState()[point] > 0 && options.length) {
                 selectChecker(point);
             }
             return;
@@ -551,6 +669,10 @@ var UI = (function() {
 
     function handleBarClick(player) {
         if (player !== BG.PLAYER) return;
+        if (isMultiplayer) {
+            if (Board.getBarCount(BG.PLAYER) > 0 && stepOptions().length) selectChecker(BG.BAR_PLAYER);
+            return;
+        }
         if (Game.getCurrentPlayer() !== BG.PLAYER) return;
         if (Game.getState() !== BG.STATE.MOVING) return;
 
@@ -575,7 +697,9 @@ var UI = (function() {
     }
 
     function showLegalMoves(fromPoint) {
-        var moves = Game.getMovesRemaining();
+        var moves = isMultiplayer
+            ? stepOptions().map(function(o) { return [o.move]; })
+            : Game.getMovesRemaining();
         highlightedMoves = [];
 
         for (var i = 0; i < moves.length; i++) {
@@ -590,9 +714,11 @@ var UI = (function() {
             }
         }
 
-        // Highlight destination points
+        // Highlight destination points; 0 is bearing off, into the tray
         highlightedMoves.forEach(function(move) {
-            var pointEl = document.querySelector('.point[data-point="' + move.to + '"]');
+            var pointEl = move.to === 0
+                ? document.querySelector('.off-area.player-off')
+                : document.querySelector('.point[data-point="' + move.to + '"]');
             if (pointEl) {
                 pointEl.classList.add('highlighted');
             }
@@ -607,7 +733,7 @@ var UI = (function() {
             c.classList.remove('selected');
         });
 
-        document.querySelectorAll('.point.highlighted').forEach(function(p) {
+        document.querySelectorAll('.point.highlighted, .off-area.highlighted').forEach(function(p) {
             p.classList.remove('highlighted');
         });
     }
@@ -663,7 +789,7 @@ var UI = (function() {
     // ── Doubling Cube ────────────────────────────────────────────────────────
     function handleDouble() {
         if (isMultiplayer) {
-            Multiplayer.sendDouble();
+            if (canDoubleOnline()) Multiplayer.sendDouble();
             return;
         }
 
@@ -689,7 +815,7 @@ var UI = (function() {
             elements.doublingCube.classList.add('ai-owned');
         }
 
-        if (!Dice.canDouble(BG.PLAYER)) {
+        if (isMultiplayer ? !canDoubleOnline() : !Dice.canDouble(BG.PLAYER)) {
             elements.doublingCube.classList.add('disabled');
         }
     }
@@ -765,7 +891,7 @@ var UI = (function() {
         if (won) {
             elements.gameOverTitle.textContent = 'YOU WIN!';
             elements.gameOverTitle.className = 'game-over-title win';
-            elements.gameOverMessage.textContent = 'Congratulations! You defeated ' + winnerName + '!';
+            elements.gameOverMessage.textContent = 'Congratulations! You won the match!';
         } else {
             elements.gameOverTitle.textContent = 'DEFEAT';
             elements.gameOverTitle.className = 'game-over-title lose';

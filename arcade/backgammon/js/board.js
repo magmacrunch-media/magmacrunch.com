@@ -345,7 +345,8 @@ var Board = (function() {
     // ── Win Detection ────────────────────────────────────────────────────────
     function getWinner() {
         if (board[BG.OFF_PLAYER] >= 15) return BG.PLAYER;
-        if (board[BG.OFF_AI] >= 15) return BG.AI;
+        // AI checkers borne off are counted negative, like every AI count.
+        if (board[BG.OFF_AI] <= -15) return BG.AI;
         return null;
     }
 
