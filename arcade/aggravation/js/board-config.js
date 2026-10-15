@@ -34,30 +34,40 @@ var AC = (function() {
         });
     });
 
+    // ── The shared rules ───────────────────────────────────────────────────────
+    //
+    // Movement, the home run, captures and blockades come from adenosine-race
+    // (../shared/adenosine-race.js), the same rules SORRY and Parchis run on.
+    // Marbles only move forward, so the 'progress' rule fits: a marble's
+    // progress is read off its square and needs no lap flag. homeEntry is the
+    // entry itself, which 'progress' reads as a full lap, and landing exactly
+    // on it steps onto home cell 0, as this file always did. adenosine-race's
+    // tests hold it to the advancePosition this file carried before, for every
+    // square and roll.
+    //
+    // What stays here is what makes this Aggravation: 1 or 6 to leave the
+    // yard, blockades, and the move list below.
+
+    var TRACK = AdRace.createTrack({
+        length: TRACK_SIZE,
+        homeLength: HOME_SIZE,
+        homeRule: 'progress',
+        colors: COLORS.reduce(function(acc, c) {
+            acc[c] = { entry: COLOR_CONFIG[c].entry, homeEntry: COLOR_CONFIG[c].entry };
+            return acc;
+        }, {}),
+        safeSquares: SAFE_SQUARES,
+    });
+
     // ── Position encoding ──────────────────────────────────────────────────────
+    // null = yard, {track:n} = track, {home:n} = home run, 'finished' = scored
 
-    function posIsNull(pos)     { return pos === null; }
-    function posIsTrack(pos)    { return pos !== null && typeof pos === 'object' && 'track' in pos; }
-    function posIsHome(pos)     { return pos !== null && typeof pos === 'object' && 'home' in pos; }
-    function posIsFinished(pos) { return pos === 'finished'; }
-
-    function posEquals(a, b) {
-        if (a === null && b === null) return true;
-        if (a === null || b === null) return false;
-        if (a === 'finished' && b === 'finished') return true;
-        if (a === 'finished' || b === 'finished') return false;
-        if ('track' in a && 'track' in b) return a.track === b.track;
-        if ('home' in a && 'home' in b) return a.home === b.home;
-        return false;
-    }
-
-    function posToString(pos) {
-        if (pos === null) return 'yard';
-        if (pos === 'finished') return 'finished';
-        if ('track' in pos) return 'T' + pos.track;
-        if ('home' in pos) return 'H' + pos.home;
-        return '?';
-    }
+    function posIsNull(pos)     { return TRACK.isYard(pos); }
+    function posIsTrack(pos)    { return TRACK.isTrack(pos); }
+    function posIsHome(pos)     { return TRACK.isHome(pos); }
+    function posIsFinished(pos) { return TRACK.isFinished(pos); }
+    function posEquals(a, b)    { return TRACK.equals(a, b); }
+    function posToString(pos)   { return TRACK.describe(pos); }
 
     // ── Track path (60 positions, clockwise rectangular ring) ─────────────────
     //
@@ -117,75 +127,20 @@ var AC = (function() {
 
     // ── Track advancement ──────────────────────────────────────────────────────
 
+    // Callers read { newPos, enteredHome, captured }, so the shape stays.
     function advancePosition(color, fromPos, steps) {
-        if (fromPos === null || fromPos === 'finished') return null;
-
-        var cfg = COLOR_CONFIG[color];
-
-        if ('home' in fromPos) {
-            var newHome = fromPos.home + steps;
-            if (newHome > HOME_SIZE) return null;
-            if (newHome === HOME_SIZE) return { newPos: 'finished', enteredHome: false, captured: false };
-            return { newPos: { home: newHome }, enteredHome: false, captured: false };
-        }
-
-        var curTrack = fromPos.track;
-
-        // Check if this move passes through or lands on the entry position.
-        // A marble enters the home run when it crosses the entry after completing a lap.
-        // Distance from curTrack to entry, going clockwise:
-        var distToEntry = (cfg.entry - curTrack + TRACK_SIZE) % TRACK_SIZE;
-        var crossesEntry = distToEntry > 0 && distToEntry <= steps;
-
-        if (crossesEntry) {
-            var homeSteps = steps - distToEntry;
-            if (homeSteps > HOME_SIZE) return null; // overshoot
-            if (homeSteps === HOME_SIZE) return { newPos: 'finished', enteredHome: true, captured: false };
-            return { newPos: { home: homeSteps }, enteredHome: true, captured: false };
-        }
-
-        var newTrack = (curTrack + steps) % TRACK_SIZE;
-        return { newPos: { track: newTrack }, enteredHome: false, captured: false };
+        var r = TRACK.advance(color, fromPos, steps);
+        if (!r) return null;
+        return { newPos: r.pos, enteredHome: r.enteredHome, captured: false };
     }
 
     // ── Pawn queries ───────────────────────────────────────────────────────────
 
-    function getPawnsAtTrack(pawnPositions, trackPos) {
-        var result = [];
-        COLORS.forEach(function(c) {
-            if (!pawnPositions[c]) return;
-            for (var i = 0; i < NUM_PAWNS; i++) {
-                var pos = pawnPositions[c][i];
-                if (posIsTrack(pos) && pos.track === trackPos) {
-                    result.push({ color: c, index: i });
-                }
-            }
-        });
-        return result;
-    }
-
-    function isSafeSquare(trackPos) {
-        return SAFE_SQUARES.indexOf(trackPos) !== -1;
-    }
-
+    function getPawnsAtTrack(pawnPositions, trackPos) { return TRACK.pawnsAt(pawnPositions, trackPos); }
+    function isSafeSquare(trackPos)                     { return TRACK.isSafe(trackPos); }
+    function isBlockade(pawnPositions, trackPos)        { return TRACK.isBlockade(pawnPositions, trackPos); }
     function checkCapture(movingColor, trackPos, pawnPositions) {
-        if (isSafeSquare(trackPos)) return null;
-        var pawnsHere = getPawnsAtTrack(pawnPositions, trackPos);
-        var opponents = pawnsHere.filter(function(p) { return p.color !== movingColor; });
-        if (opponents.length === 1) return opponents[0];
-        return null;
-    }
-
-    function isBlockade(pawnPositions, trackPos) {
-        var pawnsHere = getPawnsAtTrack(pawnPositions, trackPos);
-        var colorCounts = {};
-        pawnsHere.forEach(function(p) {
-            colorCounts[p.color] = (colorCounts[p.color] || 0) + 1;
-        });
-        for (var c in colorCounts) {
-            if (colorCounts[c] >= 2) return true;
-        }
-        return false;
+        return TRACK.captureAt(movingColor, trackPos, pawnPositions);
     }
 
     // ── Legal moves ────────────────────────────────────────────────────────────
