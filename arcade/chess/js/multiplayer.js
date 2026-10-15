@@ -109,12 +109,14 @@ var Multiplayer = (function() {
     MP.onGameAction = function(action) {
         // Handle resignations first to avoid double-firing gameOver + resigned
         if (action.type === 'player_resigned') {
+            _isActive = false;
             var iWon = (action.winner === MP.getMyName());
             if (_onGameEnd) _onGameEnd(iWon, action.winner, action.winnerSide, 'resignation');
             return;
         }
 
         if (action.gameOver) {
+            _isActive = false;
             var won = false;
             if (action.winner) {
                 won = (action.winner === MP.getMyName());
@@ -132,6 +134,10 @@ var Multiplayer = (function() {
     };
 
     MP.onPlayerQuit = function(data) {
+        // Both clients quit the room once a game ends, so the loser's quit
+        // reaches the winner straight after checkmate. Only a quit during
+        // play is a walkover; afterwards it would overwrite the result.
+        if (!_isActive) return;
         _isActive = false;
         if (_onGameEnd) _onGameEnd(true, data.playerName, null, 'opponent_quit');
     };

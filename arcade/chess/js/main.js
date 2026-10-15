@@ -65,6 +65,10 @@ var UI = (function() {
         elements.startMultiplayerBtn = document.getElementById('startMultiplayerBtn');
         elements.spectateBtn = document.getElementById('spectateBtn');
         elements.leaveLobbyBtn = document.getElementById('leaveLobbyBtn');
+        elements.lobbyBackBtn = document.getElementById('lobbyBackBtn');
+        elements.lobbyRoomCode = document.getElementById('lobbyRoomCode');
+        elements.roomCodeInput = document.getElementById('roomCodeInput');
+        elements.lobbyJoinBtn = document.getElementById('lobbyJoinBtn');
 
         // Chat elements
         elements.chatPanel = document.getElementById('chatPanel');
@@ -112,6 +116,11 @@ var UI = (function() {
         if (elements.startMultiplayerBtn) elements.startMultiplayerBtn.addEventListener('click', startMultiplayerGame);
         if (elements.spectateBtn) elements.spectateBtn.addEventListener('click', spectateGame);
         if (elements.leaveLobbyBtn) elements.leaveLobbyBtn.addEventListener('click', leaveLobby);
+        if (elements.lobbyBackBtn) elements.lobbyBackBtn.addEventListener('click', closeLobby);
+        if (elements.lobbyJoinBtn) elements.lobbyJoinBtn.addEventListener('click', joinLobby);
+        if (elements.roomCodeInput) elements.roomCodeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') joinLobby();
+        });
 
         // Chat
         if (elements.chatSendBtn) elements.chatSendBtn.addEventListener('click', sendChat);
@@ -189,11 +198,31 @@ var UI = (function() {
     function openLobby() {
         elements.lobbyOverlay.classList.add('active');
         elements.lobbyStatus.textContent = 'Connecting...';
-        elements.roomCodeDisplay.style.display = 'none';
+        showRoomCode(false);
         elements.lobbyPlayerList.innerHTML = '';
         elements.lobbyTimeControl.style.display = 'none';
         elements.startMultiplayerBtn.style.display = 'none';
         Multiplayer.connect();
+    }
+
+    // Nothing sent a join until 2026-10-14: the lobby connected, read the
+    // room list and stopped, so no chess game could be started online at all.
+    // The template's JOIN button and room code box were never bound here.
+    function joinLobby() {
+        var code = elements.roomCodeInput ? elements.roomCodeInput.value.trim().toUpperCase() : '';
+        var name = localStorage.getItem('arcade_username') || 'Player';
+        elements.lobbyStatus.textContent = 'Joining room...';
+        Multiplayer.joinRoom(name, code || null);
+    }
+
+    // The code lives in #roomCodeDisplay inside the #lobbyRoomCode wrapper, and
+    // the wrapper starts hidden, so showing the inner element alone showed
+    // nothing. The join row hides while a room is held.
+    function showRoomCode(on) {
+        if (elements.lobbyRoomCode) elements.lobbyRoomCode.style.display = on ? 'block' : 'none';
+        elements.roomCodeDisplay.style.display = on ? 'flex' : 'none';
+        var row = elements.lobbyJoinBtn && elements.lobbyJoinBtn.parentNode;
+        if (row) row.style.display = on ? 'none' : '';
     }
 
     function closeLobby() {
@@ -203,7 +232,7 @@ var UI = (function() {
 
     function leaveLobby() {
         Multiplayer.quit();
-        elements.roomCodeDisplay.style.display = 'none';
+        showRoomCode(false);
         elements.lobbyPlayerList.innerHTML = '';
         elements.lobbyTimeControl.style.display = 'none';
         elements.startMultiplayerBtn.style.display = 'none';
@@ -250,7 +279,7 @@ var UI = (function() {
         switch (update.type) {
             case 'welcome':
                 elements.lobbyStatus.textContent = 'You joined room ' + update.room;
-                elements.roomCodeDisplay.style.display = 'flex';
+                showRoomCode(true);
                 elements.roomCodeValue.textContent = update.room;
                 if (update.isHost) {
                     elements.lobbyTimeControl.style.display = 'block';
@@ -263,7 +292,7 @@ var UI = (function() {
 
             case 'spectator_welcome':
                 elements.lobbyStatus.textContent = 'Spectating room ' + update.room;
-                elements.roomCodeDisplay.style.display = 'flex';
+                showRoomCode(true);
                 elements.roomCodeValue.textContent = update.room;
                 elements.lobbyTimeControl.style.display = 'none';
                 elements.startMultiplayerBtn.style.display = 'none';
@@ -296,7 +325,7 @@ var UI = (function() {
 
             case 'disconnected':
                 elements.lobbyStatus.textContent = 'Disconnected from server.';
-                elements.roomCodeDisplay.style.display = 'none';
+                showRoomCode(false);
                 elements.lobbyPlayerList.innerHTML = '';
                 elements.lobbyTimeControl.style.display = 'none';
                 elements.startMultiplayerBtn.style.display = 'none';

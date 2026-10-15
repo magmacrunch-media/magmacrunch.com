@@ -18,7 +18,20 @@ var Game = (function() {
     var moveNotations = [];
     var pendingPromotion = null;
     var isMultiplayer = false;
-    var mySide = null; // 'white' or 'black' in multiplayer
+    // In multiplayer, the owner this client plays in Board's own terms:
+    // CH.PLAYER for white, CH.AI for black. See ownerOf().
+    var mySide = null;
+
+    // The server names sides 'white' and 'black'; Board, the move generator and
+    // every renderer here name them CH.PLAYER (white, moving up from row 7) and
+    // CH.AI (black). Until 2026-10-14 the server's board went in untranslated,
+    // so no piece belonged to CH.PLAYER, pawns had no direction and nothing
+    // could be selected online. Translate once, here, at the boundary.
+    function ownerOf(side) {
+        if (side === 'white') return CH.PLAYER;
+        if (side === 'black') return CH.AI;
+        return side;
+    }
 
     // ── Settings ─────────────────────────────────────────────────────────────
     function loadSettings() {
@@ -75,7 +88,7 @@ var Game = (function() {
         loadSettings();
 
         isMultiplayer = !!multiplayer;
-        mySide = side || null;
+        mySide = side ? ownerOf(side) : null;
 
         if (isMultiplayer) {
             // In multiplayer, the server controls turns
@@ -161,8 +174,9 @@ var Game = (function() {
         });
         moveNotations.push(notation);
 
-        // Check for game over
-        var gameResult = Board.getGameResult();
+        // Check for game over. Online the server announces it, with the
+        // multiplayer wording; the local verdict is in 'player'/'ai' terms.
+        var gameResult = isMultiplayer ? null : Board.getGameResult();
         if (gameResult) {
             state = CH.STATE.GAME_OVER;
             stopTimer();
@@ -202,8 +216,9 @@ var Game = (function() {
         });
         moveNotations.push(notation);
 
-        // Check for game over
-        var gameResult = Board.getGameResult();
+        // Check for game over. Online the server announces it, with the
+        // multiplayer wording; the local verdict is in 'player'/'ai' terms.
+        var gameResult = isMultiplayer ? null : Board.getGameResult();
         if (gameResult) {
             state = CH.STATE.GAME_OVER;
             stopTimer();
@@ -417,16 +432,20 @@ var Game = (function() {
 
     // ── Multiplayer State Sync ───────────────────────────────────────────────
     function applyServerState(serverState, mySideParam) {
-        // Sync board
-        Board.setState(serverState.board);
-        if (serverState.castlingRights) Board.setCastlingRights(serverState.castlingRights);
+        // Sync board, in Board's owner terms
+        Board.setState(serverState.board.map(function(row) {
+            return row.map(function(p) {
+                return p ? { type: p.type, owner: ownerOf(p.owner) } : null;
+            });
+        }));
+        var cr = serverState.castlingRights;
+        if (cr) Board.setCastlingRights({ player: cr.white, ai: cr.black });
         if (serverState.enPassantTarget !== undefined) Board.setEnPassantTarget(serverState.enPassantTarget);
 
-        if (mySideParam) mySide = mySideParam;
+        if (mySideParam) mySide = ownerOf(mySideParam);
 
         // Determine whose turn it is from server perspective
-        var serverTurnSide = serverState.currentTurnSide; // 'white' or 'black'
-        if (serverTurnSide === mySide) {
+        if (ownerOf(serverState.currentTurnSide) === mySide && serverState.phase === 'playing') {
             currentPlayer = CH.PLAYER;
             state = CH.STATE.SELECTING;
         } else {
