@@ -93,6 +93,20 @@ export const GAMES = {
       "against this repo's arcade/shared/. There is no second version yet; the\n" +
       'repo exists so the move onto adenosine has somewhere to happen.',
   },
+  // Extracted 2026-10-14 the same way, server and all: arcade-cribbage.service
+  // and arcade-stud.service run from these folders on the Pi.
+  cribbage: {
+    repo: 'cribbage',
+    other:
+      'CI that runs the scoring and server tests\n' +
+      "against this repo's arcade/shared/. There is no second version yet.",
+  },
+  'scandinavian-stud': {
+    repo: 'scandinavian-stud',
+    other:
+      'CI that runs the game logic tests against this\n' +
+      "repo's arcade/shared/. There is no second version yet.",
+  },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };

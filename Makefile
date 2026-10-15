@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -137,6 +137,16 @@ sync-jovian-humanitarian-conflict: ## Regenerate arcade/jovian-humanitarian-conf
 # Pi's arcade-sorry.service runs from arcade/SORRY/. The sync copies both.
 sync-sorry: ## Regenerate arcade/SORRY/ from the sorry repo's web/
 	node scripts/sync-game.mjs SORRY
+	npm run --silent build:adenosine
+
+# Same shape as sorry: web/ carries server.py beside the client, because the
+# Pi's arcade-cribbage and arcade-stud services run from these folders.
+sync-cribbage: ## Regenerate arcade/cribbage/ from the cribbage repo's web/
+	node scripts/sync-game.mjs cribbage
+	npm run --silent build:adenosine
+
+sync-scandinavian-stud: ## Regenerate arcade/scandinavian-stud/ from its repo's web/
+	node scripts/sync-game.mjs scandinavian-stud
 	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────

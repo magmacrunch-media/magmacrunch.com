@@ -79,7 +79,7 @@ jobs:
           repository: magmacrunch-media/george-boole
           path: game-repos/george-boole
           # Read-only deploy key. Every game below has one too, which is what
-          # lets this job check all nine whether they are public or private.
+          # lets this job check all eleven whether they are public or private.
           ssh-key: ${{ secrets.GEORGE_BOOLE_DEPLOY_KEY }}
 
       - name: Check out makemecookies
@@ -130,6 +130,18 @@ jobs:
           repository: magmacrunch-media/sorry
           path: game-repos/sorry
           ssh-key: ${{ secrets.SORRY_DEPLOY_KEY }}
+      - name: Check out cribbage
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/cribbage
+          path: game-repos/cribbage
+          ssh-key: ${{ secrets.CRIBBAGE_DEPLOY_KEY }}
+      - name: Check out scandinavian-stud
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/scandinavian-stud
+          path: game-repos/scandinavian-stud
+          ssh-key: ${{ secrets.SCANDINAVIAN_STUD_DEPLOY_KEY }}
 
       # GAME_REPOS is also the assertion that the repos are there. Without it the
       # check skips when it finds none, which is right for a clone that was never
@@ -138,8 +150,8 @@ jobs:
       #
       # GAME_REPOS_OPTIONAL IS EMPTY, AND THAT IS THE POINT. It is the declared
       # hole for a game this job cannot read, and as of 2026-10-03 there is no
-      # such game: all nine have a read-only deploy key held here, so every one
-      # is checked out above whether it is public or private. Nine of nine
+      # such game: all eleven have a read-only deploy key held here, so every one
+      # is checked out above whether it is public or private. Eleven of eleven
       # covered, which is better than this job has ever managed.
       #
       # The mechanism is kept rather than deleted. If a game ever loses its key
