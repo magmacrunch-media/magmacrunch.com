@@ -107,6 +107,20 @@ export const GAMES = {
       'CI that runs the game logic tests against this\n' +
       "repo's arcade/shared/. There is no second version yet.",
   },
+  // The other two race games, extracted 2026-10-14 like SORRY. Neither loads
+  // adenosine yet: each has its own network.js rather than MP.
+  aggravation: {
+    repo: 'aggravation',
+    other:
+      'CI that runs the server tests against this\n' +
+      "repo's arcade/shared/. There is no second version yet.",
+  },
+  parchisi: {
+    repo: 'parchisi',
+    other:
+      'CI that runs the server tests against this\n' +
+      "repo's arcade/shared/. There is no second version yet.",
+  },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };

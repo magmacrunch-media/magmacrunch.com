@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -148,6 +148,14 @@ sync-cribbage: ## Regenerate arcade/cribbage/ from the cribbage repo's web/
 sync-scandinavian-stud: ## Regenerate arcade/scandinavian-stud/ from its repo's web/
 	node scripts/sync-game.mjs scandinavian-stud
 	npm run --silent build:adenosine
+
+# No build:adenosine for these two: neither references an adenosine bundle,
+# only arcade-base.css, so there is nothing for a sync to leave stale.
+sync-aggravation: ## Regenerate arcade/aggravation/ from the aggravation repo's web/
+	node scripts/sync-game.mjs aggravation
+
+sync-parchisi: ## Regenerate arcade/parchisi/ from the parchisi repo's web/
+	node scripts/sync-game.mjs parchisi
 
 # ── Build ─────────────────────────────────────
 
