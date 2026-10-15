@@ -1,22 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-app="Gatefold">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>album art maker — magmacrunch media</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GATE//FOLD</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <!-- Press Start 2P and Courier Prime are self-hosted by the shell.
-         The rest are the font picker's options, which are not. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DotGothic16&family=Inter:wght@400;700&family=Oswald:wght@400;700&family=Pixelify+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Silkscreen:wght@400;700&family=Space+Mono:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+    <!-- fonts.css is the shell's two core faces, self-hosted. typefaces.css is
+         the picker's other nine, also self-hosted: under the desktop CSP
+         (font-src 'self') a Google Fonts request is blocked, and because every
+         one of them is font-display:swap the fallback has ALREADY painted - so
+         nothing looks broken, nothing logs, and the exported PNG is simply the
+         wrong typeface. See app/fonts/README.md. -->
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
+    <link rel="stylesheet" href="typefaces.css?v=04091e82">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
     <link rel="stylesheet" href="../shell/dropdown.css?v=b021aff2">
-    <link rel="stylesheet" href="css/style.css?v=852cc466">
+    <link rel="stylesheet" href="style.css?v=f55b25ab">
+
+    <!-- The kit loads in <head>, not at the end of <body>. bridge-core.js sets
+         html.desktop, and the menu bar, the doc name and the hidden back link
+         are all gated on it; doing that after the body paints flashes the
+         website's chrome on every launch. boot.js is FIRST regardless - it
+         exists to report failures in everything after it. -->
+    <script src="kit/boot.js?v=3867389f"></script>
+    <script src="kit/bridge-core.js?v=1a0ffb5c"></script>
+    <script src="kit/keys.js?v=a0ef34b7"></script>
+    <script src="kit/history.js?v=0a47fcb3"></script>
+    <script src="kit/prefs.js?v=27328242"></script>
+    <script src="kit/modal.js?v=0549bda4"></script>
+    <script src="kit/dom.js?v=1d063261"></script>
+    <script src="kit/artstore.js?v=43b03d3d"></script>
+    <script src="kit/menu.js?v=21cff107"></script>
+    <script src="bridge.js?v=f313e7c4"></script>
 </head>
 <body>
+    <!-- The web (LITE) build still runs on phones, where this workspace does
+         not fit. Hidden on the desktop, where the window is resizable and a
+         narrow window is a choice rather than a device. -->
     <div class="mobile-notice">
         This tool is best experienced on a desktop or laptop.<br>
         Please visit on a wider screen for the full workspace.
@@ -24,20 +45,84 @@
 
     <header>
         <div class="header-left">
-            <h1 class="glitch" data-text="ALBUM//ART">ALBUM//ART</h1>
+            <h1 class="glitch" data-text="GATE//FOLD">GATE//FOLD</h1>
+
+            <!-- Desktop only. Drawn in the page rather than by Windows: a
+                 native menu bar is OS-drawn, so it cannot take the app's
+                 typeface. Every item names an action and menu.js dispatches
+                 it; items that mirror a button proxy it via data-toggles, so
+                 there is still one implementation of each toggle. -->
+            <nav class="menubar" id="menubar" aria-label="Main menu">
+                <div class="menu">
+                    <button class="menu-title" data-menu="file">FILE</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="project:new" title="Start an empty cover">New<i>Ctrl+N</i></button>
+                        <button data-action="project:open" title="Open an .gatefold project">Open&hellip;<i>Ctrl+O</i></button>
+                        <hr>
+                        <button data-action="project:save" title="An .gatefold file holds every element, the canvas and the imported art. A PNG holds only pixels.">Save<i>Ctrl+S</i></button>
+                        <button data-action="project:save-as" title="Save the project under a new name">Save As&hellip;<i>Ctrl+Shift+S</i></button>
+                        <hr>
+                        <button data-action="file:import">Import Image&hellip;<i>Ctrl+I</i></button>
+                        <button data-action="file:export">Export PNG&hellip;<i>Ctrl+E</i></button>
+                        <button data-action="file:print-marks" title="Add crop and fold marks on paper outside the bleed. The exported image gets bigger; the card does not.">Crop &amp; Fold Marks</button>
+                        <hr>
+                        <button data-action="app:quit">Exit<i>Alt+F4</i></button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <button class="menu-title" data-menu="edit">EDIT</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="edit:undo">Undo<i>Ctrl+Z</i></button>
+                        <button data-action="edit:redo">Redo<i>Ctrl+Shift+Z</i></button>
+                        <hr>
+                        <button data-action="edit:copy">Copy<i>Ctrl+C</i></button>
+                        <button data-action="edit:paste">Paste<i>Ctrl+V</i></button>
+                        <button data-action="edit:delete">Delete<i>Del</i></button>
+                        <hr>
+                        <button data-action="edit:clear">Clear All</button>
+                        <hr>
+                        <button data-action="edit:lock" title="Fix the selected element in place">Lock Selected<i>Ctrl+L</i></button>
+                        <button data-action="edit:unlock-all" title="Release everything that was locked">Unlock All<i>Ctrl+Shift+L</i></button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <button class="menu-title" data-menu="view">VIEW</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="view:layers" data-toggles="layersToggle">Layers<i>F7</i></button>
+                        <button data-action="view:reference" data-toggles="refToggle">Reference Panel</button>
+                        <hr>
+                        <button data-action="view:print-guides" title="Fold lines and the safe margin. Never exported.">Fold &amp; Safe Guides</button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <button class="menu-title" data-menu="help">HELP</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="help:reference">Reference&hellip;<i>F1</i></button>
+                        <button data-action="help:credits">Credits&hellip;</button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Desktop only, and empty until project-ui.js fills it: the open
+                 file's name and dirty marker. CSS hides it in the browser,
+                 where there is no file to name. -->
+            <span class="doc-name" id="doc-name"></span>
         </div>
         <div class="header-right">
-            <span class="sys-stat" id="canvasSizeStat">1024×1024</span>
+            <span class="sys-stat" id="canvasSizeStat">1024&times;1024</span>
             <span class="sys-stat" id="elementCountStat">0 ELEMENTS</span>
         </div>
     </header>
 
+    <!-- Website chrome. `../utilities/` does not exist inside the bundle, so on
+         the desktop this is not redundant, it is a link that cannot resolve;
+         style.css hides it under html.desktop. -->
     <nav class="tool-nav">
-        <a href="../utilities/" class="back-link chip"><span class="chrome" data-text="← UTILITIES">← creative utilities</span></a>
+        <a href="../utilities/" class="back-link chip"><span class="chrome" data-text="&#8592; UTILITIES">&#8592; creative utilities</span></a>
     </nav>
 
     <div class="workspace">
-        <!-- LEFT PANEL: Tools -->
+        <!-- LEFT PANEL: tools -->
         <aside class="panel tools-panel">
             <div class="action-btns">
                 <button class="action-btn" id="undoBtn" title="Undo (Ctrl+Z)">UNDO</button>
@@ -59,12 +144,11 @@
                                 <span>1024</span>
                                 <span class="dropdown-arrow">&#9662;</span>
                             </div>
-                            <div class="dropdown-options">
-                                <div class="dropdown-option" data-value="512">512</div>
-                                <div class="dropdown-option active" data-value="1024">1024</div>
-                                <div class="dropdown-option" data-value="2048">2048</div>
-                                <div class="dropdown-option" data-value="4096">4096</div>
-                            </div>
+                            <!-- SQUARE and CASSETTE, written by ui/sizes.js from
+                                 core/formats.js. Typed out here they were a
+                                 second list that could disagree with the one
+                                 in core/, and did. -->
+                            <div class="dropdown-options"></div>
                         </div>
                     </div>
                     <div class="canvas-bg-item">
@@ -80,7 +164,7 @@
             <div class="panel-divider"></div>
 
             <div class="tool-grid">
-                <button class="tool-btn active" data-tool="select" title="Select / Move (V) — Esc or click outside to deselect">
+                <button class="tool-btn active" data-tool="select" title="Select / Move (V) - Esc or click outside to deselect">
                     <span class="tool-icon">&#9658;</span>
                     <span class="tool-name">SELECT</span>
                 </button>
@@ -88,7 +172,7 @@
                     <span class="tool-icon">T</span>
                     <span class="tool-name">TEXT</span>
                 </button>
-                <button class="tool-btn" id="imageBtn" title="Upload Image (I)">
+                <button class="tool-btn" id="imageBtn" title="Import Image (Ctrl+I) - or drop one on the canvas">
                     <span class="tool-icon">&#9634;</span>
                     <span class="tool-name">IMAGE</span>
                 </button>
@@ -120,14 +204,19 @@
 
             <div class="panel-divider"></div>
 
-            <div class="panel-label">REFERENCE</div>
-            <button class="ref-upload-btn" id="refUploadBtn">UPLOAD IMAGE</button>
-            <input type="file" id="refFileInput" accept="image/*" hidden>
-            <div class="ref-preview-wrap" id="refPreviewWrap">
-                <canvas id="refCanvas" class="ref-canvas"></canvas>
-                <button class="ref-clear-btn" id="refClearBtn" title="Remove reference">&times;</button>
+            <div class="panel-label">
+                REFERENCE
+                <button class="section-toggle active" id="refToggle" title="Show the reference panel">&#9662;</button>
             </div>
-            <p class="ref-hint">click to sample color</p>
+            <div class="ref-section" id="refSection">
+                <button class="ref-upload-btn" id="refUploadBtn">UPLOAD IMAGE</button>
+                <input type="file" id="refFileInput" accept="image/*" hidden>
+                <div class="ref-preview-wrap" id="refPreviewWrap">
+                    <canvas id="refCanvas" class="ref-canvas"></canvas>
+                    <button class="ref-clear-btn" id="refClearBtn" title="Remove reference">&times;</button>
+                </div>
+                <p class="ref-hint">click to sample color</p>
+            </div>
         </aside>
 
         <!-- SHAPES POPUP -->
@@ -159,7 +248,7 @@
                     <span class="tool-name">HEXA</span>
                 </button>
                 <button class="shape-btn" data-tool="diamond" title="Diamond">
-                    <span class="chrome" data-text="◇"><span class="tool-icon">&#9671;</span></span>
+                    <span class="tool-icon">&#9671;</span>
                     <span class="tool-name">DIAMOND</span>
                 </button>
                 <button class="shape-btn" data-tool="star" title="Star">
@@ -204,19 +293,35 @@
             </div>
             <div class="popup-section-label">CLIP ART</div>
             <div class="shapes-popup-grid" id="clipartGrid">
-                <!-- populated by JS -->
+                <!-- populated by ui/shapes-popup.js from core/clipart.js -->
             </div>
         </div>
 
-        <!-- CENTER: Canvas + Reference -->
+        <!-- CENTER: the canvas -->
         <div class="center-area">
+            <!-- display:contents - see the note in style.css. Do NOT give this
+                 a box; it clipped the canvas by 17.5px top and bottom. -->
             <div class="canvas-wrap" id="canvasWrap">
                 <canvas id="mainCanvas" width="1024" height="1024"></canvas>
             </div>
         </div>
 
-        <!-- RIGHT PANEL: Properties -->
+        <!-- RIGHT PANEL: layers + properties -->
         <aside class="panel props-panel">
+            <!-- FULL only (core/tier.js). A layer list is the one place the
+                 z-order is visible; the FWD/BACK buttons below drive the same
+                 splice, so there is one implementation of the reorder. -->
+            <div class="layers-section" id="layersSection">
+                <div class="panel-label">
+                    LAYERS
+                    <button class="section-toggle active" id="layersToggle" title="Show the layer list (F7)">&#9662;</button>
+                </div>
+                <div class="layers-list" id="layersList">
+                    <!-- populated by ui/layers.js -->
+                </div>
+                <div class="panel-divider"></div>
+            </div>
+
             <div class="panel-label">PROPERTIES</div>
 
             <div class="prop-group">
@@ -250,10 +355,10 @@
             <div class="prop-group" id="rotationGroup" hidden>
                 <label class="prop-label">ROTATION</label>
                 <div class="range-row">
-                    <button class="rot-btn" id="rotMinus" title="Rotate −5°">&#8722;</button>
+                    <button class="rot-btn" id="rotMinus" title="Rotate -5 degrees">&#8722;</button>
                     <input type="range" id="rotation" min="0" max="360" value="0" class="range-input">
-                    <button class="rot-btn" id="rotPlus" title="Rotate +5°">+</button>
-                    <span class="range-val" id="rotationVal">0°</span>
+                    <button class="rot-btn" id="rotPlus" title="Rotate +5 degrees">+</button>
+                    <span class="range-val" id="rotationVal">0&deg;</span>
                 </div>
             </div>
 
@@ -296,8 +401,19 @@
                 <div class="prop-group" id="imageDimsGroup">
                     <label class="prop-label">SIZE</label>
                     <div class="range-row">
-                        <span class="range-val" id="imageDims">—</span>
+                        <span class="range-val" id="imageDims">&mdash;</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Both tiers. The layers panel has a per-row lock too, but it is
+                 FULL-only, so without this LITE could lock something and never
+                 unlock it. Locking leaves the element selected, so undoing the
+                 decision is one click away. -->
+            <div class="prop-group" id="lockGroup" hidden>
+                <label class="prop-label">POSITION</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="lockBtn" title="Fix this element in place (Ctrl+L)">&#128274; LOCK</button>
                 </div>
             </div>
 
@@ -350,67 +466,230 @@
 
             <div class="prop-group">
                 <label class="prop-label">FILE NAME</label>
-                <input type="text" id="fileName" class="file-input" value="album-art">
+                <input type="text" id="fileName" class="file-input" value="cover">
             </div>
             <button class="export-btn" id="exportBtn">EXPORT PNG</button>
         </aside>
     </div>
 
-    <!-- TEXT MODAL -->
-    <div class="modal-overlay" id="textModal" hidden>
-        <div class="modal-box">
-            <div class="modal-header">ADD TEXT</div>
-            <textarea id="modalTextInput" class="modal-textarea" placeholder="Type here..." rows="3"></textarea>
-            <div class="modal-row">
-                <label class="prop-label">FONT</label>
-                <div class="custom-dropdown" id="modalFontSelectDropdown">
-                    <div class="dropdown-selected">
-                        <span>Press Start 2P</span>
-                        <span class="dropdown-arrow">&#9662;</span>
-                    </div>
-                    <div class="dropdown-options">
-                        <div class="dropdown-option active" data-value="Press Start 2P">Press Start 2P</div>
-                        <div class="dropdown-option" data-value="VT323">VT323</div>
-                        <div class="dropdown-option" data-value="Silkscreen">Silkscreen</div>
-                        <div class="dropdown-option" data-value="DotGothic16">DotGothic16</div>
-                        <div class="dropdown-option" data-value="Pixelify Sans">Pixelify Sans</div>
-                        <div class="dropdown-option" data-value="Courier Prime">Courier Prime</div>
-                        <div class="dropdown-option" data-value="Space Mono">Space Mono</div>
-                        <div class="dropdown-option" data-value="Bebas Neue">Bebas Neue</div>
-                        <div class="dropdown-option" data-value="Oswald">Oswald</div>
-                        <div class="dropdown-option" data-value="Playfair Display">Playfair Display</div>
-                        <div class="dropdown-option" data-value="Inter">Inter</div>
-                        <div class="dropdown-option" data-value="Times New Roman">Times New Roman</div>
-                        <div class="dropdown-option" data-value="Georgia">Georgia</div>
-                        <div class="dropdown-option" data-value="Impact">Impact</div>
-                        <div class="dropdown-option" data-value="Arial">Arial</div>
-                    </div>
+    <!-- DIALOGS
+         Real <dialog> elements on MagmaKit.modal, not the old div overlay: the
+         kit gives the three ways out (the x, a named closer, the backdrop) one
+         implementation, and asker() settles its promise exactly once whichever
+         way is taken. They live outside .workspace so nothing that rewrites a
+         panel's innerHTML can remove them. -->
+    <dialog class="modal-box" id="textModal">
+        <div class="modal-header">ADD TEXT<button class="modal-close" title="Close">&times;</button></div>
+        <textarea id="modalTextInput" class="modal-textarea" placeholder="Type here..." rows="3"></textarea>
+        <div class="modal-row">
+            <label class="prop-label">FONT</label>
+            <div class="custom-dropdown" id="modalFontSelectDropdown">
+                <div class="dropdown-selected">
+                    <span>Press Start 2P</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="Press Start 2P">Press Start 2P</div>
+                    <div class="dropdown-option" data-value="VT323">VT323</div>
+                    <div class="dropdown-option" data-value="Silkscreen">Silkscreen</div>
+                    <div class="dropdown-option" data-value="DotGothic16">DotGothic16</div>
+                    <div class="dropdown-option" data-value="Pixelify Sans">Pixelify Sans</div>
+                    <div class="dropdown-option" data-value="Courier Prime">Courier Prime</div>
+                    <div class="dropdown-option" data-value="Space Mono">Space Mono</div>
+                    <div class="dropdown-option" data-value="Bebas Neue">Bebas Neue</div>
+                    <div class="dropdown-option" data-value="Oswald">Oswald</div>
+                    <div class="dropdown-option" data-value="Playfair Display">Playfair Display</div>
+                    <div class="dropdown-option" data-value="Inter">Inter</div>
+                    <div class="dropdown-option" data-value="Times New Roman">Times New Roman</div>
+                    <div class="dropdown-option" data-value="Georgia">Georgia</div>
+                    <div class="dropdown-option" data-value="Impact">Impact</div>
+                    <div class="dropdown-option" data-value="Arial">Arial</div>
                 </div>
             </div>
-
-            <div class="modal-row">
-                <label class="prop-label">SIZE</label>
-                <input type="range" id="modalFontSize" min="8" max="200" value="48" class="range-input">
-                <span class="range-val" id="modalFontSizeVal">48</span>
-            </div>
-            <div class="modal-btns">
-                <button class="action-btn" id="modalCancel">CANCEL</button>
-                <button class="export-btn" id="modalAdd">ADD TEXT</button>
+        </div>
+        <div class="modal-row">
+            <label class="prop-label">SIZE</label>
+            <input type="range" id="modalFontSize" min="8" max="200" value="48" class="range-input">
+            <span class="range-val" id="modalFontSizeVal">48</span>
+        </div>
+        <!-- Fill and stroke here as well as in the property panel: the panel
+             has to be set BEFORE the dialog opens, which means knowing what
+             you want before you have seen it. These are seeded from the panel
+             and written back to it on ADD, so the two never disagree. -->
+        <div class="modal-row">
+            <label class="prop-label">FILL</label>
+            <div class="color-row">
+                <input type="color" id="modalFillColor" value="#ffffff" class="color-input">
+                <input type="text" id="modalFillHex" class="color-hex-input" value="#ffffff" maxlength="7">
+                <button class="no-fill-btn" id="modalNoFillBtn" title="No fill">&#8210;</button>
             </div>
         </div>
-    </div>
+        <div class="modal-row">
+            <label class="prop-label">STROKE</label>
+            <div class="color-row">
+                <input type="color" id="modalStrokeColor" value="#000000" class="color-input">
+                <input type="text" id="modalStrokeHex" class="color-hex-input" value="#000000" maxlength="7">
+                <button class="no-fill-btn" id="modalNoStrokeBtn" title="No stroke">&#8210;</button>
+            </div>
+        </div>
+        <div class="modal-btns">
+            <button class="action-btn" id="modalCancel">CANCEL</button>
+            <button class="export-btn" id="modalAdd">ADD TEXT</button>
+        </div>
+    </dialog>
 
+    <!-- REFERENCE and CREDITS are real dialogs rather than a block of text in
+         the confirm box. Both were one monospace paragraph run through
+         App.platform.label(), which said everything and showed nothing: the
+         chords, the prose and the licence notices all had the same weight.
+
+         Shaped on sprite-forge's, which solved this first.
+
+         CHORDS ARE ONE <kbd> EACH, not one per key. ui/platform.js rewrites
+         Ctrl+Shift+S to the single Mac glyph run, and it can only do that to a
+         string that holds the whole chord. -->
+    <dialog class="modal-box doc-modal" id="referenceModal">
+        <div class="modal-header">REFERENCE<button class="modal-close" title="Close">&times;</button></div>
+        <div class="modal-body">
+            <div class="sub-label">tools</div>
+            <dl class="ref-grid">
+                <dt><kbd>V</kbd></dt><dd>Select and move</dd>
+                <dt><kbd>T</kbd></dt><dd>Text</dd>
+                <dt><kbd>R</kbd> <kbd>C</kbd> <kbd>L</kbd></dt><dd>Rectangle, circle, line</dd>
+            </dl>
+
+            <div class="sub-label">the selection</div>
+            <dl class="ref-grid">
+                <dt><kbd>&larr;&uarr;&darr;&rarr;</kbd></dt><dd>Nudge a pixel &mdash; hold <kbd>Shift</kbd> for ten</dd>
+                <dt><kbd>Esc</kbd></dt><dd>Deselect. The way out once art covers the canvas</dd>
+                <dt><kbd>Del</kbd></dt><dd>Delete the selected element</dd>
+                <dt><kbd>Ctrl+C</kbd> <kbd>Ctrl+V</kbd></dt><dd>Copy and paste it</dd>
+                <dt><kbd>Ctrl+L</kbd></dt><dd>Lock it in place</dd>
+                <dt><kbd>Ctrl+Shift+L</kbd></dt><dd>Unlock everything</dd>
+            </dl>
+
+            <div class="sub-label">project</div>
+            <dl class="ref-grid">
+                <dt><kbd>Ctrl+N</kbd> <kbd>Ctrl+O</kbd></dt><dd>New, and open a .gatefold project</dd>
+                <dt><kbd>Ctrl+S</kbd></dt><dd>Save &mdash; add <kbd>Shift</kbd> for Save As</dd>
+                <dt><kbd>Ctrl+I</kbd> <kbd>Ctrl+E</kbd></dt><dd>Import an image, export a PNG</dd>
+                <dt><kbd>Ctrl+Z</kbd></dt><dd>Undo &mdash; add <kbd>Shift</kbd> to redo</dd>
+                <dt><kbd>F7</kbd> <kbd>F1</kbd></dt><dd>Layers, and this card</dd>
+            </dl>
+
+            <div class="sub-label">things that are not keys</div>
+            <p>Drag the handle above a selection to rotate it. Drop an image on
+                the canvas, or paste one. Click the reference image to sample a
+                colour off it.</p>
+
+            <div class="sub-label">centring</div>
+            <p>Drag an element toward the middle and it snaps to the centre of
+                the cover, with a line showing which axis caught. Each axis is
+                separate, so a title can be centred across the cover while
+                staying high on it.</p>
+
+            <div class="sub-label">locking</div>
+            <p>A photo fitted with COVER fills the canvas, so every click that
+                misses the text on top of it lands on the photo. Lock it and
+                clicks pass straight through &mdash; from the panel, the layers
+                list, or <kbd>Ctrl+L</kbd>.</p>
+
+            <div class="sub-label">the two files</div>
+            <p>A <strong>.gatefold</strong> file is the whole cover: every
+                element, the canvas, and the imported art itself. A
+                <strong>PNG</strong> is only pixels. Exporting is not saving.</p>
+        </div>
+        <div class="modal-btns">
+            <button class="export-btn" id="referenceClose">CLOSE</button>
+        </div>
+    </dialog>
+
+    <dialog class="modal-box doc-modal" id="creditsModal">
+        <div class="modal-header">CREDITS<button class="modal-close" title="Close">&times;</button></div>
+        <div class="modal-body">
+            <p class="credits-lede">GATE//FOLD <span id="creditsVersion"></span><br>
+                A square album-cover editor by <strong>magmacrunch media</strong>.</p>
+
+            <div class="sub-label">licence</div>
+            <p>PolyForm Noncommercial 1.0.0. Copyright 2026 magmacrunch media,
+                magmacrunch.com. Free to use for anything that is not a
+                commercial purpose; the full text ships beside the app.</p>
+
+            <div class="sub-label">typefaces</div>
+            <p>Press Start 2P, Courier Prime, VT323, Silkscreen, DotGothic16,
+                Pixelify Sans, Space Mono, Bebas Neue, Oswald, Playfair Display
+                and Inter, all under the SIL Open Font License 1.1, whose text
+                ships beside the faces in <code>fonts/</code>. Self-hosted
+                rather than fetched, so a cover looks the same offline &mdash;
+                and so an export cannot come out in the fallback face.</p>
+
+            <div class="sub-label">clip art</div>
+            <p>The 27 icons are from <strong>Lucide</strong>, under the ISC
+                licence. They are drawn as canvas paths rather than embedded as
+                images, so they take the fill and stroke of the element.</p>
+
+            <div class="sub-label">built on</div>
+            <p><strong>magma-kit</strong> &mdash; the shared shell, undo stack,
+                dialogs and art store behind this app, sprite-forge, deck-press
+                and magma-ops. <strong>Tauri</strong> wraps the desktop build.</p>
+        </div>
+        <div class="modal-btns">
+            <button class="export-btn" id="creditsClose">CLOSE</button>
+        </div>
+    </dialog>
+
+    <dialog class="modal-box" id="confirm-dialog">
+        <div class="modal-header">GATE//FOLD<button class="modal-close" title="Close">&times;</button></div>
+        <p class="modal-message" id="confirm-message"></p>
+        <div class="modal-btns">
+            <button class="action-btn" id="confirm-cancel">CANCEL</button>
+            <button class="export-btn" id="confirm-ok">OK</button>
+        </div>
+    </dialog>
+
+    <!-- The version is written here and read back by the Credits modal; it is
+         the only copy in markup, and tests/version.test.mjs holds it to
+         Cargo.toml. The web build has no binary to ask, which is why it is in
+         the markup at all. -->
     <footer>
-        <span class="footer-text">ALBUM//ART v1.8 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+        <button class="footer-text" id="credits-link">GATE//FOLD <span id="app-version">v1.13.1</span> &mdash; <span>MAGMACRUNCH MEDIA</span></button>
     </footer>
 
     <script src="../shell/toast.js?v=d87a2776"></script>
     <script src="../shell/dropdown.js?v=2aa77ebe"></script>
-    <script src="js/history.js?v=717c7840"></script>
-    <script src="js/color.js?v=1a2e45ab"></script>
-    <script src="js/canvas.js?v=b9359e4b"></script>
-    <script src="js/tools.js?v=2f5ca7cd"></script>
-    <script src="js/clipart.js?v=a7d338a6"></script>
-    <script src="js/app.js?v=294846ce"></script>
+    <script src="core/tier.js?v=6b0c5f01"></script>
+    <script src="core/palette.js?v=c5bd2864"></script>
+    <script src="core/element.js?v=beb64a8e"></script>
+    <script src="core/waves.js?v=40c78ccb"></script>
+    <script src="core/geometry.js?v=bb9f8f52"></script>
+    <script src="core/guides.js?v=f30c123b"></script>
+    <script src="core/panels.js?v=4219fc2f"></script>
+    <script src="core/marks.js?v=a997cc71"></script>
+    <script src="core/clipart.js?v=e2ffe43f"></script>
+    <script src="core/keybindings.js?v=d3f824c1"></script>
+    <script src="core/artstore.js?v=3f878c18"></script>
+    <script src="core/formats.js?v=2400ba67"></script>
+    <script src="core/pngmeta.js?v=4f6af6e4"></script>
+    <script src="core/gatefold.js?v=a5eca7eb"></script>
+    <script src="platform.js?v=5716e9a7"></script>
+    <script src="canvas.js?v=515a587d"></script>
+    <script src="images.js?v=c1250423"></script>
+    <script src="render.js?v=c06d5562"></script>
+    <script src="props.js?v=c4623e79"></script>
+    <script src="tools.js?v=8f185dfb"></script>
+    <script src="reference.js?v=70d2800b"></script>
+    <script src="textmodal.js?v=11204b0d"></script>
+    <script src="png.js?v=16e934e1"></script>
+    <script src="export.js?v=cc91e736"></script>
+    <script src="import.js?v=7433e741"></script>
+    <script src="layers.js?v=976c7e25"></script>
+    <script src="confirm.js?v=c7234a68"></script>
+    <script src="shapes-popup.js?v=be6193f5"></script>
+    <script src="project-ui.js?v=8661fd16"></script>
+    <script src="help-ui.js?v=7268519d"></script>
+    <script src="menu.js?v=5b86f2f2"></script>
+    <script src="session.js?v=43eff771"></script>
+    <script src="sizes.js?v=9e97307c"></script>
+    <script src="main.js?v=727311e7"></script>
 </body>
 </html>

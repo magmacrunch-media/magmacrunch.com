@@ -1,7 +1,27 @@
-/* ── clipart.js — Lucide icon paths (ISC license) for clip art tool ── */
-window.ClipartLibrary = (function () {
-    // Each icon: { paths: SVG path strings, circles: [[cx,cy,r], ...], lines: [[x1,y1,x2,y2], ...], rects: [[x,y,w,h,r], ...] }
-    // All icons are defined in a 24x24 viewBox.
+// core/clipart.js — the icon library, as DATA.
+//
+// Twenty-seven icons from Lucide (ISC), each defined in a 24x24 viewBox as
+// some combination of SVG path strings, circles, lines, rects and points.
+//
+// The web tool kept drawClipart() in here too, which made the whole library
+// unreachable from a Node suite for the sake of one function that needs a
+// canvas. The drawing moved to ui/render.js, where the rest of the drawing
+// is; what is left is a table and three accessors, so the shapes popup and
+// the layers panel can both read it without a DOM.
+//
+// Lucide, ISC License. https://lucide.dev — see LICENSES.md.
+//
+// Pure: no DOM, no canvas.
+
+(function () {
+    'use strict';
+
+    const App = (window.Gatefold = window.Gatefold || {});
+
+    /* Each icon: { label, paths: [d], circles: [[cx,cy,r]], lines:
+       [[x1,y1,x2,y2]], rects: [[x,y,w,h,r]], points: [[x,y]] }. All in a
+       24x24 viewBox; ui/render.js scales and centres them into the element
+       box. */
     const ICONS = {
         // ── MUSIC / AUDIO ──
         music: {
@@ -198,73 +218,15 @@ window.ClipartLibrary = (function () {
         },
     };
 
-    function drawClipart(ctx, id, x, y, w, h) {
-        const icon = ICONS[id];
-        if (!icon) return;
-
-        const scale = Math.min(w, h) / 24;
-        const offsetX = x + (w - 24 * scale) / 2;
-        const offsetY = y + (h - 24 * scale) / 2;
-
-        ctx.save();
-        ctx.translate(offsetX, offsetY);
-        ctx.scale(scale, scale);
-
-        // Draw paths
-        if (icon.paths) {
-            for (const d of icon.paths) {
-                const p = new Path2D(d);
-                ctx.stroke(p);
-            }
-        }
-
-        // Draw circles
-        if (icon.circles) {
-            for (const [cx, cy, r] of icon.circles) {
-                ctx.beginPath();
-                ctx.arc(cx, cy, r, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-        }
-
-        // Draw lines
-        if (icon.lines) {
-            for (const [x1, y1, x2, y2] of icon.lines) {
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.stroke();
-            }
-        }
-
-        // Draw rects
-        if (icon.rects) {
-            for (const [rx, ry, rw, rh, rr] of icon.rects) {
-                ctx.beginPath();
-                if (rr) {
-                    ctx.roundRect(rx, ry, rw, rh, rr);
-                } else {
-                    ctx.rect(rx, ry, rw, rh);
-                }
-                ctx.stroke();
-            }
-        }
-
-        // Draw points (small filled circles)
-        if (icon.points) {
-            for (const [px, py] of icon.points) {
-                ctx.beginPath();
-                ctx.arc(px, py, 0.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        ctx.restore();
-    }
-
     function getIconIds() { return Object.keys(ICONS); }
-    function getIcon(id) { return ICONS[id]; }
+    function getIcon(id) { return ICONS[id] || null; }
     function getIconLabel(id) { return ICONS[id] ? ICONS[id].label : id; }
 
-    return { drawClipart, getIconIds, getIcon, getIconLabel };
-})();
+    App.clipart = {
+        ICONS: ICONS,
+        VIEWBOX: 24,
+        getIconIds: getIconIds,
+        getIcon: getIcon,
+        getIconLabel: getIconLabel,
+    };
+}());
