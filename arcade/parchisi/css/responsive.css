@@ -94,7 +94,8 @@
         font-size: 8px;
     }
 
-    #chatMessages {
+    #chatMessages,
+    #chatMessages2 {
         height: 70px;
         font-size: 9px;
     }

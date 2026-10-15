@@ -103,6 +103,9 @@ var UI = (function() {
             onWelcome: function(msg) {
                 updateStatus('Connected! Room: ' + (msg.room || '----'));
                 showLobby(msg);
+                // welcome carries the count but not the roster; the roster
+                // follows in the lobby_update the server sends after it.
+                updateLobby(msg);
             },
 
             onLobbyUpdate: function(msg) {
@@ -208,11 +211,11 @@ var UI = (function() {
             },
 
             onSystem: function(msg) {
-                addChatMessage('system', '', msg.text, els.chatMessages);
+                addChatMessage('system', '', msg.text, visibleChat());
             },
 
             onChat: function(msg) {
-                addChatMessage(msg.from, msg.color, msg.text, els.chatMessages);
+                addChatMessage(msg.from, msg.color, msg.text, visibleChat());
             },
 
             onError: function(text) {
@@ -224,11 +227,9 @@ var UI = (function() {
                 if (quitColor) {
                     GameState.applyAction({ type: GameState.ActionTypes.PLAYER_LEAVE, color: quitColor });
                 }
-                addChatMessage('system', '', msg.playerName + ' left', els.chatMessages);
-
-                if (!gameActive) {
-                    showStartScreen();
-                }
+                // Only the player who left goes back to the start screen, and
+                // handleLobbyQuit does that for them. Everyone else stays put.
+                addChatMessage('system', '', msg.playerName + ' left', visibleChat());
             },
 
             onPromotedHost: function() {
@@ -344,9 +345,12 @@ var UI = (function() {
     }
 
     function updateLobby(msg) {
-        if (msg.playersInfo) {
+        // server_base sends the roster as `players`; only its quit path also
+        // sends `playersInfo`, which is all this used to read.
+        var roster = msg.players || msg.playersInfo;
+        if (roster) {
             els.lobbyPlayers.innerHTML = '';
-            msg.playersInfo.forEach(function(p) {
+            roster.forEach(function(p) {
                 var row = document.createElement('div');
                 row.className = 'lobby-player';
                 var dot = document.createElement('span');
@@ -694,6 +698,12 @@ var UI = (function() {
         els.gameScreen.style.display = 'none';
         els.lobbyOverlay.style.display = 'none';
         els.gameOverModal.classList.remove('active');
+    }
+
+    // The lobby and the game screen each have a chat panel, and only one is
+    // ever shown. Incoming chat goes to whichever that is.
+    function visibleChat() {
+        return els.gameScreen.style.display === 'none' ? els.chatMessages : els.chatMessages2;
     }
 
     function showGameScreen() {

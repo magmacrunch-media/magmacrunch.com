@@ -95,7 +95,8 @@
     border-bottom: 1px solid var(--pc-border);
 }
 
-#chatMessages {
+#chatMessages,
+#chatMessages2 {
     height: 100px;
     overflow-y: auto;
     padding: 6px;

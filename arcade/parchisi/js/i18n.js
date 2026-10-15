@@ -50,6 +50,7 @@ var I18n = (function() {
     strings.es.language = 'IDIOMA';
     strings.es.close = 'CERRAR';
     strings.es.playerJoined = 'se unio a la sala';
+    strings.es.playerLeft = 'salio de la sala';
     strings.es.wins = 'ha ganado';
 
     // -- English --
@@ -91,6 +92,7 @@ var I18n = (function() {
     strings.en.language = 'LANGUAGE';
     strings.en.close = 'CLOSE';
     strings.en.playerJoined = 'joined the room';
+    strings.en.playerLeft = 'left the room';
     strings.en.wins = 'wins';
 
     function t(key) {

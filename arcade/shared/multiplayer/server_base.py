@@ -632,6 +632,9 @@ class GameServer:
             "playerCount": room.player_count,
             "maxPlayers": room.max_players,
         }))
+        # welcome has no roster, so without this the creator's own lobby
+        # listed nobody until a second player arrived.
+        await self._broadcast_lobby(room)
 
         return room, name
 
@@ -682,7 +685,10 @@ class GameServer:
             "maxPlayers": room.max_players,
             "canStart": room.can_start(),
             "gameStarted": room.game_started,
-        }, exclude=websocket)
+        })
+        # The joiner is included: welcome carries their count but not the
+        # roster, so excluding them (as this did until 2026-10-14) left their
+        # own lobby reading "0 / N players" with nobody listed.
 
         return room, name
 

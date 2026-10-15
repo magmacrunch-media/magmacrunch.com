@@ -33,6 +33,12 @@ var UI = (function() {
         els.chatInput     = document.getElementById('chatInput');
         els.chatBtn       = document.getElementById('chatBtn');
         els.chatMessages  = document.getElementById('chatMessages');
+        // The game screen has its own chat panel. Until 2026-10-14 it reused
+        // the lobby's ids, so getElementById found the lobby's hidden panel and
+        // the in-game one was never read from or written to.
+        els.chatInput2    = document.getElementById('chatInput2');
+        els.chatBtn2      = document.getElementById('chatBtn2');
+        els.chatMessages2 = document.getElementById('chatMessages2');
         els.quitBtn       = document.getElementById('quitBtn');
         els.gameOverModal = document.getElementById('gameOverModal');
         els.winnerText    = document.getElementById('winnerText');
@@ -109,6 +115,10 @@ var UI = (function() {
         els.chatInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') handleChat();
         });
+        els.chatBtn2.addEventListener('click', handleChat);
+        els.chatInput2.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleChat();
+        });
         els.nameInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') handleJoin();
         });
@@ -132,6 +142,9 @@ var UI = (function() {
                 debug('Joined as ' + msg.playerName);
                 if (els.roomCodeDisplay) els.roomCodeDisplay.textContent = msg.room || '----';
                 showLobby();
+                // welcome carries the count but not the roster; the roster
+                // follows in the lobby_update the server sends after it.
+                updateLobby(msg);
             },
 
             onLobbyUpdate: function(msg) {
@@ -255,7 +268,7 @@ var UI = (function() {
                     type: GameState.ActionTypes.PLAYER_LEAVE,
                     color: msg.color,
                 });
-                addChatMessage(I18n.t('systemLabel'), '', msg.playerName + ' ' + I18n.t('playerJoined'));
+                addChatMessage(I18n.t('systemLabel'), '', msg.playerName + ' ' + I18n.t('playerLeft'));
             },
 
             onPromotedHost: function() {
@@ -314,9 +327,12 @@ var UI = (function() {
     function handleStartGame() { Network.startGame(); }
 
     function updateLobby(msg) {
-        if (msg.playersInfo) {
+        // server_base sends the roster as `players`; only its quit path also
+        // sends `playersInfo`, which is all this used to read.
+        var roster = msg.players || msg.playersInfo;
+        if (roster) {
             els.lobbyPlayers.innerHTML = '';
-            msg.playersInfo.forEach(function(p) {
+            roster.forEach(function(p) {
                 var row = document.createElement('div');
                 row.className = 'lobby-player';
                 var dot = document.createElement('span');
@@ -396,11 +412,18 @@ var UI = (function() {
     // -- Chat --
 
     function handleChat() {
-        var text = els.chatInput.value.trim();
+        var input = inGame() ? els.chatInput2 : els.chatInput;
+        var text = input.value.trim();
         if (!text) return;
         Network.chat(text);
         addChatMessage(Network.getMyName(), Network.getMyColor(), text);
-        els.chatInput.value = '';
+        input.value = '';
+    }
+
+    // The lobby and the game screen each have a chat panel, and only one is
+    // ever shown. Chat goes to whichever that is.
+    function inGame() {
+        return els.gameScreen.style.display !== 'none';
     }
 
     function addChatMessage(from, color, text) {
@@ -414,8 +437,9 @@ var UI = (function() {
         var textSpan = document.createElement('span');
         textSpan.textContent = text;
         div.appendChild(textSpan);
-        els.chatMessages.appendChild(div);
-        els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
+        var panel = inGame() ? els.chatMessages2 : els.chatMessages;
+        panel.appendChild(div);
+        panel.scrollTop = panel.scrollHeight;
     }
 
     // -- UI updates --

@@ -27,6 +27,7 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "multiplayer"))
 from server_base import (  # noqa: E402
     LOOPBACK,
+    GameServer,
     PUBLIC_ORIGINS,
     RateLimiter,
     Room,
@@ -256,3 +257,43 @@ class TestUniqueName:
     def test_the_suffixed_name_still_fits_twenty_characters(self):
         long = "x" * 20
         assert len(self.room_with(long).unique_name(long)) <= 20
+
+
+class TestJoinRoomRoster:
+    """
+    welcome carries the joiner's count and no roster, and join_room's
+    lobby_update used to exclude the joiner, so their own lobby read
+    "0 / N players" with nobody listed until someone else came or went.
+    """
+
+    class FakeSocket:
+        def __init__(self):
+            self.sent = []
+
+        async def send(self, data):
+            import json
+            self.sent.append(json.loads(data))
+
+    def test_the_joiner_gets_the_roster(self):
+        import asyncio
+        server = GameServer(game_factory=lambda: None, max_players=4)
+        host, joiner = self.FakeSocket(), self.FakeSocket()
+
+        async def go():
+            room, _ = await server._handle_create_room(host, {"name": "Host", "room": "ABCD"})
+            await server._handle_join_room(joiner, {"name": "Guest", "room": room.code})
+
+        asyncio.run(go())
+        updates = [m for m in joiner.sent if m["type"] == "lobby_update"]
+        assert updates, [m["type"] for m in joiner.sent]
+        assert [p["name"] for p in updates[-1]["players"]] == ["Host", "Guest"]
+        assert updates[-1]["playerCount"] == 2
+
+    def test_the_creator_gets_the_roster(self):
+        import asyncio
+        server = GameServer(game_factory=lambda: None, max_players=4)
+        host = self.FakeSocket()
+        asyncio.run(server._handle_create_room(host, {"name": "Host", "room": "ABCD"}))
+        updates = [m for m in host.sent if m["type"] == "lobby_update"]
+        assert updates, [m["type"] for m in host.sent]
+        assert [p["name"] for p in updates[-1]["players"]] == ["Host"]
