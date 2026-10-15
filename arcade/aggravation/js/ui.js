@@ -138,6 +138,12 @@ var UI = (function() {
                 BoardRenderer.render(els.boardCanvas, state.pawns, state.colorMap);
                 updateScores(state);
                 updateTurnInfo(state);
+
+                // The server's first turn_update comes after the first move, so
+                // the opening player's ROLL has to be enabled from here.
+                var isMyTurn = state.currentTurn === mySlot;
+                els.rollBtn.disabled = !isMyTurn;
+                if (isMyTurn) updateStatus2('Your turn: roll!');
             },
 
             onDiceRolled: function(msg) {
@@ -149,8 +155,9 @@ var UI = (function() {
                     var state = GameState.getState();
                     legalMoves = AC.getLegalMoves(mySlot, msg.dice, state.pawns);
                     if (legalMoves.length === 0) {
+                        // The server passes the turn itself when a roll has no
+                        // move; a skip_turn from here only spent rate budget.
                         updateStatus2('No legal moves');
-                        setTimeout(function() { Network.skipTurn(); }, 1000);
                     } else {
                         updateStatus2('Choose a marble');
                         highlightLegalMoves();

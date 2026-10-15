@@ -12,6 +12,7 @@ var Network = (function() {
     var mySlot = '';
     var isHost = false;
     var roomCode = '';
+    var outbox = [];   // sends made while the socket is still opening
 
     // Callbacks
     var onWelcome      = function() {};
@@ -30,22 +31,23 @@ var Network = (function() {
     var onSpectator    = function() {};
     var onGameOver     = function() {};
 
+    // Where the game server is. mpServerFor (../shared/mp-server.js) is the
+    // arcade's one answer: the nginx path on the public site, the port itself
+    // on the LAN or tailnet. This used to hardcode
+    // wss://aggravation.magmacrunch.com, which fails its TLS handshake because
+    // the Pi's certificate names only magmacrunch.duckdns.org.
     function getServerUrl() {
         var params = new URLSearchParams(window.location.search);
-        var serverParam = params.get('server');
-        if (serverParam) {
-            var proto = serverParam.match(/^(\d|localhost)/) ? 'ws' : 'wss';
-            return proto + '://' + serverParam;
-        }
-        var h = window.location.hostname;
-        if (h === 'localhost' || h === '127.0.0.1' || h === '') {
-            return 'ws://localhost:8774';
-        }
-        return 'wss://aggravation.magmacrunch.com';
+        var addr = params.get('server') || mpServerFor('aggravation', 8774);
+        if (/^wss?:\/\//.test(addr)) return addr;
+        var plain = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|100\.)/.test(addr)
+            || window.location.protocol === 'http:';
+        return (plain ? 'ws://' : 'wss://') + addr;
     }
 
     function connect(serverUrl) {
         var url = serverUrl || getServerUrl();
+        outbox = [];
         try {
             ws = new WebSocket(url);
         } catch (e) {
@@ -56,6 +58,7 @@ var Network = (function() {
         ws.onopen = function() {
             connected = true;
             console.log('[Network] Connected to', url);
+            while (outbox.length) ws.send(outbox.shift());
         };
 
         ws.onmessage = function(evt) {
@@ -79,9 +82,15 @@ var Network = (function() {
 
     function _handle(msg) {
         switch (msg.type) {
+            case 'game_action':
+                // server_base wraps every game frame in this envelope.
+                if (msg.action && msg.action.type !== 'game_action') _handle(msg.action);
+                break;
             case 'welcome':
-                myName = msg.playerName || '';
-                mySlot = msg.slot || '';
+                // The server confirms the name (it may truncate it) but sends
+                // no slot: the slot comes from game_started, below.
+                myName = msg.playerName || myName;
+                mySlot = '';
                 isHost = msg.isHost || false;
                 roomCode = msg.room || '';
                 onWelcome(msg);
@@ -91,6 +100,11 @@ var Network = (function() {
                 onLobbyUpdate(msg);
                 break;
             case 'game_started':
+                // playerNames maps board colour -> player name.
+                mySlot = '';
+                for (var slot in (msg.playerNames || {})) {
+                    if (msg.playerNames[slot] === myName) mySlot = slot;
+                }
                 onGameStarted(msg);
                 break;
             case 'dice_rolled':
@@ -132,9 +146,15 @@ var Network = (function() {
         }
     }
 
+    // ui.js connects on JOIN and sends 200 ms later, which loses to a TLS
+    // handshake through nginx, and a send on a socket still CONNECTING used to
+    // be dropped without a word. Hold it until onopen instead.
     function _send(msg) {
-        if (ws && ws.readyState === WebSocket.OPEN) {
+        if (!ws) return;
+        if (ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify(msg));
+        } else if (ws.readyState === WebSocket.CONNECTING) {
+            outbox.push(JSON.stringify(msg));
         }
     }
 
