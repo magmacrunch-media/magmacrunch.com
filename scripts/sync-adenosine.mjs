@@ -49,7 +49,7 @@ const SHARED = join(ROOT, 'arcade', 'shared');
  * that wants the widget. arcade/tests/test-chat-retired.js fails if the name
  * comes back here, and is the place to read before dropping that test.
  */
-const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio', 'multiplayer'];
+const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio', 'multiplayer', 'race'];
 
 /**
  * The oldest release whose bundle may be copied over the committed one.
