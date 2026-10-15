@@ -173,9 +173,13 @@ class SorryGame:
                 self.phase = 'finished'
                 msgs.append({"type": "game_over", "winner": player_name, "winnerColor": color})
 
-        # Advance turn (card 2 allows draw again — skip turn advance)
-        if card_value != "2" and self.phase != 'finished':
-            self._advance_turn()
+        # Advance turn, except on a 2, which draws again. Announce
+        # the turn either way: a 2 keeps it with the same player, and the client
+        # only re-enables DRAW CARD on a turn_update, so without one the game
+        # stalled on every 2 drawn online.
+        if self.phase != 'finished':
+            if card_value != "2":
+                self._advance_turn()
             msgs.append(self._turn_update_msg())
 
         return msgs

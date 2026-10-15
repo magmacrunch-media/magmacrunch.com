@@ -185,10 +185,11 @@ MP.onGameStarted = function(data) {
         }
     }
 
-    // Convert player-based colorMap to slot-based colorMap
+    // Convert player-based colorMap to slot-based colorMap. sides is
+    // slot -> name, so the lookup goes through _slotForName.
     Multiplayer._slotColorMap = {};
     for (var pname in colorMap) {
-        var slot = Multiplayer._sides[pname];
+        var slot = _slotForName(pname);
         if (slot) {
             Multiplayer._slotColorMap[slot] = colorMap[pname];
         }
@@ -198,7 +199,25 @@ MP.onGameStarted = function(data) {
 
     // Trigger game start in game-state
     applyAction({ type: ActionTypes.START_GAME });
+
+    // The server announces turns only after a move, so the opening turn comes
+    // from the state in game_started. Without this nobody's DRAW CARD enables.
+    _syncTurn(state.currentTurn);
 };
+
+function _slotForName(name) {
+    for (var s in Multiplayer._sides) {
+        if (Multiplayer._sides[s] === name) return s;
+    }
+    return null;
+}
+
+// turn_update carries a name; game-state tracks the turn by slot. Keep both.
+function _syncTurn(name) {
+    var slot = _slotForName(name);
+    if (slot) applyAction({ type: ActionTypes.SYNC_TURN_COLOR, payload: { color: slot } });
+    Multiplayer.onTurnUpdate(name);
+}
 
 MP.onGameState = function(state) {
     // Full state sync (for spectators)
@@ -218,7 +237,7 @@ MP.onGameAction = function(action) {
         Multiplayer.onPawnMoved(action.color, action.pawnId, action.newPosition, action.lapped);
     }
     else if (t === 'turn_update') {
-        Multiplayer.onTurnUpdate(action.currentTurnName);
+        _syncTurn(action.currentTurnName);
     }
     else if (t === 'color_changed') {
         Multiplayer._slotColorMap = action.colorMap || {};

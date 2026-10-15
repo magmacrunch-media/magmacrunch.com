@@ -109,9 +109,10 @@ class TestMove:
             'color': 'red', 'pawnIndex': 0,
             'newPosition': {'track': 5}, 'lapped': False,
         })
-        # Should not include turn_update (no next turn message)
+        # The turn stays with Alice, and is announced: the client re-enables
+        # DRAW CARD only on a turn_update, so omitting it stalled the game.
         turn_updates = [m for m in result if m.get('type') == 'turn_update']
-        assert len(turn_updates) == 0
+        assert turn_updates == [{"type": "turn_update", "currentTurnName": "Alice"}]
 
     def test_no_card_drawn_rejects_move(self, game):
         game.current_card = None
