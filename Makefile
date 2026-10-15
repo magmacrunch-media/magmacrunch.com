@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi sync-cave-diving
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi sync-cave-diving sync-chess sync-checkers sync-backgammon sync-chinese-checkers
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -161,6 +161,22 @@ sync-parchisi: ## Regenerate arcade/parchisi/ from the parchisi repo's web/
 # are re-derived after the copy, as for the other adenosine games.
 sync-cave-diving: ## Regenerate arcade/cave-diving/ from the cave-diving repo's web/
 	node scripts/sync-game.mjs cave-diving
+	npm run --silent build:adenosine
+
+sync-chess: ## Regenerate arcade/chess/ from the chess repo's web/
+	node scripts/sync-game.mjs chess
+	npm run --silent build:adenosine
+
+sync-checkers: ## Regenerate arcade/checkers/ from the checkers repo's web/
+	node scripts/sync-game.mjs checkers
+	npm run --silent build:adenosine
+
+sync-backgammon: ## Regenerate arcade/backgammon/ from the backgammon repo's web/
+	node scripts/sync-game.mjs backgammon
+	npm run --silent build:adenosine
+
+sync-chinese-checkers: ## Regenerate arcade/chinese-checkers/ from the chinese-checkers repo's web/
+	node scripts/sync-game.mjs chinese-checkers
 	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────
