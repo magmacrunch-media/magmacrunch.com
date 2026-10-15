@@ -6,6 +6,7 @@ var UI = (function() {
     'use strict';
 
     var mySlot = null;
+    var sides = {};       // player name -> board slot, from game_started
     var selectedPawn = null;
     var legalMoves = [];
     var gameActive = false;
@@ -126,8 +127,9 @@ var UI = (function() {
     function setupNetworkCallbacks() {
         Network.setCallbacks({
             onWelcome: function(msg) {
-                mySlot = msg.slot;
-                debug('Joined as ' + msg.playerName + ' (slot: ' + msg.slot + ')');
+                // The server assigns slots at game start, not on join.
+                mySlot = null;
+                debug('Joined as ' + msg.playerName);
                 if (els.roomCodeDisplay) els.roomCodeDisplay.textContent = msg.room || '----';
                 showLobby();
             },
@@ -139,10 +141,39 @@ var UI = (function() {
             onGameStarted: function(msg) {
                 debug('Game started!');
                 gameActive = true;
-                if (msg.colorMap) injectColorMap(msg.colorMap);
+
+                // state.sides is name -> slot, and slots go to players in
+                // join order, which is also the server's turn order.
+                sides = (msg.state && msg.state.sides) || {};
+                mySlot = sides[Network.getMyName()] || null;
+                var turnOrder = PC.COLORS.filter(function(c) {
+                    return Object.keys(sides).some(function(n) { return sides[n] === c; });
+                });
+                var slotHex = {}, slotName = {};
+                Object.keys(sides).forEach(function(n) {
+                    slotName[sides[n]] = n;
+                    if (msg.colorMap && msg.colorMap[n]) slotHex[sides[n]] = msg.colorMap[n];
+                });
+                injectColorMap(slotHex);
+
+                GameState.applyAction({
+                    type: GameState.ActionTypes.START_GAME,
+                    turnOrder: turnOrder,
+                    colorMap: slotHex,
+                    playerNames: slotName,
+                });
                 showGameScreen();
                 var state = GameState.getState();
-                if (state) BoardRenderer.render(els.boardCanvas, state.pawns, state.colorMap);
+                BoardRenderer.render(els.boardCanvas, state.pawns, state.colorMap);
+
+                // The first turn_update follows the first move, so the opening
+                // player's ROLL is enabled from here.
+                var opener = slotName[state.currentTurn];
+                var isMyTurn = state.currentTurn === mySlot;
+                updateTurnInfo(opener, isMyTurn);
+                els.rollBtn.disabled = !isMyTurn;
+                els.rollBtn.classList.toggle('active', isMyTurn);
+                if (isMyTurn) updateStatus(I18n.t('rollPrompt'));
             },
 
             onDiceRolled: function(msg) {
@@ -170,7 +201,13 @@ var UI = (function() {
             },
 
             onTurnUpdate: function(msg) {
-                GameState.applyAction({ type: GameState.ActionTypes.ADVANCE_TURN });
+                // Sync to the named player rather than stepping blindly: after
+                // doubles the turn stays put and is announced all the same.
+                var slot = sides[msg.currentTurnName];
+                var order = GameState.getState().turnOrder || [];
+                for (var i = 0; i < order.length && GameState.getState().currentTurn !== slot; i++) {
+                    GameState.applyAction({ type: GameState.ActionTypes.ADVANCE_TURN });
+                }
                 var isMyTurn = msg.currentTurnName === Network.getMyName();
                 updateTurnInfo(msg.currentTurnName, isMyTurn);
                 els.rollBtn.disabled = !isMyTurn;

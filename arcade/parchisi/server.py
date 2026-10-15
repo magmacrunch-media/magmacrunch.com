@@ -207,6 +207,23 @@ class ParchisiGame:
         for pi in range(NUM_PAWNS):
             pos = pawns[pi]
 
+            # Leaving the yard: a 5 on either die, or a total of 5, puts the
+            # pawn on its entry square. advance_position has no yard case, so
+            # without this no pawn could ever leave and every move the client
+            # offered was refused in silence. Mirrors getLegalMoves in
+            # js/board-config.js, which is what the player is shown.
+            if pos is None:
+                if 5 in dice or sum(dice) == 5:
+                    entry = COLOR_ENTRY[slot]
+                    moves.append({
+                        'pawnIndex': pi,
+                        'newPos': {'track': entry},
+                        'capture': check_capture(slot, entry, self.pawn_positions),
+                        'steps': 0,
+                        'dieIndex': -1,
+                    })
+                continue
+
             # Try each die individually
             for di, steps in enumerate(dice):
                 if steps == 0:
@@ -297,6 +314,11 @@ class ParchisiGame:
         # Move the pawn
         self.pawn_positions[slot][pawn_idx] = new_pos
 
+        # The client reads capture.color; the server's own dicts say 'slot'.
+        if capture and isinstance(capture, dict):
+            capture = {'color': capture.get('color') or capture.get('slot'),
+                       'index': capture.get('index')}
+
         msgs = [{
             'type': 'pawn_moved',
             'color': slot,
@@ -317,10 +339,15 @@ class ParchisiGame:
                 })
                 return msgs
 
-        # Advance turn (unless doubles — player goes again)
+        # Advance turn, except on doubles, where the player goes again. That
+        # is announced too: the client re-enables ROLL only on a turn_update,
+        # so without one a doubles roll stalled the game.
         is_doubles = self.dice_values[0] == self.dice_values[1] and self.dice_values[0] != 0
         self.waiting_for_move = False
-        if not is_doubles:
+        if is_doubles:
+            self.dice_values = [0, 0]
+            msgs.append({'type': 'turn_update', 'currentTurnName': player_name})
+        else:
             msgs.extend(self._advance_turn())
 
         return msgs

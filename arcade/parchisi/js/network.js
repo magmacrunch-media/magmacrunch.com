@@ -30,15 +30,17 @@ var Network = (function() {
     var onGameOver     = function() {};
 
     // ── Server address ────────────────────────────────────────────────────────
+    // mpServerFor (../shared/mp-server.js) is the arcade's one answer: the
+    // nginx path on the public site, the port itself on the LAN or tailnet.
+    // This used to hardcode ws://magmacrunch.duckdns.org:8773, which an https
+    // page refuses to open as mixed content.
     function getServerUrl() {
         var params = new URLSearchParams(window.location.search);
-        var serverParam = params.get('server');
-        if (serverParam) {
-            var proto = serverParam.match(/^(\d|localhost)/) ? 'ws' : 'wss';
-            return proto + '://' + serverParam;
-        }
-        // Default to magmacrunch server
-        return 'ws://magmacrunch.duckdns.org:8773';
+        var addr = params.get('server') || mpServerFor('parchisi', 8773);
+        if (/^wss?:\/\//.test(addr)) return addr;
+        var plain = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|100\.)/.test(addr)
+            || window.location.protocol === 'http:';
+        return (plain ? 'ws://' : 'wss://') + addr;
     }
 
     // ── Connect ───────────────────────────────────────────────────────────────
@@ -79,6 +81,11 @@ var Network = (function() {
     // ── Message handler ───────────────────────────────────────────────────────
     function _handle(msg) {
         switch (msg.type) {
+            case 'game_action':
+                // server_base wraps every game frame in this envelope.
+                if (msg.action && msg.action.type !== 'game_action') _handle(msg.action);
+                break;
+
             case 'welcome':
                 myName = msg.playerName || '';
                 isHost = msg.isHost || false;
@@ -209,12 +216,14 @@ var Network = (function() {
         _send({ type: 'chat', text: text });
     }
 
+    // server_base knows 'quit', and reaches a game's own actions only
+    // through game_action; 'quit_game' and a bare 'change_color' were ignored.
     function quit() {
-        _send({ type: 'quit_game' });
+        _send({ type: 'quit' });
     }
 
     function changeColor(color) {
-        _send({ type: 'change_color', color: color });
+        _send({ type: 'game_action', action: { type: 'change_color', color: color } });
     }
 
     // ── Getters ───────────────────────────────────────────────────────────────

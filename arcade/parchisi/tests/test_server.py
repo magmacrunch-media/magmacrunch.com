@@ -337,3 +337,56 @@ def game_pawns():
 
 MIN_PLAYERS = 2
 MAX_PLAYERS = 4
+
+
+# ── Online play: what the client offers, the server must accept ───────────────
+
+from server import ParchisiGame  # noqa: E402
+
+
+@pytest.fixture
+def started():
+    g = ParchisiGame()
+    g.set_player_names(['Alice', 'Bob'])
+    g.reset()
+    return g
+
+
+class TestYardExit:
+    """advance_position has no yard case, so before this every pawn was stuck."""
+
+    @pytest.mark.parametrize('dice', [[5, 2], [3, 5], [1, 4], [2, 3]])
+    def test_a_five_or_a_total_of_five_leaves_the_yard(self, started, dice):
+        moves = started._compute_legal_moves('red', dice)
+        assert {'track': COLOR_ENTRY['red']} in [m['newPos'] for m in moves]
+
+    def test_no_five_no_exit(self, started):
+        assert started._compute_legal_moves('red', [2, 2]) == []
+
+    def test_the_exit_move_is_accepted(self, started):
+        started.dice_values = [1, 4]
+        started.waiting_for_move = True
+        started.legal_moves = started._compute_legal_moves('red', [1, 4])
+        msgs = started._handle_move('Alice', {'pawnIndex': 0, 'newPos': {'track': 5}})
+        assert msgs[0]['type'] == 'pawn_moved'
+        assert started.pawn_positions['red'][0] == {'track': 5}
+
+
+class TestOnlineTurnFrames:
+    def test_doubles_announce_the_same_player_again(self, started):
+        started.pawn_positions['red'][0] = {'track': 10}
+        started.dice_values = [2, 2]
+        started.waiting_for_move = True
+        started.legal_moves = started._compute_legal_moves('red', [2, 2])
+        msgs = started._handle_move('Alice', {'pawnIndex': 0, 'newPos': {'track': 12}})
+        assert {'type': 'turn_update', 'currentTurnName': 'Alice'} in msgs
+
+    def test_a_capture_names_the_victim_by_color(self, started):
+        started.pawn_positions['red'][0] = {'track': 10}
+        started.pawn_positions['blue'][0] = {'track': 13}
+        started.dice_values = [3, 6]
+        started.waiting_for_move = True
+        started.legal_moves = started._compute_legal_moves('red', [3, 6])
+        msgs = started._handle_move('Alice', {'pawnIndex': 0, 'newPos': {'track': 13}})
+        assert msgs[0]['capture'] == {'color': 'blue', 'index': 0}
+        assert started.pawn_positions['blue'][0] is None
