@@ -1,16 +1,23 @@
 /**
- * network.js — WebSocket client for Parchís multiplayer
+ * network.js -- Parchis's multiplayer client, on adenosine's MP.
+ *
+ * The socket, the protocol and the server address all belong to MP now
+ * (../shared/adenosine-multiplayer.js). Until 2026-10-14 this file opened its
+ * own WebSocket and re-implemented all three, and it read ?server= with no
+ * allowlist, so a crafted link could point a player's socket and name at any
+ * host. MP refuses a ?server= host that is not this page's own, the configured
+ * default, or a private address.
+ *
+ * What stays here is the API ui.js already calls -- the same functions, and
+ * callbacks receiving the same message shapes -- so ui.js did not change. MP
+ * hands some frames over as fields rather than messages (chat, system,
+ * rejected), and those are rebuilt into the objects ui.js reads.
  */
 
 var Network = (function() {
     'use strict';
 
-    var ws = null;
-    var connected = false;
-    var myName = '';
-    var myColor = '';
-    var isHost = false;
-    var roomCode = '';
+    var outbox = [];   // sends made while the socket is still opening
 
     // ── Callbacks (set by ui.js before connect) ───────────────────────────────
     var onWelcome      = function() {};
@@ -29,209 +36,127 @@ var Network = (function() {
     var onSpectator    = function() {};
     var onGameOver     = function() {};
 
-    // ── Server address ────────────────────────────────────────────────────────
-    // mpServerFor (../shared/mp-server.js) is the arcade's one answer: the
-    // nginx path on the public site, the port itself on the LAN or tailnet.
-    // This used to hardcode ws://magmacrunch.duckdns.org:8773, which an https
-    // page refuses to open as mixed content.
-    function getServerUrl() {
-        var params = new URLSearchParams(window.location.search);
-        var addr = params.get('server') || mpServerFor('parchisi', 8773);
-        if (/^wss?:\/\//.test(addr)) return addr;
-        var plain = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|100\.)/.test(addr)
-            || window.location.protocol === 'http:';
-        return (plain ? 'ws://' : 'wss://') + addr;
+    // ── Game frames, delivered inside server_base's game_action envelope ─────
+    function _handleGame(action) {
+        switch (action && action.type) {
+            case 'dice_rolled': onDiceRolled(action); break;
+            case 'turn_update': onTurnUpdate(action); break;
+            case 'pawn_moved':  onPawnMoved(action);  break;
+            case 'game_over':   onGameOver(action);   break;
+            default: console.log('[Network] Unknown game frame:', action && action.type);
+        }
+    }
+
+    function _wire() {
+        MP.onConnected = function() {
+            while (outbox.length) outbox.shift()();
+        };
+        MP.onDisconnected = function() { onDisconnect(); };
+        MP.onError = function(text) { onError(text); };
+        MP.onWelcome = function(msg) { onWelcome(msg); };
+        MP.onLobbySnapshot = function(msg) { onLobbyUpdate(msg); };
+        MP.onLobbyUpdate = function(msg) { onLobbyUpdate(msg); };
+        MP.onGameStarted = function(msg) { onGameStarted(msg); };
+        MP.onGameAction = _handleGame;
+        MP.onSystemMessage = function(text) { onSystem({ type: 'system', text: text }); };
+        MP.onChatMessage = function(from, text, color) {
+            onChat({ type: 'chat', from: from, text: text, color: color });
+        };
+        MP.onPlayerQuit = function(msg) { onPlayerQuit(msg); };
+        MP.onRejected = function(reason) { onRejected({ type: 'rejected', reason: reason }); };
+        MP.onSpectatorWelcome = function(msg) { onSpectator(msg); };
     }
 
     // ── Connect ───────────────────────────────────────────────────────────────
     function connect(serverUrl) {
-        var url = serverUrl || getServerUrl();
-
+        outbox = [];
+        _wire();
         try {
-            ws = new WebSocket(url);
+            MP.connect(serverUrl);
         } catch (e) {
             onError('Could not connect to server');
-            return;
-        }
-
-        ws.onopen = function() {
-            connected = true;
-            console.log('[Network] Connected to', url);
-        };
-
-        ws.onmessage = function(evt) {
-            try {
-                var msg = JSON.parse(evt.data);
-                _handle(msg);
-            } catch (e) {
-                console.error('[Network] Bad message:', e);
-            }
-        };
-
-        ws.onclose = function() {
-            connected = false;
-            onDisconnect();
-        };
-
-        ws.onerror = function() {
-            onError('Connection error');
-        };
-    }
-
-    // ── Message handler ───────────────────────────────────────────────────────
-    function _handle(msg) {
-        switch (msg.type) {
-            case 'game_action':
-                // server_base wraps every game frame in this envelope.
-                if (msg.action && msg.action.type !== 'game_action') _handle(msg.action);
-                break;
-
-            case 'welcome':
-                myName = msg.playerName || '';
-                isHost = msg.isHost || false;
-                myColor = msg.chosenColor || '';
-                roomCode = msg.room || '';
-                onWelcome(msg);
-                break;
-
-            case 'lobby_snapshot':
-            case 'lobby_update':
-                onLobbyUpdate(msg);
-                break;
-
-            case 'game_started':
-                onGameStarted(msg);
-                break;
-
-            case 'dice_rolled':
-                onDiceRolled(msg);
-                break;
-
-            case 'turn_update':
-                onTurnUpdate(msg);
-                break;
-
-            case 'pawn_moved':
-                onPawnMoved(msg);
-                break;
-
-            case 'system':
-                onSystem(msg);
-                break;
-
-            case 'chat':
-                onChat(msg);
-                break;
-
-            case 'error':
-                onError(msg.text || 'Unknown error');
-                break;
-
-            case 'player_quit':
-                onPlayerQuit(msg);
-                break;
-
-            case 'promoted_to_host':
-                isHost = true;
-                onPromotedHost(msg);
-                break;
-
-            case 'rejected':
-                onRejected(msg);
-                break;
-
-            case 'spectator_welcome':
-                onSpectator(msg);
-                break;
-
-            case 'game_over':
-                onGameOver(msg);
-                break;
-
-            default:
-                console.log('[Network] Unknown message type:', msg.type);
         }
     }
 
     // ── Send helpers ──────────────────────────────────────────────────────────
-    function _send(msg) {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify(msg));
-        }
+    // MP drops a send made before the socket is open, so hold it until
+    // onConnected rather than losing a JOIN pressed during the handshake.
+    function _send(fn) {
+        if (MP.isConnected()) fn();
+        else outbox.push(fn);
     }
 
     function join(name, color) {
-        _send({ type: 'join', name: name, color: color });
+        _send(function() { MP.join(name, color); });
     }
 
     function joinRoom(name, color, room) {
-        _send({ type: 'join_room', name: name, color: color, room: room });
+        _send(function() { MP.joinRoom(name, color, room); });
     }
 
     function createRoom(name, color) {
-        _send({ type: 'create_room', name: name, color: color });
+        _send(function() { MP.createRoom(name, color); });
     }
 
     function spectate(name, room) {
-        _send({ type: 'spectate', name: name, room: room });
+        _send(function() { MP.spectate(name, room); });
     }
 
     function startGame() {
-        _send({ type: 'start_game' });
+        _send(function() { MP.startGame(); });
     }
 
     function rollDice() {
-        _send({ type: 'game_action', action: { type: 'roll_dice' } });
+        _send(function() { MP.sendAction({ type: 'roll_dice' }); });
     }
 
     function movePawn(color, pawnIndex, newPos, capture) {
-        _send({
-            type: 'game_action',
-            action: {
+        _send(function() {
+            MP.sendAction({
                 type: 'move_pawn',
                 color: color,
                 pawnIndex: pawnIndex,
                 newPos: newPos,
                 capture: capture,
-            }
+            });
         });
     }
 
     function penaltyPawn(color, pawnIndex) {
-        _send({
-            type: 'game_action',
-            action: {
+        _send(function() {
+            MP.sendAction({
                 type: 'penalty_pawn',
                 color: color,
                 pawnIndex: pawnIndex,
-            }
+            });
         });
     }
 
     function skipTurn() {
-        _send({ type: 'game_action', action: { type: 'skip_turn' } });
+        _send(function() { MP.sendAction({ type: 'skip_turn' }); });
     }
 
     function chat(text) {
-        _send({ type: 'chat', text: text });
+        _send(function() { MP.sendChat(text); });
     }
 
     // server_base knows 'quit', and reaches a game's own actions only
     // through game_action; 'quit_game' and a bare 'change_color' were ignored.
     function quit() {
-        _send({ type: 'quit' });
+        if (MP.isConnected()) MP.quit();
+        outbox = [];
     }
 
     function changeColor(color) {
-        _send({ type: 'game_action', action: { type: 'change_color', color: color } });
+        _send(function() { MP.sendAction({ type: 'change_color', color: color }); });
     }
 
     // ── Getters ───────────────────────────────────────────────────────────────
-    function isConnected() { return connected; }
-    function getMyName()   { return myName; }
-    function getMyColor()  { return myColor; }
-    function getIsHost()   { return isHost; }
-    function getRoomCode() { return roomCode; }
+    function isConnected() { return MP.isConnected(); }
+    function getMyName()   { return MP.getMyName() || ''; }
+    function getMyColor()  { return MP.getMyColor() || ''; }
+    function getIsHost()   { return MP.amIHost(); }
+    function getRoomCode() { return MP.getRoomCode() || ''; }
 
     // ── Callback setters ──────────────────────────────────────────────────────
     function setCallbacks(cbs) {
@@ -272,6 +197,5 @@ var Network = (function() {
         getIsHost: getIsHost,
         getRoomCode: getRoomCode,
         setCallbacks: setCallbacks,
-        getServerUrl: getServerUrl,
     };
 })();
