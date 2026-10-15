@@ -121,6 +121,14 @@ export const GAMES = {
       'CI that runs the server tests against this\n' +
       "repo's arcade/shared/. There is no second version yet.",
   },
+  // Extracted 2026-10-15. No server: its CI is the headless dive in
+  // tests/test-simulation.js. The song still streams from music/jukebox/ here.
+  'cave-diving': {
+    repo: 'cave-diving',
+    other:
+      'CI that dives the real game modules headlessly,\n' +
+      'holding the dive to its song. There is no second version yet.',
+  },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };
