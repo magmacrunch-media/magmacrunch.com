@@ -41,7 +41,7 @@ function trackIndexToXY(idx) {
 }
 
 function trackDistance(from, to) {
-  return ((to - from) % TRACK_LENGTH + TRACK_LENGTH) % TRACK_LENGTH;
+  return RACE.distance(from, to);
 }
 
 // ─── COLOR TRACK CONFIG ───────────────────────────────────────────────────────
@@ -103,41 +103,51 @@ const SLIDES = (function() {
   return slides;
 })();
 
+// ─── THE SHARED RULES ─────────────────────────────────────────────────────────
+// Movement, the safe zone and slides come from adenosine-race
+// (../shared/adenosine-race.js), the same rules Aggravation and Parchis run on.
+// This board is its reference design: the 'lap' home rule IS this file's old
+// advancePosition, kept to the letter, because SORRY moves pawns backward
+// (cards 4 and 10) and places them anywhere (Sorry! and 11), so how far a
+// pawn has come cannot be read off its square and a lapped flag carries it.
+// adenosine-race's tests hold it to that function for every square, card and
+// lapped flag, and to checkSlide on random boards.
+//
+// keys keeps this game's own spelling, { safe: n } and 'home', which the
+// server, the renderer and every saved move already use.
+//
+// What stays here is what makes this SORRY: the cards, the 7 split, the 11
+// swap and the Sorry! card, all in getLegalMoves below.
+
+const RACE = AdRace.createTrack({
+  length: TRACK_LENGTH,
+  homeLength: 5,
+  homeRule: 'lap',
+  keys: { home: 'safe', finished: 'home' },
+  colors: Object.fromEntries(
+    Object.entries(COLOR_CONFIG).map(([c, cfg]) => [c, { entry: cfg.entry, homeEntry: cfg.safeEntry }]),
+  ),
+  slides: SLIDES,
+});
+
 /**
  * If `trackIdx` is a slide start square that `color` should ride,
  * returns { slideEnd, slideBumps } where slideBumps is an array of
  * { pawnId, color } for every opponent pawn swept by the slide.
- * Returns null if no slide applies.
+ * Returns null if no slide applies. Own pawns are never bumped by your
+ * own slide.
  */
 function checkSlide(trackIdx, color, allPawns) {
-  const slide = SLIDES.find(s => s.start === trackIdx && s.color !== color);
-  if (!slide) return null;
-
-  // Collect all track indices the slide passes through (start+1 … end inclusive).
-  // Guard against any degenerate slide definition that could loop forever.
-  const swept = [];
-  let i = slide.start;
-  const maxSteps = TRACK_LENGTH; // absolute ceiling — no real slide exceeds a few squares
-  while (i !== slide.end && swept.length < maxSteps) {
-    i = (i + 1) % TRACK_LENGTH;
-    swept.push(i);
-  }
-
-  // Find opponent pawns sitting on swept squares.
-  // Own pawns are never bumped by your own slide (Bug 1 fix).
-  const slideBumps = [];
+  const board = {};
   Object.entries(allPawns).forEach(([c, cpawns]) => {
-    if (c === color) return;  // skip friendly pawns
-    cpawns.forEach(p => {
-      const pos = p.boardPosition;
-      if (!pos || pos === 'home' || pos.track === undefined) return;
-      if (swept.includes(pos.track)) {
-        slideBumps.push({ pawnId: p.id, color: c });
-      }
-    });
+    board[c] = cpawns.map(p => p.boardPosition);
   });
-
-  return { slideEnd: { track: slide.end }, slideBumps };
+  const slide = RACE.slideAt(color, trackIdx, board);
+  if (!slide) return null;
+  return {
+    slideEnd: { track: slide.end },
+    slideBumps: slide.bumps.map(b => ({ pawnId: allPawns[b.color][b.index].id, color: b.color })),
+  };
 }
 
 /**
@@ -176,11 +186,7 @@ function positionToXY(position, color) {
 }
 
 function positionsEqual(a, b) {
-  if (a === b) return true;
-  if (!a || !b) return false;
-  if (a.track !== undefined && b.track !== undefined) return a.track === b.track;
-  if (a.safe  !== undefined && b.safe  !== undefined) return a.safe  === b.safe;
-  return false;
+  return RACE.equals(a, b);
 }
 
 /**
@@ -196,61 +202,12 @@ function positionsEqual(a, b) {
  * @param {boolean} alreadyLapped  — whether this pawn has already completed a lap
  */
 function advancePosition(pos, color, steps, alreadyLapped) {
-  const cfg = COLOR_CONFIG[color];
-
-  // ── In safe zone ──
-  if (pos && pos.safe !== undefined) {
-    const newSafe = pos.safe + steps;
-    if (newSafe < 0)   return null; // can't back out of safe zone
-    if (newSafe === 5) return { position: 'home', lapped: true };
-    if (newSafe > 5)   return null; // overshoot
-    return { position: { safe: newSafe }, lapped: true };
-  }
-
-  // ── On perimeter ──
-  if (pos && pos.track !== undefined) {
-    if (steps < 0) {
-      // Backward — wraps freely, never enters safe zone
-      const newTrack = ((pos.track + steps) % TRACK_LENGTH + TRACK_LENGTH) % TRACK_LENGTH;
-      return { position: { track: newTrack }, lapped: alreadyLapped };
-    }
-
-    // Forward — check if this move causes the pawn to lap (pass through/reach entry)
-    const entry = cfg.entry;
-    const distToEntry = ((entry - pos.track + TRACK_LENGTH) % TRACK_LENGTH);
-    // willLap: the pawn crosses or lands on its entry square for the first time.
-    // distToEntry === 0 means the pawn IS at its entry square — it exited Start and
-    // has come all the way around, so ANY forward move now counts as lapped.
-    const willLap = !alreadyLapped && (distToEntry === 0 || steps >= distToEntry);
-    const nowLapped = alreadyLapped || willLap;
-
-    // Check if we reach the safe zone entry (only if lapped).
-    // Guard: safeEntry must actually be AHEAD of the pawn in the forward direction
-    // AND must be reachable before the pawn would lap past entry again.
-    // Without this guard, a pawn sitting one step past safeEntry computes
-    // distToSafe = 59 (wrapping the whole board) and spuriously enters the safe zone.
-    if (nowLapped) {
-      const distToSafe  = ((cfg.safeEntry - pos.track + TRACK_LENGTH) % TRACK_LENGTH);
-      const distToEntry = ((cfg.entry     - pos.track + TRACK_LENGTH) % TRACK_LENGTH);
-      // safeEntry is only genuinely ahead if it comes before entry in the forward direction.
-      // (distToEntry === 0 means the pawn IS at entry — safe zone is still reachable ahead.)
-      const safeReachable = (distToEntry === 0)
-        ? distToSafe < TRACK_LENGTH   // at entry: safe zone is ~58 steps ahead, always reachable
-        : distToSafe < distToEntry;   // safe zone must come before entry going forward
-      if (safeReachable && steps >= distToSafe) {
-        const safeSteps = steps - distToSafe;
-        if (safeSteps > 5) return null; // overshoot HOME
-        if (safeSteps === 5) return { position: 'home', lapped: true };
-        return { position: { safe: safeSteps }, lapped: true };
-      }
-    }
-
-    // Normal forward move on perimeter
-    const newTrack = (pos.track + steps) % TRACK_LENGTH;
-    return { position: { track: newTrack }, lapped: nowLapped };
-  }
-
-  return null;
+  // Backward moves wrap freely and never enter the safe zone; a forward move
+  // laps the pawn when it reaches or passes its entry, and only a lapped pawn
+  // turns into the safe zone at safeEntry. That rule now lives in
+  // adenosine-race as homeRule 'lap'; callers read { position, lapped }.
+  const r = RACE.advance(color, pos, steps, alreadyLapped);
+  return r ? { position: r.pos, lapped: r.lapped } : null;
 }
 
 // ─── LEGAL MOVE CALCULATOR ────────────────────────────────────────────────────
