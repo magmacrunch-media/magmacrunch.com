@@ -439,16 +439,20 @@ class SokoGame:
         self.raises_this_round = 0
         self.action_log = []
 
-        # Reset players
+        # Reset players. One with no chips left sits the hand out: dealt in
+        # all-in for nothing, they could win a pot they never paid into.
+        self.went_to_showdown = False
         for p in self.players:
             p.cards = []
-            p.folded = False
+            p.folded = p.chips <= 0
             p.all_in = False
             p.current_bet = 0
             p.hand = None
 
         # Post antes
         for p in self.players:
+            if p.folded:
+                continue
             if p.chips >= ANTE_AMOUNT:
                 p.chips -= ANTE_AMOUNT
                 p.current_bet = ANTE_AMOUNT
@@ -461,6 +465,8 @@ class SokoGame:
 
         # Deal hole card (face down) to each player
         for p in self.players:
+            if p.folded:
+                continue
             card = self.deck.deal()
             p.cards.append(card)
 
@@ -593,6 +599,7 @@ class SokoGame:
 
     def showdown(self):
         self.phase = 'showdown'
+        self.went_to_showdown = True
 
         # Reveal all hole cards
         for p in self.players:
@@ -660,7 +667,9 @@ class SokoGame:
 
         if call_amount <= 0:
             actions.append('check')
-        elif player.chips >= call_amount:
+        elif player.chips > 0:
+            # call() puts a short stack all-in; offering only fold left a
+            # player who could not cover the bet no way to stay in.
             actions.append('call')
 
         if player.chips > call_amount and self.raises_this_round < MAX_RAISES_PER_ROUND:
@@ -675,6 +684,12 @@ class SokoGame:
         self.new_hand()
         self.start_betting_round()
 
+    def _player_view(self, p):
+        d = p.to_dict()
+        for i, c in enumerate(d['cards']):
+            c['hole'] = i == 0
+        return d
+
     def get_state(self, viewer_id=None):
         return {
             'pot': self.pot,
@@ -682,7 +697,14 @@ class SokoGame:
             'round': self.round,
             'bettingRound': self.betting_round,
             'phase': self.phase,
-            'players': [p.to_dict(hide_holes=True, viewer_id=viewer_id) for p in self.players],
+            # Every card, the hole card marked. One frame goes to the whole
+            # room, so hiding the hole here hid it from its owner too, and
+            # nobody could see their own hole card online. The page keeps
+            # opponents' holes face down until the showdown.
+            'players': [self._player_view(p) for p in self.players],
+            'actions': {p.id: self.get_available_actions(p.id) for p in self.players
+                        if self.phase == 'betting' and p is self.get_current_player()},
+            'showdown': getattr(self, 'went_to_showdown', False),
             'currentPlayerIndex': self.current_player_index,
             'currentTurn': self.players[self.current_player_index].id if self.current_player_index < len(self.players) else None,
             'dealerIndex': self.dealer_index,
@@ -701,26 +723,58 @@ class SokoGame:
 # ── Server Game Logic ────────────────────────────────────────────────────────
 
 class SokoServerGame:
-    """Wrapper that handles multiplayer actions from players."""
+    """Wrapper that handles multiplayer actions from players.
+
+    Players are keyed by name: server_base passes names to set_player_names
+    and to handle_action, and the page identifies itself by its name too.
+    """
 
     def __init__(self):
+        self.player_map = {}  # player_id -> name
+        self.seats = []       # [(player_id, name)]
         self.reset()
-        self.player_map = {}  # websocket/player_id -> name
 
     def reset(self):
         self.game = SokoGame()
         self.current_turn = None
         self.turn_order = []
+        self.match_winner = None
+        if self.seats:
+            self._seat_players()
+            # server_base calls reset() to start the match. It used to build
+            # an empty table here, after set_player_names had seated everyone,
+            # and nothing ever dealt: the page waited on cards for good.
+            if len(self.game.players) >= 2:
+                self.game.new_hand()
+                self.game.start_betting_round()
+                self._settle()
 
     def set_player_names(self, player_ids_names):
-        """Set player names from room player list."""
+        """Seat the players. server_base passes names; the tests pass
+        (id, name) pairs. A bare name used to be unpacked as a pair, which
+        raised for any name not exactly two characters long."""
+        self.seats = [tuple(n) if isinstance(n, (list, tuple)) else (n, n)
+                      for n in player_ids_names]
+        self._seat_players()
+
+    def _seat_players(self):
         self.game.players = []
         self.turn_order = []
-        for i, (pid, name) in enumerate(player_ids_names):
-            player = Player(name, pid)
-            self.game.players.append(player)
+        for pid, name in self.seats:
+            self.game.players.append(Player(name, pid))
             self.turn_order.append(pid)
             self.player_map[pid] = name
+
+    def _settle(self):
+        """Deal on while nobody is left to bet: with everyone else all-in or
+        folded a street opens with no one to act, and the hand used to stop
+        there, because only a betting action ever advanced it."""
+        while self.game.phase == 'waiting' and not self.game.game_over:
+            self.game.advance_street()
+        if self.game.game_over and self.match_winner is None:
+            funded = [p for p in self.game.players if p.chips > 0]
+            if len(funded) == 1:
+                self.match_winner = funded[0]
 
     def handle_action(self, player_id, action):
         """Process a game action from a player."""
@@ -735,17 +789,17 @@ class SokoServerGame:
         return None
 
     def _handle_start_hand(self, player_id):
-        """Start a new hand."""
-        if len(self.game.players) < 2:
+        """Start the first hand, when no hand has been dealt yet."""
+        if len(self.game.players) < 2 or self.game.round != 0:
             return None
 
         self.game.new_hand()
         self.game.start_betting_round()
+        self._settle()
 
         return {
             'type': 'hand_started',
-            'state': self.game.get_state(),
-            'hands': {p.id: [c.to_dict() for c in p.cards] for p in self.game.players}
+            'state': self.get_state(),
         }
 
     def _handle_player_action(self, player_id, action):
@@ -758,6 +812,8 @@ class SokoServerGame:
             return None
 
         sub_action = action.get('action')
+        if sub_action not in self.game.get_available_actions(player_id):
+            return None  # a check facing a bet, say
 
         if sub_action == 'check':
             self.game.check(current)
@@ -768,26 +824,20 @@ class SokoServerGame:
             self.game.raise_bet(current, amount)
         elif sub_action == 'fold':
             self.game.fold(current)
-        else:
-            return None
+
+        self._settle()
 
         result = {
             'type': 'action_made',
             'player': player_id,
             'action': sub_action,
-            'state': self.game.get_state()
+            'state': self.get_state(),
         }
 
-        # Check if betting is complete, advance street or showdown
-        if self.game.phase == 'waiting' and not self.game.game_over:
-            self.game.advance_street()
-            result['state'] = self.game.get_state()
+        if self.game.phase == 'betting':
+            nxt = self.game.get_current_player()
+            result['nextTurn'] = nxt.id if nxt else None
 
-            # If now betting again, include whose turn it is
-            if self.game.phase == 'betting':
-                result['nextTurn'] = self.game.get_current_player().id if self.game.get_current_player() else None
-
-        # Check for game over
         if self.game.game_over:
             result['gameOver'] = True
             result['winner'] = {
@@ -795,26 +845,27 @@ class SokoServerGame:
                 'name': self.game.last_winner.name,
                 'hand': self.game.last_winner.hand
             }
-            # Reveal all cards
-            result['state'] = self.game.get_state()
 
         return result
 
     def _handle_next_hand(self, player_id):
-        """Start next hand after game over."""
-        if not self.game.game_over:
+        """Start next hand after the last one ended, unless the match is over."""
+        if not self.game.game_over or self.match_winner is not None:
             return None
 
         self.game.prepare_next_hand()
+        self._settle()
 
         return {
             'type': 'hand_started',
-            'state': self.game.get_state(),
-            'hands': {p.id: [c.to_dict() for c in p.cards] for p in self.game.players}
+            'state': self.get_state(),
         }
 
     def get_state(self, viewer_id=None):
-        return self.game.get_state(viewer_id)
+        state = self.game.get_state(viewer_id)
+        state['matchOver'] = self.match_winner is not None
+        state['matchWinner'] = self.match_winner.name if self.match_winner else None
+        return state
 
 
 # ── Main ────────────────────────────────────────────────────────────────────

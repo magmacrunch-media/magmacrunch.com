@@ -594,6 +594,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         MP.onPlayerQuit = function(data) {
             addLobbyChatMessage('System', data.playerName + ' left the game', '');
+            if (isMultiplayer && mpState && mpState.phase !== 'game_over') {
+                showMessage(data.playerName + ' left the game.');
+                actionButtonsEl.innerHTML = '';
+                actionButtonsEl.appendChild(actionButton('Back to Menu', '', () => location.reload()));
+            }
         };
 
         MP.onGameAction = function(action) {
@@ -710,153 +715,213 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ── Multiplayer Game Logic ─────────────────────────────────
+    //
+    // The server is the whole game online: every frame it sends carries the
+    // full table as `state`, and the page redraws from that alone. Until
+    // 2026-10-14 this section acted only on a `state` no frame carried, so
+    // every card click returned early, and the server could not deal anyway.
+    // There was also no way to cut, see the count of a hand, or start the
+    // next one. Go needs no button: the server passes the turn itself.
+
+    let mpState = null;
+    let mpLog = '';
+
+    const sameCard = (a, b) => a.suit === b.suit && a.rank === b.rank;
+    const cardText = c => `${c.rank}${SUIT_SYMBOLS[c.suit]}`;
+    const toCard = c => new AdCards.Card(c.suit, c.rank);
+
+    function opponentOf(state) {
+        return ((state && state.players) || []).find(p => p !== myName) || 'Opponent';
+    }
 
     function startMultiplayerGame(data) {
         isMultiplayer = true;
         startScreen.style.display = 'none';
         gameScreen.style.display = 'flex';
-
-        // Initialize game state from server
-        if (data.state) {
-            syncMultiplayerState(data.state);
-        }
-
         CribbageBoard.init('cribbageBoard');
-        showMessage('Game started! Waiting for cards...');
+        mpLog = '';
+        renderMultiplayer(data.state);
     }
 
     function syncMultiplayerState(state) {
-        if (!state) return;
-
-        // Update hands
-        if (state.playerHands && state.playerHands[myName]) {
-            renderMultiplayerHand(state.playerHands[myName], 'playerHand', true);
-        }
-
-        // Update crib
-        if (state.crib) {
-            cribAreaEl.innerHTML = '';
-            state.crib.forEach(card => {
-                const cardEl = createCardElement(card, false);
-                cribAreaEl.appendChild(cardEl);
-            });
-        }
-
-        // Update starter
-        if (state.starter) {
-            starterCardEl.innerHTML = '';
-            const cardEl = createCardElement(state.starter, true);
-            starterCardEl.appendChild(cardEl);
-        }
-
-        // Update count
-        if (state.currentCount !== undefined) {
-            countDisplayEl.textContent = state.currentCount;
-        }
-
-        // Update board
-        if (state.scores) {
-            CribbageBoard.updatePegs(state.scores[myName] || 0, getOpponentScore(state.scores));
-        }
+        renderMultiplayer(state);
     }
 
-    function renderMultiplayerHand(cards, containerId, faceUp) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        cards.forEach(card => {
-            const cardEl = createCardElement(card, faceUp);
-            cardEl.addEventListener('click', () => handleMultiplayerCardClick(card));
-            container.appendChild(cardEl);
+    function handleMultiplayerAction(action) {
+        if (!action || !action.state) return;
+        const line = describeAction(action);
+        if (line) mpLog = line;
+        renderMultiplayer(action.state);
+    }
+
+    function describeAction(a) {
+        const you = a.player === myName;
+        const who = you ? 'You' : a.player;
+        switch (a.type) {
+            case 'crib_confirmed':
+                return `${who} put two cards in the crib.`;
+            case 'starter_cut': {
+                let line = `Starter: ${cardText(a.starter)}`;
+                if (a.starter.rank === 'J') line += '. His heels: 2 to the dealer.';
+                return line;
+            }
+            case 'card_played': {
+                let line = `${who} played ${cardText(a.card)}, count ${a.count}.`;
+                if (a.points) line += `\n${a.description}: ${a.points} to ${you ? 'you' : a.player}.`;
+                if (a.go) line += `\n${a.go === myName ? 'You are' : a.go + ' is'} on a go.`;
+                if (a.goPoints) line += `\n1 to ${you ? 'you' : a.player} for ${a.lastCard ? 'last card' : 'the go'}.`;
+                return line;
+            }
+            case 'next_hand':
+                return 'New hand dealt.';
+        }
+        return '';
+    }
+
+    function scoringText(results) {
+        return results.map(r => {
+            const whose = r.player === 'crib'
+                ? (r.owner === myName ? 'Your crib' : `${r.owner}'s crib`)
+                : (r.player === myName ? 'Your hand' : `${r.player}'s hand`);
+            const b = r.score.breakdown || {};
+            const parts = [];
+            if (b.fifteens) parts.push(`15s ${b.fifteens}`);
+            if (b.pairs) parts.push(`pairs ${b.pairs}`);
+            if (b.runs) parts.push(`runs ${b.runs}`);
+            if (b.flush) parts.push(`flush ${b.flush}`);
+            if (b.nobs) parts.push(`nobs ${b.nobs}`);
+            const cards = (r.cards || []).map(cardText).join(' ');
+            return `${whose} (${cards}): ${r.score.total}` + (parts.length ? ` [${parts.join(', ')}]` : '');
+        }).join('\n');
+    }
+
+    function renderMultiplayer(state) {
+        if (!state) return;
+        mpState = state;
+        const opponent = opponentOf(state);
+        const hands = state.playerHands || {};
+        const myHand = hands[myName] || [];
+        const mySelection = (state.cribSelections && state.cribSelections[myName]) || [];
+        const pegging = state.phase === 'pegging';
+        const myTurn = pegging && state.currentTurn === myName;
+        const showing = state.phase === 'hand_scoring' || state.phase === 'game_over';
+
+        playerHandEl.innerHTML = '';
+        myHand.forEach(c => {
+            const el = createCardElement(toCard(c), true);
+            if (mySelection.some(s => sameCard(s, c))) el.classList.add('selected');
+            if (pegging && pegValue(c.rank) + state.currentCount > MAX_PEG_COUNT) {
+                el.classList.add('unplayable');
+            } else {
+                el.addEventListener('click', () => handleMultiplayerCardClick(c));
+            }
+            playerHandEl.appendChild(el);
         });
+
+        aiHandEl.innerHTML = '';
+        (hands[opponent] || []).forEach(c => aiHandEl.appendChild(createCardElement(toCard(c), false)));
+
+        playedCardsEl.innerHTML = '';
+        (state.playedCards || []).forEach(c => playedCardsEl.appendChild(createCardElement(toCard(c), true)));
+
+        cribAreaEl.innerHTML = '';
+        (state.crib || []).forEach(c => cribAreaEl.appendChild(createCardElement(toCard(c), showing)));
+
+        starterCardEl.innerHTML = '';
+        if (state.starter) starterCardEl.appendChild(createCardElement(toCard(state.starter), true));
+
+        countDisplayEl.textContent = state.currentCount || 0;
+        const scores = state.scores || {};
+        CribbageBoard.updatePegs(scores[myName] || 0, scores[opponent] || 0);
+
+        const dealerIsMe = state.dealer === myName;
+        const lines = [];
+        if (mpLog) lines.push(mpLog);
+        actionButtonsEl.innerHTML = '';
+
+        switch (state.phase) {
+            case 'crib_selection':
+                if (myHand.length === CARDS_PER_HAND) {
+                    lines.push(`Pick 2 cards for ${dealerIsMe ? 'your' : opponent + "'s"} crib.`);
+                    updateMultiplayerCribButtons(mySelection.length);
+                } else {
+                    lines.push(`Waiting for ${opponent} to pick crib cards.`);
+                }
+                break;
+            case 'starter_cut':
+                if (!dealerIsMe) {
+                    lines.push('Cut the deck for the starter.');
+                    actionButtonsEl.appendChild(actionButton('Cut Deck', 'confirm', () => {
+                        MP.sendAction({ type: 'cut_starter' });
+                    }));
+                } else {
+                    lines.push(`Waiting for ${opponent} to cut.`);
+                }
+                break;
+            case 'pegging':
+                lines.push(myTurn ? 'Your turn: play a card.' : `${opponent}'s turn.`);
+                break;
+            case 'hand_scoring':
+                lines.push(scoringText(state.lastScoring || []));
+                actionButtonsEl.appendChild(actionButton('Next Hand', 'confirm', () => {
+                    MP.sendAction({ type: 'next_hand' });
+                }));
+                break;
+            case 'game_over':
+                showMultiplayerGameOver(state, opponent);
+                return;
+        }
+        showMessage(lines.join('\n'));
+    }
+
+    function showMultiplayerGameOver(state, opponent) {
+        const won = state.winner === myName;
+        const scores = state.scores || {};
+        messageAreaEl.innerHTML = '';
+        const box = document.createElement('div');
+        box.className = `game-over-message ${won ? 'win' : 'lose'}`;
+        const h = document.createElement('h2');
+        h.textContent = won ? 'You Win!' : `${state.winner} Wins!`;
+        const p = document.createElement('p');
+        p.textContent = `Final Score: ${scores[myName] || 0} - ${scores[opponent] || 0}`;
+        box.appendChild(h);
+        box.appendChild(p);
+        if (state.lastScoring && state.lastScoring.length) {
+            const detail = document.createElement('p');
+            detail.style.whiteSpace = 'pre-line';
+            detail.textContent = scoringText(state.lastScoring);
+            box.appendChild(detail);
+        }
+        box.appendChild(actionButton('Back to Menu', '', () => location.reload()));
+        messageAreaEl.appendChild(box);
+        actionButtonsEl.innerHTML = '';
     }
 
     function handleMultiplayerCardClick(card) {
-        const state = lastMultiplayerState;
+        const state = mpState;
         if (!state) return;
 
         switch (state.phase) {
             case 'crib_selection':
-                MP.sendAction({ type: 'select_crib', card: card });
+                if (((state.playerHands || {})[myName] || []).length === CARDS_PER_HAND) {
+                    MP.sendAction({ type: 'select_crib', card: { suit: card.suit, rank: card.rank } });
+                }
                 break;
             case 'pegging':
                 if (state.currentTurn === myName) {
-                    MP.sendAction({ type: 'play_card', card: card });
+                    MP.sendAction({ type: 'play_card', card: { suit: card.suit, rank: card.rank } });
                 }
                 break;
         }
-    }
-
-    let lastMultiplayerState = null;
-
-    function handleMultiplayerAction(action) {
-        if (!action) return;
-
-        lastMultiplayerState = action.state || lastMultiplayerState;
-
-        switch (action.type) {
-            case 'crib_selection_update':
-                if (action.player === myName) {
-                    // Update our selection UI
-                    renderMultiplayerHand(getMyHandFromState(lastMultiplayerState), 'playerHand', true);
-                    updateMultiplayerCribButtons(action.selectedCount);
-                }
-                break;
-
-            case 'crib_confirmed':
-                showMessage(`${action.player} confirmed their crib selection`);
-                break;
-
-            case 'starter_cut':
-                if (action.starter) {
-                    starterCardEl.innerHTML = '';
-                    const cardEl = createCardElement(action.starter, true);
-                    starterCardEl.appendChild(cardEl);
-                    showMessage(`Starter: ${action.starter.rank}${SUIT_SYMBOLS[action.starter.suit]}`);
-                }
-                break;
-
-            case 'card_played':
-                if (action.player !== myName) {
-                    // Show opponent's card in their hand area
-                    // For now, just show it played
-                }
-                showMessage(`${action.player} played ${action.card.rank}${SUIT_SYMBOLS[action.card.suit]} - Count: ${action.count}`);
-                if (action.description) {
-                    showMessage(action.description);
-                }
-                break;
-
-            case 'go_called':
-                showMessage(`${action.player} says Go!`);
-                break;
-
-            case 'game_over':
-                showMessage(`${action.winner} wins! Final score: ${JSON.stringify(action.scores)}`);
-                break;
-        }
-    }
-
-    function getMyHandFromState(state) {
-        if (!state || !state.playerHands) return [];
-        return state.playerHands[myName] || [];
-    }
-
-    function getOpponentScore(scores) {
-        const opponentName = Object.keys(scores).find(k => k !== myName);
-        return opponentName ? scores[opponentName] : 0;
     }
 
     function updateMultiplayerCribButtons(selectedCount) {
         actionButtonsEl.innerHTML = '';
 
         if (selectedCount === 2) {
-            const btn = document.createElement('button');
-            btn.className = 'action-btn confirm';
-            btn.textContent = 'Send to Crib';
-            btn.addEventListener('click', () => {
+            actionButtonsEl.appendChild(actionButton('Send to Crib', 'confirm', () => {
                 MP.sendAction({ type: 'confirm_crib' });
-            });
-            actionButtonsEl.appendChild(btn);
+            }));
         } else {
             const msg = document.createElement('div');
             msg.className = 'selection-hint';

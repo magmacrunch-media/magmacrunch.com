@@ -558,3 +558,57 @@ class TestAvailableActions:
         current = game.game.get_current_player()
         actions = game.game.get_available_actions(current.id)
         assert 'fold' in actions
+
+
+# ── Online flow, as server_base drives it ─────────────────────────────────────
+
+class TestOnlineFlow:
+    """server_base calls set_player_names(names) and then reset()."""
+
+    def started(self, seed=0):
+        import random
+        random.seed(seed)
+        game = SokoServerGame()
+        game.set_player_names(["Alice", "Bob"])
+        game.reset()
+        return game
+
+    def test_start_deals_the_first_hand(self):
+        game = self.started()
+        state = game.get_state()
+        assert state['phase'] == 'betting'
+        assert all(len(p['cards']) == 2 for p in state['players'])
+        assert state['actions'][state['currentTurn']]
+
+    def test_every_player_can_see_their_own_hole_card(self):
+        state = self.started().get_state()
+        for p in state['players']:
+            assert p['cards'][0]['hole'] is True
+            assert 'rank' in p['cards'][0]
+
+    def test_a_check_facing_a_bet_is_refused(self):
+        game = self.started()
+        first = game.game.get_current_player().id
+        game.handle_action(first, {"type": "player_action", "action": "raise"})
+        second = game.game.get_current_player().id
+        assert game.handle_action(second, {"type": "player_action", "action": "check"}) is None
+
+    def test_random_play_reaches_a_match_winner(self):
+        import random
+        for seed in range(10):
+            game = self.started(seed)
+            for _ in range(20000):
+                state = game.get_state()
+                if state['matchOver']:
+                    break
+                if state['gameOver']:
+                    assert game.handle_action("Alice", {"type": "next_hand"})
+                    continue
+                mover = state['currentTurn']
+                actions = state['actions'][mover]
+                # Raise often enough that stacks actually move
+                pick = random.choice(actions + ['raise'] * 2 if 'raise' in actions else actions)
+                assert game.handle_action(mover, {"type": "player_action", "action": pick}), (seed, state)
+            state = game.get_state()
+            assert state['matchOver'], seed
+            assert state['matchWinner'] in ("Alice", "Bob")

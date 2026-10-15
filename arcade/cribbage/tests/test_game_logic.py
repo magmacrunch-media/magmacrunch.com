@@ -454,18 +454,107 @@ class TestGameFlow:
         assert game.scores["Alice"] == 100 + SCORE['FIFTEEN']
 
     def test_winning_score(self, game):
-        game.scores = {"Alice": 120, "Bob": 100}
-        game.phase = 'hand_scoring'
-        game.player_hands = {"Alice": hand(card('5')), "Bob": hand(card('10'))}
-        game.starter = card('K')
-        game.crib = hand(card('2'), card('3'), card('4'), card('6'))
+        # Bob (non-dealer) lays the last card: one for last card takes him
+        # to 121 and the game ends there, before any hand is counted.
+        game.scores = {"Alice": 100, "Bob": 120}
+        game.phase = 'pegging'
         game.dealer_index = 0
-        game.players = ["Alice", "Bob"]
+        game.current_turn = "Bob"
+        game.current_count = 0
+        game.played_cards = []
+        game.player_hands = {"Alice": [], "Bob": hand(card('9'))}
 
-        result = game.handle_action("Alice", {"type": "next_hand"})
+        result = game.handle_action("Bob", {"type": "play_card", "card": card('9')})
         assert result is not None
-        assert result['type'] == 'game_over'
-        assert result['winner'] == 'Alice'
+        assert result['lastCard'] is True
+        assert result['state']['phase'] == 'game_over'
+        assert result['state']['winner'] == 'Bob'
+
+
+class TestOnlineFlow:
+    """The game as server_base drives it: names first, then reset()."""
+
+    def started(self, seed=1):
+        import random
+        random.seed(seed)
+        g = CribbageGame()
+        g.set_player_names(["Alice", "Bob"])
+        g.reset()
+        return g
+
+    def test_start_deals_both_hands(self):
+        g = self.started()
+        assert g.phase == 'crib_selection'
+        assert len(g.player_hands["Alice"]) == 6
+        assert len(g.player_hands["Bob"]) == 6
+
+    def test_a_king_counts_ten(self, game):
+        game.phase = 'pegging'
+        game.dealer_index = 0
+        game.current_turn = "Bob"
+        game.current_count = 21
+        game.played_cards = [card('J'), card('A'), card('K', 'spades')]
+        game.player_hands = {"Alice": hand(card('2')), "Bob": hand(card('K'))}
+        result = game.handle_action("Bob", {"type": "play_card", "card": card('K')})
+        assert result is not None
+        assert result['hit31'] is True
+
+    def test_the_turn_stays_while_the_opponent_is_on_a_go(self, game):
+        game.phase = 'pegging'
+        game.dealer_index = 0
+        game.current_turn = "Bob"
+        game.current_count = 20
+        game.played_cards = [card('10'), card('10', 'spades')]
+        game.player_hands = {"Alice": hand(card('Q')), "Bob": hand(card('5'), card('3'))}
+        result = game.handle_action("Bob", {"type": "play_card", "card": card('5')})
+        assert result['go'] == "Alice"
+        assert game.current_turn == "Bob"
+
+    def test_after_a_go_the_other_player_leads(self, game):
+        game.phase = 'pegging'
+        game.dealer_index = 0
+        game.current_turn = "Bob"
+        game.current_count = 25
+        game.played_cards = [card('10'), card('10', 'spades'), card('5')]
+        game.player_hands = {"Alice": hand(card('Q')), "Bob": hand(card('4'), card('9'))}
+        result = game.handle_action("Bob", {"type": "play_card", "card": card('4')})
+        assert result['goPoints'] == 1
+        assert game.current_count == 0
+        assert game.current_turn == "Alice"
+
+    def test_a_whole_game_reaches_121(self):
+        # Random legal play, both seats, until the end. The old flow stalled
+        # here within a hand: a lead handed to a player with no cards.
+        import random
+        for seed in range(20):
+            g = self.started(seed)
+            for _ in range(5000):
+                if g.phase == 'game_over':
+                    break
+                if g.phase == 'crib_selection':
+                    for p in g.players:
+                        if len(g.player_hands[p]) == 6:
+                            for c in g.player_hands[p][:2]:
+                                assert g.handle_action(p, {"type": "select_crib", "card": c})
+                            assert g.handle_action(p, {"type": "confirm_crib"})
+                elif g.phase == 'starter_cut':
+                    assert g.handle_action(g.players[0], {"type": "cut_starter"})
+                elif g.phase == 'pegging':
+                    p = g.current_turn
+                    playable = [c for c in g.player_hands[p]
+                                if card_value(c) + g.current_count <= 31]
+                    assert playable, (seed, p, g.player_hands, g.current_count)
+                    assert g.handle_action(p, {"type": "play_card", "card": random.choice(playable)})
+                elif g.phase == 'hand_scoring':
+                    assert g.handle_action(g.players[1], {"type": "next_hand"})
+            assert g.phase == 'game_over', seed
+            assert max(g.scores.values()) >= 121
+            assert g.winner in g.players
+
+
+def card_value(c):
+    from server import PEGGING_VALUES
+    return PEGGING_VALUES[c['rank']]
 
 
 # ── Score Constants ───────────────────────────────────────────────────────────

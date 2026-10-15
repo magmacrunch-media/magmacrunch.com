@@ -535,6 +535,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         MP.onPlayerQuit = function(data) {
             addLobbyChatMessage('System', data.playerName + ' left the game', '');
+            if (isMultiplayer) {
+                hideActionButtons();
+                messageArea.textContent = data.playerName + ' left the game.';
+            }
         };
 
         MP.onGameAction = function(action) {
@@ -657,6 +661,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── Multiplayer Game Logic ─────────────────────────────────
+    //
+    // The server sends the whole table as `state` on every frame, every card
+    // included with the hole card marked, and what the player to act may do
+    // in state.actions. Until 2026-10-14 the page asked the single-player
+    // engine for those actions, so it offered buttons for a game that was not
+    // being played, and it never showed anybody their own hole card.
+
+    let lastMultiplayerState = null;
 
     function startMultiplayerGame(data) {
         isMultiplayer = true;
@@ -665,60 +677,57 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'flex';
         }
-
-        // Initialize game state from server
-        if (data.state) {
-            syncMultiplayerState(data.state);
-        }
-
-        // Initialize chip animation
         ChipAnim.init('chipAnimDisplay', 'chipAnimLegend');
-
-        showMessage('Game started! Waiting for cards...');
+        messageArea.innerHTML = '';
+        if (data.state) syncMultiplayerState(data.state);
     }
 
     function syncMultiplayerState(state) {
         if (!state) return;
+        lastMultiplayerState = state;
 
-        // Update stats
         document.getElementById('potAmount').textContent = state.pot || 0;
         document.getElementById('roundDisplay').textContent = state.round || 1;
 
-        // Update player's chips
         const myPlayer = state.players ? state.players.find(p => p.id === myPlayerId) : null;
         if (myPlayer) {
             document.getElementById('playerChips').textContent = myPlayer.chips;
             ChipAnim.setChips(myPlayer.chips);
         }
 
-        // Update street label
         const streetNames = LABELS[lang].streetNames;
         document.getElementById('streetLabel').textContent = streetNames[state.round] || `Street ${state.round}`;
 
-        // Render players
-        if (state.players) {
-            renderMultiplayerPlayers(state.players);
-        }
+        if (state.players) renderMultiplayerPlayers(state);
+        renderMultiplayerActionLog(state.actionLog);
 
-        // Show action buttons if it's my turn
-        if (state.phase === 'betting' && state.currentTurn === myPlayerId) {
-            const actions = game.getAvailableActions ? game.getAvailableActions(myPlayerId) : [];
-            showMultiplayerActionButtons(actions);
+        const myActions = (state.actions && state.actions[myPlayerId]) || [];
+        if (state.phase === 'betting' && state.currentTurn === myPlayerId && myActions.length) {
+            showMultiplayerActionButtons(myActions, state, myPlayer);
         } else {
             hideActionButtons();
         }
 
-        // Check for game over
         if (state.gameOver) {
             showMultiplayerGameOver(state);
+        } else {
+            const turn = state.players && state.players.find(p => p.id === state.currentTurn);
+            messageArea.innerHTML = '';
+            const div = document.createElement('div');
+            div.className = 'game-message';
+            div.textContent = state.currentTurn === myPlayerId
+                ? 'Your turn'
+                : (turn ? `${turn.name} to act` : '');
+            messageArea.appendChild(div);
         }
     }
 
-    function renderMultiplayerPlayers(players) {
+    function renderMultiplayerPlayers(state) {
+        const players = state.players;
         const aiAreas = document.getElementById('aiAreas');
         const playerArea = document.getElementById('playerArea');
+        const reveal = !!state.showdown;
 
-        // Render other players
         aiAreas.innerHTML = '';
         players.filter(p => p.id !== myPlayerId).forEach(p => {
             const area = document.createElement('div');
@@ -726,32 +735,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const nameTag = document.createElement('div');
             nameTag.className = 'ai-name';
-
             const nameText = document.createElement('span');
             nameText.className = 'ai-name-text';
-            nameText.textContent = p.name;
-
+            nameText.textContent = p.name + (p.id === state.currentTurn ? ' ◀' : '');
             const chipsSpan = document.createElement('span');
             chipsSpan.className = 'ai-chips';
             chipsSpan.textContent = p.chips;
-
             nameTag.appendChild(nameText);
             nameTag.appendChild(chipsSpan);
 
             const cardsDiv = document.createElement('div');
             cardsDiv.className = 'ai-cards';
-
-            // Show cards face up during showdown, otherwise hide
-            const showCards = lastMultiplayerState && lastMultiplayerState.phase === 'showdown';
             p.cards.forEach(card => {
-                const cardEl = createCardElement(card, showCards);
-                cardsDiv.appendChild(cardEl);
+                cardsDiv.appendChild(createCardElement(card, !card.hole || (reveal && !p.folded)));
             });
 
             area.appendChild(nameTag);
             area.appendChild(cardsDiv);
 
-            if (p.hand && !p.folded) {
+            // Their hand is read with the hole card in it, so it is shown
+            // only once the hole card is.
+            if (reveal && p.hand && !p.folded) {
                 const handLabel = document.createElement('div');
                 handLabel.className = 'ai-hand';
                 handLabel.textContent = p.hand.description;
@@ -761,20 +765,12 @@ document.addEventListener('DOMContentLoaded', () => {
             aiAreas.appendChild(area);
         });
 
-        // Render human player
         const myPlayer = players.find(p => p.id === myPlayerId);
         if (myPlayer) {
             playerArea.innerHTML = '';
-
             const cardsDiv = document.createElement('div');
             cardsDiv.className = 'player-cards';
-
-            myPlayer.cards.forEach(card => {
-                const cardEl = createCardElement(card, true);
-                cardEl.addEventListener('click', () => handleMultiplayerCardClick(card));
-                cardsDiv.appendChild(cardEl);
-            });
-
+            myPlayer.cards.forEach(card => cardsDiv.appendChild(createCardElement(card, true)));
             playerArea.appendChild(cardsDiv);
 
             if (myPlayer.hand && !myPlayer.folded) {
@@ -786,28 +782,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    let lastMultiplayerState = null;
-
-    function handleMultiplayerCardClick(card) {
-        // Card clicks during multiplayer are handled by action buttons
-    }
-
     function handleMultiplayerAction(action) {
-        if (!action) return;
-
-        lastMultiplayerState = action.state || lastMultiplayerState;
-
-        if (action.state) {
-            syncMultiplayerState(action.state);
-        }
-
-        // Show action log
-        if (action.state && action.state.actionLog) {
-            renderMultiplayerActionLog(action.state.actionLog);
-        }
+        if (!action || !action.state) return;
+        syncMultiplayerState(action.state);
     }
 
-    function showMultiplayerActionButtons(actions) {
+    function showMultiplayerActionButtons(actions, state, me) {
         actionButtons.innerHTML = '';
 
         actions.forEach(action => {
@@ -818,40 +798,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 'check':
                     btn.innerHTML = `${LABELS[lang].check} <span class="btn-sub">/ check</span>`;
                     btn.classList.add('check');
-                    btn.addEventListener('click', () => {
-                        MP.sendAction({ type: 'player_action', action: 'check' });
-                    });
                     break;
                 case 'call': {
-                    const callAmount = lastMultiplayerState ? lastMultiplayerState.currentBet - (myPlayerCurrentBet || 0) : 0;
-                    btn.innerHTML = `${LABELS[lang].call} <span class="btn-sub">/ call ${callAmount}</span>`;
+                    const owed = Math.min(state.currentBet - ((me && me.currentBet) || 0), (me && me.chips) || 0);
+                    btn.innerHTML = `${LABELS[lang].call} <span class="btn-sub">/ call ${owed}</span>`;
                     btn.classList.add('call');
-                    btn.addEventListener('click', () => {
-                        MP.sendAction({ type: 'player_action', action: 'call' });
-                    });
                     break;
                 }
                 case 'raise':
                     btn.innerHTML = `${LABELS[lang].raise} <span class="btn-sub">/ raise</span>`;
                     btn.classList.add('raise');
-                    btn.addEventListener('click', () => {
-                        MP.sendAction({ type: 'player_action', action: 'raise' });
-                    });
                     break;
                 case 'fold':
                     btn.innerHTML = `${LABELS[lang].fold} <span class="btn-sub">/ fold</span>`;
                     btn.classList.add('fold');
-                    btn.addEventListener('click', () => {
-                        MP.sendAction({ type: 'player_action', action: 'fold' });
-                    });
                     break;
             }
+            btn.dataset.action = action;
+            btn.addEventListener('click', () => {
+                hideActionButtons();
+                MP.sendAction({ type: 'player_action', action: action });
+            });
 
             actionButtons.appendChild(btn);
         });
     }
-
-    let myPlayerCurrentBet = 0;
 
     function renderMultiplayerActionLog(log) {
         const actionLog = document.getElementById('actionLog');
@@ -872,17 +843,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const winner = state.lastWinner;
         const isPlayerWin = winner && winner.id === myPlayerId;
 
-        messageArea.innerHTML = `
-            <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
-                <h2>${isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose}</h2>
-                <p>${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})</p>
-                <button id="nextHandBtn" class="action-btn">Seuraava käsi / next hand</button>
-            </div>
-        `;
+        messageArea.innerHTML = '';
+        const box = document.createElement('div');
+        box.className = `game-over-message ${isPlayerWin ? 'win' : 'lose'}`;
+        const h = document.createElement('h2');
+        const line = document.createElement('p');
+        const btn = document.createElement('button');
+        btn.className = 'action-btn';
 
-        document.getElementById('nextHandBtn').addEventListener('click', () => {
-            MP.sendAction({ type: 'next_hand' });
-        });
+        if (state.matchOver) {
+            // One player holds every chip: the match is over, not just the hand.
+            const won = state.matchWinner === myPlayerId;
+            box.className = `game-over-message ${won ? 'win' : 'lose'}`;
+            h.textContent = won ? LABELS[lang].youWin : `${state.matchWinner} wins the table`;
+            line.textContent = won ? 'You took every chip at the table.' : 'You are out of chips.';
+            btn.id = 'backToMenuBtn';
+            btn.textContent = 'Menu';
+            btn.addEventListener('click', () => location.reload());
+        } else {
+            h.textContent = isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose;
+            const how = winner && winner.hand && state.showdown ? `, ${winner.hand.description}` : '';
+            line.textContent = `${winner ? winner.name : LABELS[lang].player}${how} (${state.pot})`;
+            btn.id = 'nextHandBtn';
+            btn.textContent = 'Seuraava käsi / next hand';
+            btn.addEventListener('click', () => {
+                btn.disabled = true;
+                MP.sendAction({ type: 'next_hand' });
+            });
+        }
+
+        box.appendChild(h);
+        box.appendChild(line);
+        box.appendChild(btn);
+        messageArea.appendChild(box);
     }
 
     function createCardElement(card, faceUp) {
