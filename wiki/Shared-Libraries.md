@@ -59,7 +59,7 @@ arcade/shared/
 ### Loading in a Game Page
 
 ```html
-<!-- RPG games (tetris) -->
+<!-- RPG games (nelikko) -->
 <script src="../shared/adenosine-rpg.js"></script>
 <script src="../shared/adenosine-score-client.js"></script>
 

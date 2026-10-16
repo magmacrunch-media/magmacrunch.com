@@ -196,12 +196,12 @@ jobs:
           repository: magmacrunch-media/tarot
           path: game-repos/tarot
           ssh-key: ${{ secrets.TAROT_DEPLOY_KEY }}
-      - name: Check out tetris
+      - name: Check out nelikko
         uses: actions/checkout@v7
         with:
-          repository: magmacrunch-media/tetris
-          path: game-repos/tetris
-          ssh-key: ${{ secrets.TETRIS_DEPLOY_KEY }}
+          repository: magmacrunch-media/nelikko
+          path: game-repos/nelikko
+          ssh-key: ${{ secrets.NELIKKO_DEPLOY_KEY }}
       - name: Check out two-to-the-n
         uses: actions/checkout@v7
         with:

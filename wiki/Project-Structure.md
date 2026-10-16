@@ -25,7 +25,7 @@
 │   ├── fifteen-puzzle/
 │   ├── threes/
 │   ├── klotski/
-│   ├── tetris/
+│   ├── nelikko/
 │   ├── moonlight-drift/   # generated
 │   ├── very-long-boards/
 │   ├── roderick-tron/

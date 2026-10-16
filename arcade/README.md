@@ -49,7 +49,7 @@ Change the game in its own repo, sync, and commit the result. The historical
 | solitaire_THLD | card game (hold'em) | complete | cards, score-client |
 | SORRY! | board game (multiplayer) | complete | multiplayer |
 | tarot | card game (french tarot) | complete | score-client |
-| tetris | classic | complete | rpg, score-client |
+| nelikko | falling blocks (was tetris) | complete | rpg, score-client |
 | threes | tile puzzle | complete | puzzle, score-client |
 | very-long-boards | downhill skater | complete | score-client |
 
@@ -209,7 +209,7 @@ Downloadable desktop app bundling select games. Lego architecture — each game 
 #### puzzles
 6. 2^N
 7. george-boole
-8. tetris
+8. nelikko
 
 ### planned structure
 
@@ -234,7 +234,7 @@ arcade-sample-pack/           # new project root (sibling to website/)
 │   └── puzzles/
 │       ├── 2^N/
 │       ├── george-boole/
-│       └── tetris/
+│       └── nelikko/
 └── package.json
 ```
 
@@ -352,7 +352,7 @@ if ('serviceWorker' in navigator) {
 
 ### games to update (13 files)
 
-`arcade/index.html`, `2^N/`, `tetris/`, `george-boole/`, `moonlight-drift/`, `solitaire/`, `SORRY/`, `very-long-boards/`, `crystal-mirror-maze/`, `roderick-tron/`, `scandinavian-stud/`, `solitaire_THLD/`, `pay2play/index.html`
+`arcade/index.html`, `2^N/`, `nelikko/`, `george-boole/`, `moonlight-drift/`, `solitaire/`, `SORRY/`, `very-long-boards/`, `crystal-mirror-maze/`, `roderick-tron/`, `scandinavian-stud/`, `solitaire_THLD/`, `pay2play/index.html`
 
 ### deferred
 

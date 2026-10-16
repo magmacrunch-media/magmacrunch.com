@@ -351,7 +351,7 @@
 
     const gameNames = {
         '2n': '2^N', 'george-boole': 'George Boole', 'moonlight-drift': 'Moonlight Drift',
-        'solitaire': 'Solitaire', 'solitaire-thld': 'Solitaire THLD', 'tetris': 'Tetris',
+        'solitaire': 'Solitaire', 'solitaire-thld': 'Solitaire THLD', 'tetris': 'Nelikko',
         'scandinavian-stud': 'Scandinavian Stud', 'roderick-tron': 'Roderick Tron',
         'very-long-boards': 'Very Long Boards', 'klotski': 'Klotski',
         'fifteen-puzzle': 'Fifteen Puzzle', 'threes': 'Threes', 'cribbage': 'Cribbage'

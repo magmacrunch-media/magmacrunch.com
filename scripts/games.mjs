@@ -172,8 +172,8 @@ export const GAMES = {
       'version yet, and the repo exists so one has somewhere to go.',
   },
   // Extracted 2026-10-15 by dev/extract-game.py.
-  tetris: {
-    repo: 'tetris',
+  nelikko: {
+    repo: 'nelikko',
     other:
       'CI that runs its tests. There is no second\n' +
       'version yet, and the repo exists so one has somewhere to go.',

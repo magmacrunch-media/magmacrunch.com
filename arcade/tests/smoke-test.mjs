@@ -51,7 +51,7 @@ const GAMES = [
   { name: 'solitaire_THLD', path: 'solitaire_THLD' },
   { name: 'SORRY', path: 'SORRY', lobby: { dismiss: '#title-overlay', name: '#name-input', open: '#join-btn', overlay: '#lobby-overlay', port: 8765, joined: '#player-list' } },
   { name: 'tarot', path: 'tarot' },
-  { name: 'tetris', path: 'tetris' },
+  { name: 'nelikko', path: 'nelikko' },
   { name: 'threes', path: 'threes' },
   { name: 'very-long-boards', path: 'very-long-boards' },
 ];

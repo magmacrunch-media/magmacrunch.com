@@ -23,7 +23,7 @@ Game (browser) ──WebSocket──▶ admin/server.py ──file I/O──▶ 
 
 | Game | Game ID | Score type | Client |
 |------|---------|-----------|--------|
-| tetris | `tetris` | points | adenosine |
+| nelikko | `tetris` | points | adenosine |
 | 2^N | `2n` | target reached | adenosine |
 | george-boole | `george-boole` | points | adenosine |
 | fifteen-puzzle | `fifteen-puzzle` | moves (ascending) | adenosine |

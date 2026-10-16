@@ -1,13 +1,13 @@
 # Generated: do not edit here
 
-Every file in `arcade/tetris/` is a copy. The source of truth is the
-[`tetris`](https://github.com/magmacrunch-media/tetris) repository, in its
+Every file in `arcade/nelikko/` is a copy. The source of truth is the
+[`nelikko`](https://github.com/magmacrunch-media/nelikko) repository, in its
 `web/` folder.
 
 Edits made here are **silently destroyed** the next time anyone runs:
 
 ```
-make sync-tetris
+make sync-nelikko
 ```
 
 which deletes this folder and recopies it. To change the browser game, edit that

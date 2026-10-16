@@ -33,7 +33,7 @@ The arcade is the largest section of magmacrunch.com — 20+ pixel art games org
 | 15 Puzzle | Yes | Classic sliding tile puzzle. 3x3 to 6x6. |
 | Threes | Yes | Slide, merge, survive. 1+2=3. |
 | Klotski | Yes | Classic Chinese sliding block puzzle. |
-| Tetris | Yes | Helsinki 1989. Stack blocks, clear lines. |
+| Nelikko | Yes | Helsinki 1989. The falling-block puzzle, as Finland invented it. Was Tetris. |
 
 ### Action
 | Game | Scores | Description |
@@ -69,7 +69,7 @@ arcade/
 ├── fifteen-puzzle/
 ├── threes/
 ├── klotski/
-├── tetris/
+├── nelikko/
 ├── moonlight-drift/      # generated
 ├── very-long-boards/
 ├── roderick-tron/
@@ -104,7 +104,7 @@ folder. See [Multi-Version Games](Multi-Version-Games).
 
 | Approach | Games |
 |----------|-------|
-| **Canvas** | Chess, Checkers, Backgammon, Parchisi, Chinese Checkers, Aggravation, Tetris, Moonlight Drift, Very Long Boards, Roderick Tron |
+| **Canvas** | Chess, Checkers, Backgammon, Parchisi, Chinese Checkers, Aggravation, Nelikko, Moonlight Drift, Very Long Boards, Roderick Tron |
 | **DOM** | Solitaire, Cribbage, Scandinavian Stud, 2^N, George Boole, 15 Puzzle, Threes, Klotski |
 | **Hybrid** | SORRY (canvas + DOM overlay) |
 

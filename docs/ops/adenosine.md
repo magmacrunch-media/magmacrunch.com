@@ -3,7 +3,7 @@
 ## Adenosine game engine
 
 [adenosine](https://github.com/magmacrunch-media/adenosine) is the game engine used by arcade games.
-- **adenosine-rpg.js** — game loop, input, state (used by tetris)
+- **adenosine-rpg.js** -- game loop, input, state (used by nelikko)
 - **adenosine-puzzle.js** — puzzle framework (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
 - **adenosine-score-client.js** — high score client (used by 2^N, george-boole, fifteen-puzzle, klotski, threes, cribbage, tarot)
 - **adenosine-cards.js** — card deck, rendering, cribbage hand eval (used by cribbage, solitaire, scandinavian-stud, solitaire_THLD)
@@ -12,7 +12,7 @@
 ### Loading in a game page
 
 ```html
-<!-- RPG games (tetris) -->
+<!-- RPG games (nelikko) -->
 <script src="../shared/adenosine-rpg.js"></script>
 <script src="../shared/adenosine-score-client.js"></script>
 

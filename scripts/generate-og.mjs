@@ -87,7 +87,7 @@ const PAGES = [
   // Arcade collection indexes
   { id: 'arcade-board-games', title: 'BOARD GAMES', subtitle: 'chess / checkers / backgammon / parchisi / chinese checkers', color: '#00F5FF' },
   { id: 'arcade-card-games', title: 'CARD GAMES', subtitle: 'solitaire / cribbage / soko / texas hold\'em / tarot', color: '#00F5FF' },
-  { id: 'arcade-puzzles', title: 'PUZZLES', subtitle: '2^N / george boole / 15 puzzle / threes / klotski / tetris', color: '#00F5FF' },
+  { id: 'arcade-puzzles', title: 'PUZZLES', subtitle: '2^N / george boole / 15 puzzle / threes / klotski / nelikko', color: '#00F5FF' },
   { id: 'arcade-action', title: 'ACTION', subtitle: 'moonlight drift / very long boards / roderick tron / cave diving', color: '#00F5FF' },
 
   // Board games
@@ -110,7 +110,7 @@ const PAGES = [
   { id: 'arcade-fifteen-puzzle', title: '15 PUZZLE', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
   { id: 'arcade-threes', title: 'THREES', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
   { id: 'arcade-klotski', title: 'KLOTSKI', subtitle: 'play in the magmacrunch arcade', color: '#FF2D4A' },
-  { id: 'arcade-tetris', title: 'TETRIS', subtitle: 'helsinki 1989 — play in the arcade', color: '#F0F8FF' },
+  { id: 'arcade-nelikko', title: 'NELIKKO', subtitle: 'helsinki 1989 · play in the arcade', color: '#F0F8FF' },
 
   // Action
   { id: 'arcade-moonlight-drift', title: 'MOONLIGHT\nDRIFT', subtitle: 'play in the magmacrunch arcade', color: '#FF2E9C' },

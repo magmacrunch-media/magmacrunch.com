@@ -85,7 +85,7 @@ Each game has a JSON file at `arcade/admin/scores/{game}.json`:
 
 | Game | Game ID | Score type | Client |
 |------|---------|-----------|--------|
-| Tetris | `tetris` | points | adenosine |
+| Nelikko | `tetris` | points | adenosine |
 | 2^N | `2n` | target reached | adenosine |
 | George Boole | `george-boole` | points | adenosine |
 | 15 Puzzle | `fifteen-puzzle` | moves (ascending) | adenosine |

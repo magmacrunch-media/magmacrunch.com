@@ -174,7 +174,7 @@ function parseMainPages() {
     { file: 'arcade/terminal.html', title: 'Terminal Arcade', desc: 'The arcade in a shell: install, controls, cabinets' },
     { file: 'arcade/board-games/index.html', title: 'Board Games', desc: 'Chess, checkers, backgammon, and more' },
     { file: 'arcade/card-games/index.html', title: 'Card Games', desc: 'Solitaire, cribbage, poker' },
-    { file: 'arcade/puzzles/index.html', title: 'Puzzles', desc: '2048, Tetris, and brain teasers' },
+    { file: 'arcade/puzzles/index.html', title: 'Puzzles', desc: '2048, Nelikko, and brain teasers' },
     { file: 'arcade/action/index.html', title: 'Action Games', desc: 'Drift, race, and survive' },
     { file: 'press/index.html', title: 'Press Hub', desc: 'Journals and writing' },
     { file: 'press/scientific/index.html', title: 'Scientific Journal', desc: 'Academic writing and physics' },
@@ -294,7 +294,7 @@ function parseArcadeGames() {
   const gameDirs = [
     'chess', 'checkers', 'backgammon', 'parchisi', 'chinese-checkers',
     'solitaire', 'cribbage', 'scandinavian-stud', 'solitaire_THLD', 'tarot',
-    '2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'tetris',
+    '2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'nelikko',
     'moonlight-drift', 'very-long-boards', 'roderick-tron', 'SORRY',
     'makemecookies', 'jovian-humanitarian-conflict', 'cave-diving',
     'aggravation'
@@ -303,7 +303,7 @@ function parseArcadeGames() {
   const categories = {
     board: ['chess', 'checkers', 'backgammon', 'parchisi', 'chinese-checkers', 'aggravation'],
     card: ['solitaire', 'cribbage', 'scandinavian-stud', 'solitaire_THLD', 'tarot'],
-    puzzle: ['2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'tetris'],
+    puzzle: ['2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'nelikko'],
     action: ['moonlight-drift', 'very-long-boards', 'roderick-tron', 'makemecookies',
              'jovian-humanitarian-conflict', 'cave-diving'],
     other: ['SORRY']
