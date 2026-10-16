@@ -95,11 +95,30 @@ people to build on**:
 
 | | Licence | Why |
 |---|---|---|
-| Published for others to build on | **Apache 2.0** | `magnolia`, `adenosine`, `texastoast`, `hypnopompia`, `crunch-c`. A library nobody may use commercially is not much of a library. `magmascript` is MIT, from before this settled. |
-| A product, or private to one | **PolyForm Noncommercial 1.0.0** | Every game and app, plus `daffodil`, `hologram` and `magma-kit`, which are engines but each serve one product rather than the public. |
+| Published for others to build on | **Apache 2.0** | `crunch-c`, and nothing else. `magmascript` is MIT, from before this settled. |
+| A product, or private to one | **PolyForm Noncommercial 1.0.0** | Every game, every app and every engine. |
 
-Note the split is not "engines are permissive, games are not". Three engines are
-Noncommercial. Ask what the repo is *for*.
+The permissive row held `magnolia`, `adenosine`, `texastoast` and `hypnopompia`
+too, on the argument that a library nobody may use commercially is not much of a
+library. **That argument lost to measurement.** `hypnopompia` moved on
+2026-09-26, being private and published to no registry, so none of the reasoning
+ever applied to it. The other three moved on 2026-10-15, once adoption was
+actually counted: adenosine's per-version npm downloads were one pinned consumer
+plus a tail of exactly one hit per historical version, which is registry
+scanners walking the list rather than people, and texastoast's PyPI figures were
+the same noise floor. magnolia is private and published nowhere at all, so its
+permissive grant had no audience whatsoever. A grant nobody is using buys
+nothing and gives away the one protection the licence provided, which is the
+same conclusion the section below reaches from the opposite direction.
+
+**None of it is retroactive.** Versions already published under Apache 2.0 stay
+available under it, and that cannot be withdrawn. No version was bumped with the
+relicensing, so the npm and PyPI releases keep advertising Apache until each
+package's next release.
+
+So the split is not "engines are permissive, games are not", and it is no longer
+about engines at all: everything magmacrunch writes is Noncommercial except
+`crunch-c`. Ask what the repo is *for*.
 
 ### Relicensing is almost always the wrong move
 
