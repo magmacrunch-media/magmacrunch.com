@@ -53,13 +53,51 @@ from magmascript import GHClient, MC1Client, PIClient
 
 DEFAULT_CONFIG = {
     "port": 8780,
-    "auth": False,
-    "password": "changeme",
+    "password": "",
     "bind": "0.0.0.0",
 }
 
 CONFIG = {}
 LITE_MODE = False
+
+# ── Who may send what ─────────────────────────────────────────────────────────
+# This socket is ALSO the public score backend: nginx forwards
+# wss://magmacrunch.duckdns.org/scores here, and every game in the arcade talks
+# to it. So the actions those games send are public, and nothing else is.
+#
+# Until 2026-10-15 the gate below only ran when config.json said "auth": true,
+# and the Pi had no config.json at all, so it ran with DEFAULT_CONFIG and every
+# action -- poweroff_pi, score_reset, themes_save followed by
+# github_deploy_themes -- answered anybody on the internet. The gate no longer
+# depends on configuration, and "auth" is ignored if a config still has it.
+# A missing config now means a dashboard nobody can log in to, not an open one.
+PUBLIC_ACTIONS = frozenset({
+    "score_load", "score_save", "scores_all",  # adenosine-score-client.js
+    "get_mode",  # the dashboard asks before logging in; it returns the tab list
+})
+MIN_PASSWORD_LEN = 12
+
+
+def admin_password():
+    """The configured admin password, or None when there is no usable one.
+
+    Fails closed: absent, the old "changeme" placeholder, or anything shorter
+    than MIN_PASSWORD_LEN all count as none, and with none no login succeeds.
+    """
+    pw = CONFIG.get("password")
+    if not isinstance(pw, str) or len(pw) < MIN_PASSWORD_LEN or pw == "changeme":
+        return None
+    return pw
+
+
+def check_login(password):
+    expected = admin_password()
+    return expected is not None and hmac.compare_digest(str(password), expected)
+
+
+def needs_login(action, token):
+    """True when this request must be refused or answered with a login prompt."""
+    return action not in PUBLIC_ACTIONS and token not in authenticated_sessions
 
 # ── GitHub token (stored separately, never in config.json) ──────────────────
 
@@ -672,29 +710,27 @@ async def ws_handler(websocket):
 
             action = msg.get("action")
 
-            # Auth check
-            if CONFIG.get("auth"):
-                token = msg.get("token")
-                if token not in authenticated_sessions:
-                    if action == "login":
-                        if hmac.compare_digest(str(msg.get("password", "")), str(CONFIG.get("password", ""))):
-                            token = generate_session_token()
-                            authenticated_sessions.add(token)
-                            await websocket.send(json.dumps({
-                                "type": "login_ok",
-                                "token": token
-                            }))
-                        else:
-                            await websocket.send(json.dumps({
-                                "type": "login_fail",
-                                "error": "Wrong password"
-                            }))
-                        continue
+            # Auth check. Unconditional: see PUBLIC_ACTIONS.
+            if needs_login(action, msg.get("token")):
+                if action == "login":
+                    if check_login(msg.get("password", "")):
+                        token = generate_session_token()
+                        authenticated_sessions.add(token)
+                        await websocket.send(json.dumps({
+                            "type": "login_ok",
+                            "token": token
+                        }))
                     else:
                         await websocket.send(json.dumps({
-                            "type": "auth_required"
+                            "type": "login_fail",
+                            "error": "Wrong password" if admin_password()
+                                     else "No admin password is set on this server (admin/config.json)"
                         }))
-                        continue
+                    continue
+                await websocket.send(json.dumps({
+                    "type": "auth_required"
+                }))
+                continue
 
             if action == "get_mode":
                 await websocket.send(json.dumps({
@@ -1175,8 +1211,8 @@ async def ws_handler(websocket):
             elif action == "change_password":
                 current = msg.get("current", "")
                 new_pw = msg.get("new_password", "")
-                if hmac.compare_digest(str(current), str(CONFIG.get("password", ""))):
-                    if new_pw and len(new_pw) >= 4:
+                if check_login(current):
+                    if isinstance(new_pw, str) and len(new_pw) >= MIN_PASSWORD_LEN:
                         CONFIG["password"] = new_pw
                         # Save to config file
                         config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
@@ -1190,7 +1226,7 @@ async def ws_handler(websocket):
                         await websocket.send(json.dumps({
                             "type": "password_changed",
                             "ok": False,
-                            "error": "New password must be at least 4 characters"
+                            "error": f"New password must be at least {MIN_PASSWORD_LEN} characters"
                         }))
                 else:
                     await websocket.send(json.dumps({
@@ -1870,6 +1906,11 @@ def main():
 
     port = CONFIG.get("port", 8780)
     bind = CONFIG.get("bind", "0.0.0.0")
+
+    if admin_password() is None:
+        print(f"  WARNING: no usable admin password in {config_path} "
+              f"(at least {MIN_PASSWORD_LEN} characters). Scores are served; the "
+              "dashboard refuses every login until one is set.")
 
     # Initialize magmascript clients
     _init_clients()
