@@ -789,11 +789,13 @@ build.bat test     # builds and runs the host tests
   .albedo = { 1, 1, 1 }, .transmit = 1.0f,
   .ior = 1.62f, .disperse = 0.02f },</code></pre>
 
-    <h3>not in the engine, by design</h3>
-    <p>No editor, no ECS, no general physics engine, no mesh import, no skinned animation, no GUI
-      toolkit, and there will never be triangles. Neither target game needs any of them, and each
-      would cost more than it returns. Scenes are built in code from primitives, and collision is a
-      capsule against axis-aligned walls.</p>
+    <h3>small on purpose</h3>
+    <p>A scene is C: every room is a set of analytic surfaces written as struct literals, and the
+      engine never loads a scene file or draws a triangle. A browser editor runs the same tracer
+      live, lets you move things around, and writes the room back out as C. Movement is a capsule
+      walking against axis-aligned walls, which is all a mirror maze asks of physics. The games it
+      is built for need nothing more, so it carries none of the general machinery a bigger engine
+      would.</p>
 
     <h3>the name</h3>
     <p>Named after the Dag Henderson track "hologram of a dream", published by magmacrunch music.</p>
