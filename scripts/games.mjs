@@ -157,6 +157,27 @@ export const GAMES = {
       'CI that runs the server tests against this\n' +
       "repo's arcade/shared/. There is no second version yet.",
   },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  solitaire: {
+    repo: 'solitaire',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  tarot: {
+    repo: 'tarot',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  tetris: {
+    repo: 'tetris',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };

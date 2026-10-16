@@ -79,7 +79,7 @@ jobs:
           repository: magmacrunch-media/george-boole
           path: game-repos/george-boole
           # Read-only deploy key. Every game below has one too, which is what
-          # lets this job check all eighteen whether they are public or private.
+          # lets this job check all twenty-one whether they are public or private.
           ssh-key: ${{ secrets.GEORGE_BOOLE_DEPLOY_KEY }}
 
       - name: Check out makemecookies
@@ -184,6 +184,24 @@ jobs:
           repository: magmacrunch-media/chinese-checkers
           path: game-repos/chinese-checkers
           ssh-key: ${{ secrets.CHINESE_CHECKERS_DEPLOY_KEY }}
+      - name: Check out solitaire
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/solitaire
+          path: game-repos/solitaire
+          ssh-key: ${{ secrets.SOLITAIRE_DEPLOY_KEY }}
+      - name: Check out tarot
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/tarot
+          path: game-repos/tarot
+          ssh-key: ${{ secrets.TAROT_DEPLOY_KEY }}
+      - name: Check out tetris
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/tetris
+          path: game-repos/tetris
+          ssh-key: ${{ secrets.TETRIS_DEPLOY_KEY }}
 
       # GAME_REPOS is also the assertion that the repos are there. Without it the
       # check skips when it finds none, which is right for a clone that was never
@@ -192,8 +210,8 @@ jobs:
       #
       # GAME_REPOS_OPTIONAL IS EMPTY, AND THAT IS THE POINT. It is the declared
       # hole for a game this job cannot read, and as of 2026-10-03 there is no
-      # such game: all eighteen have a read-only deploy key held here, so every one
-      # is checked out above whether it is public or private. Eighteen of eighteen
+      # such game: all twenty-one have a read-only deploy key held here, so every one
+      # is checked out above whether it is public or private. Twenty-one of twenty-one
       # covered, which is better than this job has ever managed.
       #
       # The mechanism is kept rather than deleted. If a game ever loses its key

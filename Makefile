@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi sync-cave-diving sync-chess sync-checkers sync-backgammon sync-chinese-checkers
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi sync-cave-diving sync-chess sync-checkers sync-backgammon sync-chinese-checkers sync-solitaire sync-tarot sync-tetris
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -177,6 +177,18 @@ sync-backgammon: ## Regenerate arcade/backgammon/ from the backgammon repo's web
 
 sync-chinese-checkers: ## Regenerate arcade/chinese-checkers/ from the chinese-checkers repo's web/
 	node scripts/sync-game.mjs chinese-checkers
+	npm run --silent build:adenosine
+
+sync-solitaire: ## Regenerate arcade/solitaire/ from the solitaire repo's web/
+	node scripts/sync-game.mjs solitaire
+	npm run --silent build:adenosine
+
+sync-tarot: ## Regenerate arcade/tarot/ from the tarot repo's web/
+	node scripts/sync-game.mjs tarot
+	npm run --silent build:adenosine
+
+sync-tetris: ## Regenerate arcade/tetris/ from the tetris repo's web/
+	node scripts/sync-game.mjs tetris
 	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────
