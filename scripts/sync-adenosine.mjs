@@ -139,10 +139,10 @@ const PACKAGE_CSS = {
   ],
   multiplayer: [['lobby.css', 'arcade/shared/multiplayer/lobby.css']],
   puzzle: [
-    ['puzzle-base.css', 'arcade/puzzle-framework/css/puzzle-base.css'],
-    ['puzzle-grid.css', 'arcade/puzzle-framework/css/puzzle-grid.css'],
-    ['puzzle-modals.css', 'arcade/puzzle-framework/css/puzzle-modals.css'],
-    ['puzzle-responsive.css', 'arcade/puzzle-framework/css/puzzle-responsive.css'],
+    ['puzzle-base.css', 'arcade/shared/puzzle/puzzle-base.css'],
+    ['puzzle-grid.css', 'arcade/shared/puzzle/puzzle-grid.css'],
+    ['puzzle-modals.css', 'arcade/shared/puzzle/puzzle-modals.css'],
+    ['puzzle-responsive.css', 'arcade/shared/puzzle/puzzle-responsive.css'],
   ],
 };
 

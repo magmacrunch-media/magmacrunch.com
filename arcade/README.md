@@ -117,7 +117,7 @@ from `AdCards.ChipAnim`. **The stylesheets are generated too** — as of
 | `arcade/shared/chips/chip-animation.css` | `adenosine-cards` |
 | `arcade/shared/multiplayer/lobby.css` | `adenosine-multiplayer` |
 | `arcade/shared/chat-widget.css` | `adenosine-chat` |
-| `arcade/puzzle-framework/css/puzzle-{base,grid,modals,responsive}.css` | `adenosine-puzzle` |
+| `arcade/shared/puzzle/puzzle-{base,grid,modals,responsive}.css` | `adenosine-puzzle` |
 
 Edit the copy in the adenosine repo, publish, then re-run `npm run
 build:adenosine` here. An edit made directly to any of the files above survives

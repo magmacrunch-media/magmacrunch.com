@@ -52,4 +52,4 @@ arcade/shared/adenosine-*.js             text eol=lf
 arcade/shared/cards/cards.css            text eol=lf
 arcade/shared/chips/chip-animation.css   text eol=lf
 arcade/shared/multiplayer/lobby.css      text eol=lf
-arcade/puzzle-framework/css/puzzle-*.css text eol=lf
+arcade/shared/puzzle/puzzle-*.css text eol=lf

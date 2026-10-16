@@ -75,7 +75,6 @@ arcade/
 ├── roderick-tron/
 ├── SORRY/
 ├── pay2play/             # slot machine (CSS, JS, prizes)
-├── puzzle-framework/     # shared puzzle utilities
 ├── shared/               # shared libraries (chat, scores, cards, etc.)
 ├── admin/                # MAGMA//OPS dashboard + score server
 ├── counter/              # hit counter server
