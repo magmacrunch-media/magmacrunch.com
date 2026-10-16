@@ -133,14 +133,25 @@ command -v node >/dev/null 2>&1 || {
 # against a temporary index, which cannot.
 # THE EM DASH GUARD, and it has to run HERE rather than from .git/hooks. This
 # repo sets core.hooksPath to .githooks, so git runs this file and never the one
-# no-em-dash.sh --install-all writes into .git/hooks: that install reported "ok"
-# for a hook git does not run. It also has to come BEFORE the exec below, which
-# replaces this shell and would never return to anything appended after it.
+# em-dash-status.sh --install-all writes into .git/hooks: that install reported
+# "ok" for a hook git does not run. It also has to come BEFORE the exec below,
+# which replaces this shell and would never return to anything appended after it.
 #
 # Tested for rather than assumed, because this file is TRACKED and the path is
 # this machine's. On a checkout without that tree the guard is simply absent,
 # which must not fail somebody else's commit.
-dev_guard=/c/magma/dev/no-em-dash.sh
+#
+# THE PATH IS THE WEAK PART, and it proved it on 2026-10-16. That script was
+# called no-em-dash.sh until then, and because the test is `-x` rather than a
+# failure, the rename did not break this hook: it made the guard SILENTLY STOP
+# RUNNING, which is worse. --install-all rewrites the hooks it owns and cannot
+# rewrite this one, so a rename or a moved dev\ has to be corrected here by
+# hand. Nothing announces it; the only tell is the guard printing nothing.
+#
+# `|| exit 1` now catches only a scan that could not run. That script counts em
+# dashes and warns rather than refusing, as of the same day, so it exits 0 even
+# when it finds some, and this line fires on its exit 2 alone.
+dev_guard=/c/magma/dev/em-dash-status.sh
 if [ -x "$dev_guard" ]; then
 	"$dev_guard" || exit 1
 fi

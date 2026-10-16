@@ -4,7 +4,7 @@
 # every repo in the org with no token. A private host would need access granted
 # per consumer, which is 42 settings pages.
 #
-# WHY THIS REPO WANTS IT. `no-em-dash.sh --install-all` refuses to clobber an
+# WHY THIS REPO WANTS IT. `em-dash-status.sh --install-all` refuses to clobber an
 # existing pre-commit hook, and this repo has one of its own, the `?v=`
 # cache-buster straddle guard. So nothing here has ever checked the house
 # conventions, in the largest repo in the tree, and a hook would not have
