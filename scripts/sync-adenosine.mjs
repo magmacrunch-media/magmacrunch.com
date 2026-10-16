@@ -166,6 +166,86 @@ function shortHash(buf) {
   return createHash('sha256').update(bytes).digest('hex').slice(0, HASH_LEN);
 }
 
+// ── The licence banner ───────────────────────────────────────────────────────
+//
+// Every bundle this script writes into arcade/shared/ is served publicly from
+// GitHub Pages, and until 2026-10-16 not one of them carried a copyright line,
+// a licence or a notice of any kind, while this repository's own LICENSE reads
+// "All rights reserved". Apache-2.0 section 4(d) already asked for the NOTICE;
+// PolyForm Noncommercial asks that every plain-text line beginning
+// "Required Notice:" travel with any copy of the software. So a notice was
+// owed under the old licence and is owed under the new one.
+//
+// Both the identifier and the notice are READ out of the installed package,
+// never written here. adenosine moved from Apache-2.0 to PolyForm on
+// 2026-10-15; a hardcoded string would have been correct until that morning
+// and then silently wrong, and would have had to be chased through seven
+// generated bundles and seventeen game repositories to fix. Reading it means
+// the next licence change needs no edit in this file at all.
+//
+// The banner goes on BEFORE shortHash, so the ?v= stamp keeps identifying the
+// bytes a visitor actually receives rather than the bytes npm shipped.
+
+const SPDX_MARK = 'SPDX-License-Identifier:';
+const PKG_MARK = '@magmacrunch/adenosine-';
+
+/**
+ * The "Required Notice:" lines a package's own LICENSE asks to be passed on.
+ *
+ * Anchored at line start, which is not fussiness: PolyForm's text explains the
+ * mechanism in prose and then demonstrates it with
+ * "> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)". All three
+ * occurrences match an unanchored search, so an unanchored one would paste
+ * Yoyodyne's example into every bundle the site serves.
+ */
+function requiredNotices(pkgDir) {
+  const license = join(pkgDir, 'LICENSE');
+  if (!existsSync(license)) return [];
+  return readFileSync(license, 'utf8')
+    .split(/\r?\n/)
+    .filter((line) => line.startsWith('Required Notice:'))
+    .map((line) => line.trimEnd());
+}
+
+/**
+ * Remove a banner this script wrote, so re-running cannot stack them up.
+ *
+ * The docstring at the top promises that a re-run with no dependency change
+ * rewrites nothing, and prepending unconditionally would break that promise
+ * for the held bundle below, which is read back out of arcade/shared/ rather
+ * than out of node_modules: every run would add another banner and move the
+ * ?v= stamp. Both markers are required before anything is cut, so an upstream
+ * esbuild banner is left alone instead of being quietly deleted.
+ */
+function stripBanner(bytes) {
+  const head = bytes.subarray(0, 2048).toString('utf8');
+  const m = /^\/\*![\s\S]*?\*\/\n/.exec(head);
+  if (!m || !m[0].includes(SPDX_MARK) || !m[0].includes(PKG_MARK)) return bytes;
+  return bytes.subarray(Buffer.byteLength(m[0], 'utf8'));
+}
+
+/** Whether these bytes already carry a banner of ours. */
+function hasBanner(bytes) {
+  return !stripBanner(bytes).equals(bytes);
+}
+
+/**
+ * Prepend the notice, replacing any previous one.
+ *
+ * LF regardless of platform: arcade/shared/*.js is `text eol=lf` in
+ * .gitattributes, and shortHash normalises anyway, so a CRLF banner would
+ * stamp a hash no visitor's copy could produce.
+ *
+ * `version` is null for a held bundle, whose real version node_modules cannot
+ * tell us while the floor stands -- see the hold below.
+ */
+function withBanner(bytes, pkg, version, license, notices) {
+  const head = `@magmacrunch/adenosine-${pkg}${version ? ` v${version}` : ''}`;
+  const rest = [`${SPDX_MARK} ${license}`, ...notices];
+  const banner = `/*! ${head}\n${rest.map((l) => ` * ${l}`).join('\n')}\n */\n`;
+  return Buffer.concat([Buffer.from(banner, 'utf8'), stripBanner(bytes)]);
+}
+
 /** Recursively collect every .html file under a directory. */
 function htmlFiles(dir, out = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -187,6 +267,8 @@ const missing = [];
 const stale = [];
 /** Packages whose committed bundle outranks node_modules. See MIN_VERSION. */
 const held = [];
+/** Packages that cannot supply the licence or notice the banner needs. */
+const noticeless = [];
 
 /** The version package-lock.json pins for a workspace dependency, if any. */
 function lockedVersion(pkg) {
@@ -204,9 +286,9 @@ for (const pkg of PACKAGES) {
     missing.push(`@magmacrunch/adenosine-${pkg}`);
     continue;
   }
-  const version = JSON.parse(
-    readFileSync(join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'package.json'), 'utf8'),
-  ).version;
+  const pkgDir = join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`);
+  const manifest = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8'));
+  const version = manifest.version;
 
   // Guard against a stale node_modules silently *downgrading* a bundle. If the
   // lockfile has moved on (e.g. after pulling a branch that bumped a dep) and
@@ -224,6 +306,20 @@ for (const pkg of PACKAGES) {
   if (locked && locked !== version) {
     stale.push(`  @magmacrunch/adenosine-${pkg}: lockfile ${locked}, installed ${version}`);
     console.log(`  skipped   adenosine-${pkg}.js  (installed v${version}, lockfile wants v${locked})`);
+    continue;
+  }
+
+  // No notice, no sync. A bundle served without one is precisely the fault
+  // this banner exists to fix, so a package that cannot supply the licence or
+  // the notice fails the run by name. The alternative is a bundle that ships
+  // silently unnoticed, which is how all seven got into this state.
+  const notices = requiredNotices(pkgDir);
+  const faults = [];
+  if (!manifest.license) faults.push('no "license" field in package.json');
+  if (notices.length === 0) faults.push('no line beginning "Required Notice:" in LICENSE');
+  if (faults.length) {
+    noticeless.push(`  @magmacrunch/adenosine-${pkg} v${version}: ${faults.join('; ')}`);
+    console.log(`  skipped   adenosine-${pkg}.js  (${faults.join('; ')})`);
     continue;
   }
 
@@ -247,16 +343,30 @@ for (const pkg of PACKAGES) {
       );
       continue;
     }
-    const keptHash = shortHash(readFileSync(committed));
+    // The hold must not become the one bundle served with no notice. Its own
+    // banner, if it has one, names the version that bundle actually is, and
+    // node_modules cannot tell us that while the floor stands -- so keep it
+    // rather than rewriting a correct version into a stale one. A bundle
+    // committed before banners existed has none, and gains one here with no
+    // version claimed, which is reported rather than left to be noticed.
+    const committedBytes = readFileSync(committed);
+    const kept = hasBanner(committedBytes)
+      ? committedBytes
+      : withBanner(committedBytes, pkg, null, manifest.license, notices);
+    if (!kept.equals(committedBytes)) writeFileSync(committed, kept);
+    const keptHash = shortHash(kept);
     hashes.set(pkg, keptHash);
-    held.push(`  @magmacrunch/adenosine-${pkg}: installed ${version}, floor ${floor}`);
+    held.push(
+      `  @magmacrunch/adenosine-${pkg}: installed ${version}, floor ${floor}` +
+        (kept.equals(committedBytes) ? '' : ' (notice added, version not stated)'),
+    );
     console.log(
       `  held      adenosine-${pkg}.js  v${version} < v${floor}  ?v=${keptHash}  (committed build kept)`,
     );
     continue;
   }
 
-  const bytes = readFileSync(src);
+  const bytes = withBanner(readFileSync(src), pkg, version, manifest.license, notices);
   const dest = join(SHARED, `adenosine-${pkg}.js`);
   const changed = !existsSync(dest) || !readFileSync(dest).equals(bytes);
   if (changed) writeFileSync(dest, bytes);
@@ -309,6 +419,18 @@ for (const name of LOCAL_SHARED) {
 
 if (missing.length) {
   console.error(`\nMissing dependencies — run \`npm install\` first:\n  ${missing.join('\n  ')}`);
+  process.exit(1);
+}
+
+if (noticeless.length) {
+  console.error(
+    `\nCannot write a licence banner, so these were not synced:\n${noticeless.join('\n')}\n\n` +
+      'Every bundle in arcade/shared/ is served publicly, so each one carries\n' +
+      'its package\'s SPDX identifier and the "Required Notice:" lines from its\n' +
+      'LICENSE. Both are read from the installed package, so a package missing\n' +
+      'either cannot be served compliantly and is skipped rather than shipped\n' +
+      'bare. Check that the published tarball includes its LICENSE.',
+  );
   process.exit(1);
 }
 

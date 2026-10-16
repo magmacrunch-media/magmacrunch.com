@@ -1,3 +1,7 @@
+/*! @magmacrunch/adenosine-cards v0.10.0
+ * SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+ * Required Notice: Copyright 2026 magmacrunch media (https://magmacrunch.com)
+ */
 "use strict";
 var AdCards = (() => {
   var __defProp = Object.defineProperty;

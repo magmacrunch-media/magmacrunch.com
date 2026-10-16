@@ -1,3 +1,7 @@
+/*! @magmacrunch/adenosine-puzzle v0.5.0
+ * SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+ * Required Notice: Copyright 2026 magmacrunch media (https://magmacrunch.com)
+ */
 "use strict";
 var AdPuzzle = (() => {
   var __defProp = Object.defineProperty;
