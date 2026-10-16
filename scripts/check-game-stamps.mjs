@@ -30,17 +30,21 @@
  *
  * ── What it resolves against ──
  *
- * A reference is looked up in the game repo's own `web/` first, and in this
- * repo's `arcade/<folder>/` only if it is not there. That is not a fallback so
+ * A reference that stays inside the game repo's own `web/` is looked up
+ * there, and one that climbs out of it here. That is not a fallback so
  * much as the definition: a game's own `css/` and `js/` are checked against the
  * repo that owns them, and `../shared/*`, which exists in neither the game repo
  * nor its `web/`, lands here. Both kinds go stale, and they go stale for
  * completely different reasons — an edit that forgot a bump, versus a release
  * in another repo.
+ *
+ * Which of the two a reference falls to is settled by where it lands, never
+ * by what happens to be on disk beside the game repo. `inspect` records why
+ * that distinction is worth stating, and what it cost before it was.
  */
 
-import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
-import { join, dirname, resolve, relative } from 'node:path';
+import { readFileSync, existsSync, readdirSync, statSync, realpathSync } from 'node:fs';
+import { join, dirname, resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { GAMES, webCandidates, findGameWeb } from './games.mjs';
@@ -63,6 +67,31 @@ function filesUnder(dir, exts, out = []) {
 }
 
 const posix = (p) => p.split('\\').join('/');
+
+/** `p` with the symlinks along it resolved, or `p` itself if that cannot be done. */
+function realPath(p) {
+  try {
+    return realpathSync(p);
+  } catch {
+    return p;
+  }
+}
+
+/**
+ * Is `path` inside `web`, both as written and after symlinks are resolved?
+ *
+ * The lexical half is what sorts a `../shared/*` reference out of a `css/*`
+ * one. The realpath half is the belt: a link INSIDE a game's web/ pointing
+ * back at this repo would pass the lexical test and bring back exactly the
+ * fault described at `inspect`. `realWeb` is resolved once per repo, so this
+ * costs one syscall per reference.
+ */
+function containedIn(web, realWeb, path) {
+  const lexical = relative(web, path);
+  if (!lexical || lexical.startsWith('..') || isAbsolute(lexical)) return false;
+  const real = relative(realWeb, realPath(path));
+  return Boolean(real) && !real.startsWith('..') && !isAbsolute(real);
+}
 
 let checked = 0;
 const stale = [];
@@ -183,19 +212,44 @@ if (required.length) {
 
 for (const { folder, repo, web } of found) {
   const arcade = join(ROOT, 'arcade', folder);
+  const realWeb = realPath(web);
   let seen = 0;
 
   /** Resolve one reference, and record what is wrong with it. */
   const inspect = (href, query, source) => {
     if (isUnresolvable(href) || isRemote(href)) return;
 
-    // In the game repo first; here only if it is not there. `../shared/*` is
-    // in neither the repo nor its web/, so it lands in arcade/<folder>/.
-    const inRepo = join(dirname(source), href);
-    const target = existsSync(inRepo)
+    // Inside the game repo's own web/ it is the game repo's file; anything
+    // outside web/ is this repo's. `../shared/*` leaves web/, so it lands in
+    // arcade/<folder>/.
+    //
+    // What decides it is where the reference LANDS, not whether a file
+    // happens to be there. The test used to be `existsSync(inRepo)` alone,
+    // and on a dev box that quietly answered a different question:
+    // seventeen of the game repos keep a gitignored `shared` symlink into the
+    // MAIN checkout's arcade/shared/, so `../shared/*` resolved through it and
+    // was compared against the main checkout's bundles instead of the ones in
+    // the tree being checked. Run from a worktree, which is where half the
+    // work here happens, that compares against bytes the commit under test
+    // never touched, and it comes back clean. On 2026-10-16 it reported 13
+    // stale where CI, cloning the repos fresh and so having no symlink,
+    // correctly reported 44 -- short by a factor of three, in the reassuring
+    // direction, on the one check whose whole job is to notice a new bundle
+    // staling somebody else's stamps.
+    //
+    // CI is unaffected either way, which is the point of fixing it here:
+    // nothing in any game repo lives outside its web/ and is referenced from
+    // inside it, so in a fresh clone the old rule and this one pick
+    // arcade/<folder>/ for every one of them. Should such a file ever be
+    // added, resolving it here is still the right answer -- `make sync-<repo>`
+    // copies web/ and nothing above it, so a reference climbing out of web/ is
+    // broken on the live site, and MISSING is the honest report.
+    const inRepo = resolve(dirname(source), href);
+    const fromRepo = existsSync(inRepo) && containedIn(web, realWeb, inRepo);
+    const target = fromRepo
       ? inRepo
       : resolve(arcade, dirname(relative(web, source)), href);
-    const owner = existsSync(inRepo) ? repo : 'magmacrunch.com';
+    const owner = fromRepo ? repo : 'magmacrunch.com';
 
     if (!existsSync(target)) {
       missing.push(`${repo}/web/${posix(relative(web, source))} -> ${href}`);
