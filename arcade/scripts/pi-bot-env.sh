@@ -22,11 +22,12 @@ LOG_DIR="$PI_HOME/arcade/logs"
 ENV_FILE="$PI_HOME/arcade-config/.env"
 LOCK_FILE="$PI_HOME/arcade-config/bots.lock"
 
-# cron runs with PATH=/usr/local/bin:/usr/bin:/bin:/usr/games, which omits
-# ~/.local/bin — where pip installs magmascript. bot-rebuild-search-index.sh
-# died on "magmascript: command not found" every day while the same command
-# worked fine in an interactive shell.
-PATH="$PI_HOME/.local/bin:$PATH"
+# Debian's cron runs with PATH=/usr/bin:/bin and nothing else, so it omits
+# ~/.local/bin AND /usr/local/bin. This comment used to say cron included
+# /usr/local/bin, and that is how bot-check-links.sh died on "lychee: command
+# not found" every Monday from 2026-09-21 to 2026-10-12 while the same command
+# worked in an interactive shell: setup-pi.sh installs lychee there.
+PATH="$PI_HOME/.local/bin:/usr/local/bin:$PATH"
 export PATH
 
 mkdir -p "$LOG_DIR" "$(dirname "$LOCK_FILE")"

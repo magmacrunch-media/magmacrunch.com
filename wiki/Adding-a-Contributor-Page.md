@@ -6,7 +6,7 @@ Step-by-step guide to creating a new contributor page in the archive.
 
 ## 1. Find the MusicBrainz UUID
 
-Search for the contributor on [musicbrainz.org](https://musicbrainz.org/artist) and copy the UUID.
+Search for the contributor on [musicbrainz.org](https://musicbrainz.org/search?type=artist) and copy the UUID.
 
 ## 2. Create the Folder
 

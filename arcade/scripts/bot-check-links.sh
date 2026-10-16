@@ -1,6 +1,6 @@
 #!/bin/bash
 # Check links with lychee and create a GitHub Issue if broken links found.
-# Cron: 0 6 * * 1 (Monday 6 AM UTC)
+# Cron: 15 6 * * 1 (Monday 06:15 Pi local, America/New_York; Debian cron has no CRON_TZ)
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/pi-bot-env.sh"
@@ -24,6 +24,8 @@ lychee \
     --timeout 30 \
     --max-concurrency 32 \
     --format markdown \
+    --root-dir "$PWD" \
+    --exclude-path 'node_modules' \
     --output "$LYCHEE_OUT" \
     './**/*.html' \
     './**/*.md' \
@@ -32,7 +34,16 @@ lychee \
 EXIT_CODE=${PIPESTATUS[0]}
 restore_strict
 
-if [ "$EXIT_CODE" -ne 0 ]; then
+# lychee exits 2 for broken links and 0 for none. Anything else means it did
+# not check at all: 127 is "lychee: command not found", which this script read
+# as broken links every Monday from 2026-09-21 to 2026-10-12, then died on the
+# missing report and left the issue a month stale. Fail loudly instead.
+if [ "$EXIT_CODE" -ne 0 ] && [ "$EXIT_CODE" -ne 2 ]; then
+    echo "ERROR: lychee did not run a check (exit code $EXIT_CODE); issue left untouched" >&2
+    exit 1
+fi
+
+if [ "$EXIT_CODE" -eq 2 ]; then
     echo "Broken links found (exit code $EXIT_CODE)"
 
     # Check for existing open issue

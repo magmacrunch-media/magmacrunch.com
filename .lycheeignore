@@ -9,6 +9,20 @@
 ^/$
 /login$
 
+# The org's repositories. All but three are private, and a private repo
+# answers 404 to anybody not signed in, which is correct: these links are in
+# maintainer docs (READMEs, docs/ops, wiki/, each arcade game's GENERATED.md).
+# One rule rather than a list of names, because a list goes stale with every
+# new game. The blind spot is a SERVED page linking to a private repo; none
+# did on 2026-10-15 (git ls-files '*.html' | xargs grep magmacrunch-media/).
+^https://github\.com/magmacrunch-media/
+
+# Citations in published papers under press/scientific/, kept as printed.
+# The vendors and NASA have since moved or removed these pages.
+^https?://sites\.wff\.nasa\.gov/code810/nsroc\.html
+^https?://(www\.)?dewesoft\.com/products/dewesoft-x
+^https?://www\.raith\.com/products/ebpg5200\.html
+
 # Local file references (link checker can't resolve)
 ^file://
 
