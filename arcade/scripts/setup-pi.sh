@@ -97,22 +97,11 @@ if [[ -f "$PRIVATE_DIR/systemd/arcade-private.service" ]]; then
     ok "Installed arcade-private.service"
 fi
 
-# ── Install MCP server service ──────────────────────────────────────────────
+# ── MCP server (moved out) ──────────────────────────────────────────────
 
-echo ""
-echo -e "${CYAN}Installing MCP server...${NC}"
-
-MCP_DIR="$ARCADE_DIR/mcp-server"
-if [[ -f "$MCP_DIR/serve.py" ]]; then
-    # Dependencies handled by requirements.txt above
-
-    if [[ -f "$ARCADE_DIR/systemd/arcade-mcp.service" ]]; then
-        cp "$ARCADE_DIR/systemd/arcade-mcp.service" /etc/systemd/system/
-        ok "Installed arcade-mcp.service"
-    fi
-else
-    warn "MCP server not found — skipping"
-fi
+# Nothing to install here. The MCP server is magmacrunch-media/magma-mcp since
+# 2026-10-15, and it runs on MC1's WSL, not the Pi: nginx here only forwards
+# /mcp to MC1. The arcade-mcp unit this used to install never ran.
 
 # ── Install magmascript ───────────────────────────────────────────────────────
 
@@ -218,7 +207,6 @@ SERVICES=(
     "arcade-counter"
     "arcade-admin"
     "arcade-private"
-    "arcade-mcp"
 )
 
 for svc in "${SERVICES[@]}"; do

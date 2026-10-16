@@ -21,7 +21,6 @@ Live site: [magmacrunch.com](https://magmacrunch.com)
 ├── home/             about, guestbook, links
 ├── music/            jukebox, distributed music, physical media
 ├── press/            journals (scientific, experimental, lyrics)
-├── mcp-server/       MCP server — exposes project data + Pi management to AI assistants
 ├── scripts/          backup, build, and automation utilities
 ├── templates/        JS templates for archive pages
 ├── ware/             browser utilities (album art, media search, pixel process)
@@ -138,22 +137,10 @@ See [Bots wiki page](https://github.com/magmacrunch-media/magmacrunch.com/wiki/B
 
 ## mcp server
 
-The MCP server (`mcp-server/magma-mcp.py`) exposes project data to AI assistants:
-
-**Data access:**
-- `list_cached_entities`, `get_entity`, `search_cache` — MusicBrainz cache
-- `list_scoreboards`, `get_scores` — high scores
-- `list_archive_pages`, `list_arcade_games` — project structure
-- `search_discogs`, `get_discogs_release`, `get_discogs_artist` — Discogs API
-
-**Pi management:**
-- `check_pi_services`, `get_service_logs`, `restart_pi_service` — service management
-- `deploy_to_pi` — rsync files to Pi
-
-**Bot management:**
-- `list_bots`, `get_bot_status`, `trigger_bot`, `get_bot_runs` — workflow management
-
-See [MCP Server wiki page](https://github.com/magmacrunch-media/magmacrunch.com/wiki/MCP-Server) for details.
+The MCP server that exposes this site's data, and the Pi and MC1, to AI assistants is
+its own private repo, `magmacrunch-media/magma-mcp`, since 2026-10-15. It runs on MC1's
+WSL and reads its data from a checkout of this repo; the Pi's nginx forwards `/mcp`
+to it. See [docs/ops/mcp-server.md](docs/ops/mcp-server.md).
 
 ---
 

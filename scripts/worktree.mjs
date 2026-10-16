@@ -77,7 +77,6 @@ const SECRETS = [
     join('arcade', 'admin', 'config.json'),
     join('arcade', 'admin', 'api-keys.json'),
     join('arcade', 'admin', 'github-token.json'),
-    join('mcp-server', '.env'),
 ];
 
 const IS_WINDOWS = process.platform === 'win32';

@@ -83,8 +83,8 @@ under `.claude/worktrees/`, and those need provisioning too.
 
 Each worktree has its own index, HEAD and branch over the one object store, so
 commits are independent and nothing is shared until a push. Secrets are **not**
-copied in: `arcade/private/config.json`, `arcade/admin/*.json` and
-`mcp-server/.env` stay in the primary tree, and `new` names any that exist so
+copied in: `arcade/private/config.json` and `arcade/admin/*.json` stay in the
+primary tree, and `new` names any that exist so
 you can copy them by hand if that worktree needs the admin dashboard or a chat
 server.
 
@@ -225,7 +225,6 @@ commands that access local files.
 │   ├── distributed-music/  # data-driven release catalog (releases.js + app.js)
 │   └── jukebox/       # fetches songs.json for playlist
 ├── press/             # press.css, journals: scientific/, experimental/
-├── mcp-server/        # MCP server — exposes project data + Pi management to AI assistants
 ├── scripts/           # tooling: worktree.mjs, run-tests.mjs, scaffold-game.mjs, ...
 ├── templates/         # JS template scripts for archive pages
 ├── ware/              # browser utilities + dev tools (was tools/ — see below)
@@ -521,7 +520,7 @@ Every other game under `arcade/` is authored in this repo as normal.
 - `docs/ops/chat-presence-widget-changes.md` — arcade chat presence: what the online count means, and the widget changes queued for adenosine
 - `docs/ops/scores-counter.md` — high-score system and site hit counter: architecture, game IDs, deploy
 - `docs/ops/email-list.md` - the email signup: why Apps Script, how it differs from the guestbook, deploying the script, what single opt-in costs before the first send
-- `docs/ops/mcp-server.md` — remote MCP server on MC1: setup, tools, service management, troubleshooting
+- `docs/ops/mcp-server.md` -- where the MCP server went (magmacrunch-media/magma-mcp) and what nginx here still does for it
 - `docs/ops/pi-deployment.md` — Raspberry Pi setup, venv recovery, admin dashboard, systemd services/ports
 - `docs/ops/ci-bots.md` — GitHub Actions workflows, self-hosted MC1 runner, Pi cron bots, SSH keys
 - `docs/ops/opencode-mc1.md` — opencode tool-serialization bug and workarounds on MC1

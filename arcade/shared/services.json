@@ -44,7 +44,7 @@
     "Not listed at all: admin itself (8780/8781) and mcp (8785). arcade-admin is a",
     "unit the dashboard may restart, but it is hardcoded in admin/server.py, not",
     "read from here — it is the dashboard's own process and is never drawn as a",
-    "card. Their units live in arcade/admin/systemd and mcp-server/.",
+    "card. admin's unit lives in arcade/admin/systemd; mcp is magmacrunch-media/magma-mcp, on MC1.",
     "",
     "'name' and 'icon' are rendered by the dashboard. admin/server.py rejects the",
     "whole manifest if either contains HTML metacharacters, because its frontend",

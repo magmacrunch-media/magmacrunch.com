@@ -43,11 +43,6 @@
 │   ├── by-label/          # label pages with window.__LABEL_CONFIG
 │   ├── by-contributor/    # contributor pages with window.__CONTRIBUTOR_CONFIG
 │   └── _cache/            # local JSON backups of MusicBrainz data
-├── mcp-server/            # MCP server — exposes project data + Pi/MC1 management to AI assistants
-│   ├── serve.py           # HTTP wrapper (runs on MC1 WSL2, port 8785)
-│   ├── magma-mcp.py       # MCP tool definitions (the actual server logic)
-│   ├── requirements.txt
-│   └── README.md
 ├── templates/             # JS template scripts for archive pages
 ├── home/                  # about.html, about.css, guestbook.html, guestbook.css, links/
 ├── music/

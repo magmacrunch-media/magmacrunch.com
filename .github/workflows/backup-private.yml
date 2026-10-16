@@ -45,7 +45,6 @@ on:
       - 'arcade/chat-server.py'
       - 'arcade/counter/**'
       - 'scripts/**'
-      - 'mcp-server/**'
   workflow_dispatch:
 
 permissions:

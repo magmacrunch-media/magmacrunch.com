@@ -79,14 +79,6 @@ jobs:
             --exclude='venv' \
             arcade/ | $SSH_CMD jake@100.74.172.4 "cd ~ && tar xzf -"
 
-      - name: Deploy mcp-server/ to Pi
-        run: |
-          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY"
-          tar czf - \
-            --exclude='__pycache__' \
-            --exclude='.venv' \
-            mcp-server/ | $SSH_CMD jake@100.74.172.4 "cd ~/arcade && tar xzf -"
-
       - name: Recreate Pi venv and install dependencies
         run: |
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "$SSH_KEY" jake@100.74.172.4 \
