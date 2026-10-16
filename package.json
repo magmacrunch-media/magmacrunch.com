@@ -21,14 +21,14 @@
     "hooks:install": "git config core.hooksPath .githooks"
   },
   "dependencies": {
-    "@magmacrunch/adenosine-audio": "^0.3.1",
-    "@magmacrunch/adenosine-cards": "^0.9.0",
+    "@magmacrunch/adenosine-audio": "^0.4.0",
+    "@magmacrunch/adenosine-cards": "^0.10.0",
     "@magmacrunch/adenosine-chat": "^0.6.1",
-    "@magmacrunch/adenosine-multiplayer": "^0.5.2",
-    "@magmacrunch/adenosine-puzzle": "^0.4.0",
-    "@magmacrunch/adenosine-race": "^0.1.0",
-    "@magmacrunch/adenosine-rpg": "^0.3.0",
-    "@magmacrunch/adenosine-score-client": "^0.3.0"
+    "@magmacrunch/adenosine-multiplayer": "^0.6.0",
+    "@magmacrunch/adenosine-puzzle": "^0.5.0",
+    "@magmacrunch/adenosine-race": "^0.2.0",
+    "@magmacrunch/adenosine-rpg": "^0.4.0",
+    "@magmacrunch/adenosine-score-client": "^0.4.0"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.62",
