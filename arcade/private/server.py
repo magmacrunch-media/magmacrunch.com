@@ -27,7 +27,7 @@ from urllib.parse import parse_qs, urlparse
 DEFAULT_CONFIG = {
     "port": 8782,
     "password": "changeme",
-    "bind": "0.0.0.0",
+    "bind": "127.0.0.1",
     "session_ttl_hours": 24,
     "routes": {}
 }
@@ -132,12 +132,31 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
         self.send_header("Pragma", "no-cache")
         self.end_headers()
 
+    def _client_ip(self):
+        """The visitor's address, for login rate limiting.
+
+        Behind nginx every request arrives from 127.0.0.1, so keying on the
+        socket address would make the lockout global: five wrong guesses from
+        anybody would lock everybody out. nginx passes the real address in
+        X-Real-IP. It is trusted only from loopback, where nginx is the only
+        thing that can connect, because a client could send it directly
+        otherwise and pick a fresh address per guess.
+        """
+        peer = self.client_address[0]
+        if peer in ("127.0.0.1", "::1"):
+            forwarded = self.headers.get("X-Real-IP", "").strip()
+            if forwarded:
+                return forwarded
+        return peer
+
     def _set_session_cookie(self, token):
-        # Set cookie for 24 hours, HTTP-only, path=/
+        # 24 hours, HTTP-only, path=/. Secure because the server is reached
+        # through nginx over HTTPS; browsers still accept a Secure cookie from
+        # http://localhost, so running it locally keeps working.
         max_age = CONFIG.get("session_ttl_hours", 24) * 3600
         self.send_header(
             "Set-Cookie",
-            f"private_session={token}; Max-Age={max_age}; Path=/; HttpOnly"
+            f"private_session={token}; Max-Age={max_age}; Path=/; HttpOnly; Secure; SameSite=Lax"
         )
 
     def _is_authenticated(self):
@@ -203,7 +222,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path == "/login":
-            ip = self.client_address[0]
+            ip = self._client_ip()
 
             if is_locked_out(ip):
                 self._serve_login_page(error="TOO MANY ATTEMPTS — TRY AGAIN LATER")
@@ -261,7 +280,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <a href="http://magmacrunch.duckdns.org/arcade/" class="mc-back">magmacrunch arcade</a>
+  <a href="https://magmacrunch.com/arcade/" class="mc-back">magmacrunch arcade</a>
   <div class="scanlines"></div>
   <div class="container">
     <h1 class="title">PRIVATE ARCADE</h1>
@@ -332,7 +351,7 @@ def main():
         CONFIG = DEFAULT_CONFIG.copy()
 
     port = CONFIG.get("port", 8782)
-    bind = CONFIG.get("bind", "0.0.0.0")
+    bind = CONFIG.get("bind", "127.0.0.1")
 
     print(f"")
     print(f"  ╔══════════════════════════════════════════════╗")
