@@ -391,10 +391,14 @@
       reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you
       walk on it. The landscape is <strong>surveyed, not sculpted</strong>.</p>
 
-    <p>There's no procedural generation and no terrain editor, because the ground is not the
-      engine's to invent. Sibling to <a href="../magnolia/">magnolia</a>, the other C99 engine
-      here, and to <a href="../hologram/">hologram</a>, which solves the opposite problem. Built
-      for Block Island Simulator, which is the island below.</p>
+    <p>There's no procedural generation and no terrain sculpting: the shape of the ground comes
+      from the survey, and the engine's job is to reproduce it rather than reshape it. It was
+      built for Block Island Simulator, which is the island below.</p>
+
+    <p>daffodil has two C99 siblings. <a href="../magnolia/">magnolia</a> runs the Wii games.
+      <a href="../hologram/">hologram</a> makes the opposite trade: it traces light exactly,
+      dispersion and polarization included, across a few dozen analytic surfaces, where daffodil
+      rasterizes millions of triangles of ground and gets the light approximately right.</p>
 
     <div class="about-links">
       <a href="mailto:info@magmacrunch.com?subject=daffodil">contact</a>

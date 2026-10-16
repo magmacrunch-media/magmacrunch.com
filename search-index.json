@@ -1964,7 +1964,7 @@
     "c": "tool",
     "u": "/ware/daffodil/",
     "d": "A C99 heightfield terrain engine: real-world landscape at 1:1, measured, not invented.",
-    "b": "daffodil — magmacrunch media ← developer tools daffodil heightfield terrain engine · real-world landscape at 1:1 v0.1.0-dev PolyForm Noncommercial C99 + sokol A C99 heightfield terrain engine by magmacrunch media . daffodil draws real ground: it reads a heightfield built offline from LiDAR elevation data, reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you walk on it. The landscape is surveyed, not sculpted . There's no procedural generation and no terrain editor, because the ground is not the engine's to invent. Sibling to magnolia , the other C99 eng..."
+    "b": "daffodil — magmacrunch media ← developer tools daffodil heightfield terrain engine · real-world landscape at 1:1 v0.1.0-dev PolyForm Noncommercial C99 + sokol A C99 heightfield terrain engine by magmacrunch media . daffodil draws real ground: it reads a heightfield built offline from LiDAR elevation data, reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you walk on it. The landscape is surveyed, not sculpted . There's no procedural generation and no terrain sculpting: the shape of the ground comes from the survey, and the engine's job is to reproduce it..."
   },
   {
     "t": "hologram",
