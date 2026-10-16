@@ -178,6 +178,34 @@ export const GAMES = {
       'CI that runs its tests. There is no second\n' +
       'version yet, and the repo exists so one has somewhere to go.',
   },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  '2^N': {
+    repo: 'two-to-the-n',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  'fifteen-puzzle': {
+    repo: 'fifteen-puzzle',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  klotski: {
+    repo: 'klotski',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
+  // Extracted 2026-10-15 by dev/extract-game.py.
+  threes: {
+    repo: 'threes',
+    other:
+      'CI that runs its tests. There is no second\n' +
+      'version yet, and the repo exists so one has somewhere to go.',
+  },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };

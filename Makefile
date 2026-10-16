@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi sync-cave-diving sync-chess sync-checkers sync-backgammon sync-chinese-checkers sync-solitaire sync-tarot sync-tetris
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play sync-sorry sync-cribbage sync-scandinavian-stud sync-aggravation sync-parchisi sync-cave-diving sync-chess sync-checkers sync-backgammon sync-chinese-checkers sync-solitaire sync-tarot sync-tetris sync-two-to-the-n sync-fifteen-puzzle sync-klotski sync-threes
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -189,6 +189,22 @@ sync-tarot: ## Regenerate arcade/tarot/ from the tarot repo's web/
 
 sync-tetris: ## Regenerate arcade/tetris/ from the tetris repo's web/
 	node scripts/sync-game.mjs tetris
+	npm run --silent build:adenosine
+
+sync-two-to-the-n: ## Regenerate arcade/2^N/ from the two-to-the-n repo's web/
+	node scripts/sync-game.mjs 2^N
+	npm run --silent build:adenosine
+
+sync-fifteen-puzzle: ## Regenerate arcade/fifteen-puzzle/ from the fifteen-puzzle repo's web/
+	node scripts/sync-game.mjs fifteen-puzzle
+	npm run --silent build:adenosine
+
+sync-klotski: ## Regenerate arcade/klotski/ from the klotski repo's web/
+	node scripts/sync-game.mjs klotski
+	npm run --silent build:adenosine
+
+sync-threes: ## Regenerate arcade/threes/ from the threes repo's web/
+	node scripts/sync-game.mjs threes
 	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────

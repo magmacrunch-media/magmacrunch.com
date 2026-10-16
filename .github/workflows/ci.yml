@@ -79,7 +79,7 @@ jobs:
           repository: magmacrunch-media/george-boole
           path: game-repos/george-boole
           # Read-only deploy key. Every game below has one too, which is what
-          # lets this job check all twenty-one whether they are public or private.
+          # lets this job check all twenty-five whether they are public or private.
           ssh-key: ${{ secrets.GEORGE_BOOLE_DEPLOY_KEY }}
 
       - name: Check out makemecookies
@@ -202,6 +202,30 @@ jobs:
           repository: magmacrunch-media/tetris
           path: game-repos/tetris
           ssh-key: ${{ secrets.TETRIS_DEPLOY_KEY }}
+      - name: Check out two-to-the-n
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/two-to-the-n
+          path: game-repos/two-to-the-n
+          ssh-key: ${{ secrets.TWO_TO_THE_N_DEPLOY_KEY }}
+      - name: Check out fifteen-puzzle
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/fifteen-puzzle
+          path: game-repos/fifteen-puzzle
+          ssh-key: ${{ secrets.FIFTEEN_PUZZLE_DEPLOY_KEY }}
+      - name: Check out klotski
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/klotski
+          path: game-repos/klotski
+          ssh-key: ${{ secrets.KLOTSKI_DEPLOY_KEY }}
+      - name: Check out threes
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/threes
+          path: game-repos/threes
+          ssh-key: ${{ secrets.THREES_DEPLOY_KEY }}
 
       # GAME_REPOS is also the assertion that the repos are there. Without it the
       # check skips when it finds none, which is right for a clone that was never
@@ -210,8 +234,8 @@ jobs:
       #
       # GAME_REPOS_OPTIONAL IS EMPTY, AND THAT IS THE POINT. It is the declared
       # hole for a game this job cannot read, and as of 2026-10-03 there is no
-      # such game: all twenty-one have a read-only deploy key held here, so every one
-      # is checked out above whether it is public or private. Twenty-one of twenty-one
+      # such game: all twenty-five have a read-only deploy key held here, so every one
+      # is checked out above whether it is public or private. Twenty-five of twenty-five
       # covered, which is better than this job has ever managed.
       #
       # The mechanism is kept rather than deleted. If a game ever loses its key
