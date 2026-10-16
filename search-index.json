@@ -1946,11 +1946,11 @@
     "b": "adenosine — magmacrunch media ← developer tools adenosine lightweight game engines by magmacrunch media A collection of lightweight web game engines by magmacrunch media . TypeScript and JavaScript, zero runtime dependencies, built for browsers. Powering the magmacrunch web arcade since 2026. npm contact magmacrunch.com ▶ Playground Try every package live. Code editor with syntax highlighting, pre-loaded examples, and console output. ▢ Tile Map Editor Draw tile maps for the RPG engine. Paint, fill, export JSON, preview with AdRPG. ✎ Theme Customizer Customize CSS colors for cards, puzzle, chat..."
   },
   {
-    "t": "album art maker",
+    "t": "GATE//FOLD",
     "c": "tool",
     "u": "/ware/album-art-maker/",
     "d": "pixel art editor for album covers · text, shapes, images",
-    "b": "album art maker — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. ALBUM//ART 1024×1024 0 ELEMENTS UNDO REDO DELETE CLEAR ALL CANVAS 1024 ▾ 512 1024 2048 4096 BG ► SELECT T TEXT ▢ IMAGE RECT ▾ FREQUENCY 5 WAVE MODE FILLED OPEN REFERENCE UPLOAD IMAGE × click to sample color BASIC ▭ RECT ○ CIRCLE ╱ LINE ▵ TRI ⬣ PENTA ⬤ HEXA ◇ DIAMOND ★ STAR ➤ ARROW ◯ R. RECT WAVES ∿ SINE ⊝ SQUARE ⊾ SAWTOOTH ⊿ TRI WAVE ∖ STEP ⊟ PULSE CLIP ART PROPERTIES FILL ‒ STROKE ‒ STROKE WIDTH 4 ROTATION − + 0° STEPS 5 DUTY CYCLE 20% OPACITY 100% F..."
+    "b": "GATE//FOLD This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. GATE//FOLD 1024×1024 0 ELEMENTS UNDO REDO DELETE CLEAR ALL CANVAS 1024 ▾ BG ► SELECT T TEXT ▢ IMAGE RECT ▾ FREQUENCY 5 WAVE MODE FILLED OPEN REFERENCE ▾ UPLOAD IMAGE × click to sample color BASIC ▭ RECT ○ CIRCLE ╱ LINE ▵ TRI ⬣ PENTA ⬤ HEXA ◇ DIAMOND ★ STAR ➤ ARROW ◯ R. RECT WAVES ∿ SINE ⊝ SQUARE ⊾ SAWTOOTH ⊿ TRI WAVE ∖ STEP ⊟ PULSE CLIP ART LAYERS ▾ PROPERTIES FILL ‒ STROKE ‒ STROKE WIDTH 4 ROTATION − + 0° STEPS 5 DUTY CYCLE 20% OPACITY 100% FIT TO CANVAS ■ COVER □ FIT SCALE ..."
   },
   {
     "t": "crunch-c",
@@ -2020,7 +2020,7 @@
     "c": "tool",
     "u": "/ware/texastoast/",
     "d": "Python RPG engine with I2C hardware abstraction for magmacrunch game systems",
-    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ A tkinter-based 2D game engine by magmacrunch media , inspired by adenosine and built for the same kind of small RPGs, but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi. Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it's absent. It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against imaginary controllers, a l..."
+    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 PolyForm Noncommercial 1.0.0 Python 3.10+ A tkinter-based 2D game engine by magmacrunch media , inspired by adenosine and built for the same kind of small RPGs, but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi. Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it's absent. It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against imaginar..."
   },
   {
     "t": "tone grating",
