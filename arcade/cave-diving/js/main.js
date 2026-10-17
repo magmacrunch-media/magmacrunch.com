@@ -1,12 +1,12 @@
-// main.js — cave diving (not even once) | MagmaCrunch Media (c) 2026
-// The loop, the state machine, the song clock, and the scoreboard.
+// main.js - cave diving (not even once) | MagmaCrunch Media (c) 2026
+// The loop, the state machine, the surfaces, and the scoreboard.
 //
 // adenosine is used here as a canvas harness only. AdRPG.createGameLoop runs a
 // FIXED step and this is a variable-timestep physics game - the dt-in-60fps-
 // frames model roderick-tron uses - so the loop is a plain rAF, the same
 // bypass makemecookies documents for AdAudio.
 
-/* global CONFIG, SEGMENTS, Timeline, clamp01, World, Player, Entities, Input, Light, Renderer, Sfx,
+/* global CONFIG, Timeline, clamp01, World, Player, Entities, Input, Light, Renderer, Sfx,
           Music, MusicLogic, Title, diverPose, sprite */
 
 (function () {
@@ -35,8 +35,15 @@
     const btnResume       = document.getElementById('btnResume');
     const btnRetry        = document.getElementById('btnRetry');
     const btnSound        = document.getElementById('btnSound');
+    const surfaceOverlay  = document.getElementById('surfaceOverlay');
+    const surfaceName     = document.getElementById('surfaceName');
+    const surfaceHaul     = document.getElementById('surfaceHaul');
+    const btnBank         = document.getElementById('btnBank');
+    const btnDiveOn       = document.getElementById('btnDiveOn');
 
-    const STATE = { TITLE: 0, PLAYING: 1, PAUSED: 2, OVER: 3 };
+    // SURFACE: floating at one of the ways out. The tank does not drain there,
+    // and the choice is to bank or to dive on.
+    const STATE = { TITLE: 0, PLAYING: 1, PAUSED: 2, OVER: 3, SURFACE: 4 };
     const GAME_ID = 'cave-diving';
     const MAX_DEPTH_M = 148;
 
@@ -44,7 +51,7 @@
     let lastTime = 0;
     let titleFrame = 0;
     let elapsed = 0;             // ms into the dive, for animation only
-    let pace = 0;                // the diver's recent forward speed, px/s
+    let exitIndex = -1;          // the surface the diver is at, or -1
     let world, entities, player;
     let flashAmount = 0;
     let flashColor = '#ffffff';
@@ -57,13 +64,10 @@
     // ── The song ──────────────────────────────────────────────────────
     // An adaptive score cut from the one song, in music.js: the opening as
     // written, loops chosen by danger, and the record's own ending as the
-    // finale. Not AdAudio, which hardcodes loop = true over a whole file, and
-    // no longer a plain <audio>, which cannot loop a section.
+    // finale, which plays when the diver banks. Not AdAudio, which hardcodes
+    // loop = true over a whole file, and no longer a plain <audio>, which
+    // cannot loop a section.
     const MUTE_KEY = 'caveDivingMuted';
-    // The finale can only start once SURFACING has begun, and then starts when
-    // the diver's pace puts the surface about one finale away, so the song's
-    // own climb-out and fade are the last thing you hear.
-    const FINALE_AT = SEGMENTS.find((s) => s.kind === 'ascent').at;
     let music = null;
     let musicMuted = false;
     try { musicMuted = localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { musicMuted = false; }
@@ -114,9 +118,8 @@
             m.load(ac, chosen.url).then(() => {
                 music = m;
                 // Decoded after the dive began: come in where the dive is.
-                // The opening is timed from the start of the dive, and update()
-                // starts the finale on its own when it is due.
-                if (state === STATE.PLAYING || state === STATE.PAUSED) {
+                // The opening is timed from the start of the dive.
+                if (state === STATE.PLAYING || state === STATE.PAUSED || state === STATE.SURFACE) {
                     m.start(elapsed / 1000);
                     if (state === STATE.PAUSED) m.pause();
                 }
@@ -149,14 +152,15 @@
 
     function startDive() {
         world = new World(Date.now() & 0xffff);
-        entities = new Entities(world.entityRng);
+        entities = new Entities(world);
         player = new Player();
-        player.x = CONFIG.CANVAS_W / 2;
-        player.y = CONFIG.CANVAS_H * CONFIG.RAIL_POS;
+        // In the water just under the entrance, head down, the way the title
+        // card leaves you.
+        world.placeAtExit(0, player);
         player.fx = 0; player.fy = 1;
 
         elapsed = 0;
-        pace = 0;
+        exitIndex = -1;
         flashAmount = 0;
         surfaced = false;
         score = 0;
@@ -167,6 +171,7 @@
         document.body.classList.add('game-active');
         titleScreen.classList.add('hidden');
         gameOverOverlay.classList.add('hidden');
+        surfaceOverlay.classList.add('hidden');
         hud.classList.remove('hidden');
 
         // This runs inside the gesture that started the dive, which is what
@@ -179,31 +184,70 @@
         if (music) music.start(0);
     }
 
-    function endDive(reachedSurface) {
-        if (state === STATE.OVER) return;
-        state = STATE.OVER;
-        surfaced = !!reachedSurface;
-        // Surfacing inside the finale lets the record play out over the
-        // results; anything else fades rather than cutting off mid-bar.
-        if (music && !(surfaced && music.finaleAt)) music.fadeOut(surfaced ? 4 : 1.5);
-        if (surfaced) Sfx.surface();
-
-        const air = Math.round(player.air);
-        const airPts = surfaced ? air * CONFIG.AIR_POINTS : 0;
+    /** What banking at exit i is worth right now. */
+    function bankValue(i) {
+        const mult = CONFIG.EXITS[i].mult;
         const pearlPts = player.pearls * CONFIG.PEARL_POINTS;
-        const noHit = surfaced && player.hits === 0 ? CONFIG.NOHIT_BONUS : 0;
-        const surf = surfaced ? CONFIG.SURFACE_BONUS : 0;
-        score = airPts + pearlPts + noHit + surf;
+        const noHit = player.hits === 0 && player.pearls > 0 ? CONFIG.NOHIT_BONUS : 0;
+        return { mult, pearlPts, noHit, total: (pearlPts + noHit) * mult };
+    }
 
-        overTitle.textContent = surfaced ? 'YOU SURFACED' : 'OUT OF AIR';
+    /** Arrive at a surface: the tank stops draining and the choice is offered. */
+    function surfaceAt(i) {
+        state = STATE.SURFACE;
+        exitIndex = i;
+        Sfx.surface();
+        const ex = CONFIG.EXITS[i];
+        const v = bankValue(i);
+        surfaceName.textContent = ex.name;
+        surfaceHaul.textContent = 'tank ' + Math.round(player.air) + '   pearls ' + player.pearls +
+            '   x' + ex.mult;
+        btnBank.textContent = 'BANK ' + v.total.toLocaleString();
+        surfaceOverlay.classList.remove('hidden');
+        Input.clearPressed();
+    }
+
+    /** Back into the water from the surface, with the tank as it was. */
+    function diveOn() {
+        if (state !== STATE.SURFACE) return;
+        world.placeAtExit(exitIndex, player);
+        exitIndex = -1;
+        state = STATE.PLAYING;
+        lastTime = 0;
+        surfaceOverlay.classList.add('hidden');
+        Input.clearPressed();
+    }
+
+    /**
+     * End the run. Banked: what you carry, times the exit you leave by, with
+     * the record's own ending playing over the results. Drowned: nothing.
+     */
+    function endDive(banked) {
+        if (state === STATE.OVER) return;
+        const at = exitIndex;
+        state = STATE.OVER;
+        surfaced = !!banked;
+        surfaceOverlay.classList.add('hidden');
+        if (music) {
+            if (surfaced) music.finale(); else music.fadeOut(1.5);
+        }
+
+        const rows = [];
+        if (surfaced) {
+            const v = bankValue(at);
+            score = v.total;
+            overTitle.textContent = 'OUT AT ' + CONFIG.EXITS[at].name;
+            rows.push('pearls ' + player.pearls + ' x ' + CONFIG.PEARL_POINTS + ' = ' + v.pearlPts);
+            if (v.noHit) rows.push('untouched +' + v.noHit);
+            rows.push('x' + v.mult + ' for the way out');
+        } else {
+            score = 0;
+            overTitle.textContent = 'OUT OF AIR';
+            rows.push(player.pearls + ' pearls, lost with you');
+            rows.push('depth ' + Math.round(fraction() * MAX_DEPTH_M) + 'm of ' + MAX_DEPTH_M + 'm');
+        }
         overTitle.style.color = surfaced ? CONFIG.COLORS.accent : CONFIG.COLORS.danger;
         finalScore.textContent = score.toLocaleString();
-        const rows = [];
-        rows.push('air ' + air + ' x ' + CONFIG.AIR_POINTS + ' = ' + airPts);
-        rows.push('pearls ' + player.pearls + ' x ' + CONFIG.PEARL_POINTS + ' = ' + pearlPts);
-        if (surf) rows.push('surfaced +' + surf);
-        if (noHit) rows.push('untouched +' + noHit);
-        if (!surfaced) rows.push('depth ' + Math.round(fraction() * MAX_DEPTH_M) + 'm of ' + MAX_DEPTH_M + 'm');
         finalBreakdown.textContent = rows.join('   ');
 
         document.body.classList.remove('game-active');
@@ -233,19 +277,15 @@
     function update(dt, dtMs) {
         elapsed += dtMs;
 
-        const f = fraction();
-        const seg = Timeline.segmentAt(f);
-
-        world.update(dt, dtMs, f, Sfx);
+        world.update(dt);
 
         const stroke = Input.stroking();
         player.update(dt, Input.axisX(), Input.axisY(), stroke, world, Sfx);
-        world.follow(player, dt);
+        world.follow(player, dt, Sfx);
         world.confine(player);
-        // Smoothed over a few seconds: a single stroke is not a pace.
-        pace += (world.vel * 60 - pace) * (1 - Math.exp(-dtMs / 3000));
+        const seg = world.segment();
 
-        const r = entities.update(dt, world, player, seg, f, Sfx);
+        const r = entities.update(dt, world, player, Sfx);
         siltNow = r.silt;
         if (r.hit) { flashAmount = 0.5; flashColor = CONFIG.COLORS.danger; }
 
@@ -265,20 +305,26 @@
                 narrow: seg.narrow,
                 stun: player.stun,
                 shake: world.shake,
-                debris: entities.debris.some((d) => d.warned && !d.dead),
+                debris: entities.debrisComing(world),
                 silt: siltNow,
             }), dtMs / 1000);
-            if (f >= FINALE_AT) {
-                const toSurface = (1 - f) * CONFIG.DIVE_ALONG / Math.max(pace, 10);
-                if (toSurface <= music.finaleSec() + 1 || f >= 0.985) music.finale();
-            }
         }
 
         if (flashAmount > 0) flashAmount -= 0.03 * dt;
         Input.clearPressed();
 
         if (player.dead) { endDive(false); return; }
-        if (f >= 1) { endDive(true); }
+        const ex = world.exitAt(player);
+        if (ex >= 0) surfaceAt(ex);
+    }
+
+    /** At a surface: nothing drains and nothing moves, but the music plays on. */
+    function updateSurface(dt, dtMs) {
+        elapsed += dtMs;
+        if (music) music.tick(0, dtMs / 1000);
+        if (Input.wasPressed(' ') || Input.wasPressed('arrowdown') || Input.wasPressed('s')) diveOn();
+        else if (Input.wasPressed('enter') || Input.wasPressed('b')) endDive(true);
+        Input.clearPressed();
     }
 
     // ── Draw ──────────────────────────────────────────────────────────
@@ -302,7 +348,7 @@
 
     function draw() {
         const f = fraction();
-        const seg = Timeline.segmentAt(f);
+        const seg = world.segment();
         const sh = Renderer.shakeOffset(world.shake, Math.floor(elapsed / 16));
 
         ctx.save();
@@ -332,7 +378,10 @@
             x: lampPos.x, y: lampPos.y,
             dirX: player.fx, dirY: player.fy,
             radius,
-        } : null, entities.lights(world), dark);
+        } : null, entities.lights(world).concat(world.lights()), dark);
+
+        // So does daylight: an exit is seen by its own light, not the lamp's.
+        world.drawDaylight(ctx, elapsed * 0.06);
 
         // Visor and lamp survive the dark.
         drawDiver(true);
@@ -357,7 +406,7 @@
 
     function drawHud() {
         const f = fraction();
-        const seg = Timeline.segmentAt(f);
+        const seg = world.segment();
         const pct = Math.max(0, player.air) / CONFIG.AIR_MAX;
         airFill.style.width = (pct * 100).toFixed(1) + '%';
         airFill.style.background = player.air < CONFIG.AIR_PANIC
@@ -421,7 +470,8 @@
         const dt = dtMs / 16.667;
 
         if (state === STATE.PLAYING) update(dt, dtMs);
-        if (state === STATE.PLAYING || state === STATE.PAUSED) { draw(); drawHud(); }
+        else if (state === STATE.SURFACE) updateSurface(dt, dtMs);
+        if (state === STATE.PLAYING || state === STATE.PAUSED || state === STATE.SURFACE) { draw(); drawHud(); }
     }
 
     // ── Init ──────────────────────────────────────────────────────────
@@ -455,6 +505,8 @@
         if (btnStart) btnStart.addEventListener('pointerdown', (e) => { e.preventDefault(); startDive(); });
         if (btnResume) btnResume.addEventListener('pointerdown', (e) => { e.preventDefault(); togglePause(); });
         if (btnRetry) btnRetry.addEventListener('pointerdown', (e) => { e.preventDefault(); startDive(); });
+        if (btnBank) btnBank.addEventListener('pointerdown', (e) => { e.preventDefault(); if (state === STATE.SURFACE) endDive(true); });
+        if (btnDiveOn) btnDiveOn.addEventListener('pointerdown', (e) => { e.preventDefault(); diveOn(); });
         if (btnSound) {
             btnSound.addEventListener('pointerdown', (e) => {
                 // stopPropagation so tapping the toggle does not also

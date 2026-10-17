@@ -21,6 +21,35 @@ const CONFIG = {
     // distance, so lingering in one does not close it around you.
     JUNCTION_ALONG: 260,
 
+    // ── The ways out ──────────────────────────────────────────────────
+    // Every surface is a choice: bank what you carry, multiplied by how deep
+    // a way out it is, or dive on with the tank you have. The entrance pays
+    // nothing extra, so turning back is always safe and never rewarded. Once
+    // NO WAY BACK's collapse comes down, everything behind it is out of reach.
+    //
+    // Interior exits are alcoves in the LOW wall - the ceiling of a squeeze,
+    // the left wall of a shaft - each lit by a chimney of daylight. Each sits
+    // well inside its segment, clear of the chambers at either end.
+    EXITS: [
+        { at: 0.00, mult: 1, name: 'THE ENTRANCE' },
+        { at: 0.25, mult: 2, name: 'FIRST LIGHT' },     // FIRST TUNNEL, the ceiling
+        { at: 0.45, mult: 3, name: 'THE CISTERN' },     // THE DESCENT, the left wall
+        { at: 0.86, mult: 5, name: 'LAST LIGHT' },      // THE WAY OUT, the ceiling
+        { at: 1.00, mult: 8, name: 'THE FAR SIDE' },
+    ],
+    ALCOVE_HALF: 26,         // along half-length of an exit alcove
+    ALCOVE_DEPTH: 40,        // how far it is cut back into the wall
+    // Open water drawn above the entrance and beyond the far end, and how
+    // close to the waterline a diver must come to have surfaced.
+    SURFACE_HEADROOM: 60,
+    SURFACE_REACH: 8,
+    // How fast the camera re-centers when the diver turns round, px per frame
+    // on top of however far the diver swam. Slow enough not to snap.
+    CAMERA_RECENTER: 3,
+    // Within this fraction of either screen edge the camera follows the diver
+    // exactly, whichever way they face.
+    CAMERA_BAND: 0.25,
+
     // Two formats, or the game is silent on every iPhone and iPad. iOS has no
     // Ogg Vorbis decoder and every browser there is WebKit, so Chrome and
     // Firefox fail exactly as Safari does - and they fail without an error,
@@ -137,32 +166,37 @@ const CONFIG = {
     RAIL_POS: 0.38,
 
     // ── Air ───────────────────────────────────────────────────────────
-    // Air is the only life. A hit costs breath and stuns; it does not kill.
-    // A single draining resource makes every mistake compound.
+    // Air is the only life, and the whole run is ONE tank: surfacing lets you
+    // breathe but does not refill it. A hit costs breath and stuns; it does
+    // not kill. Lingering costs drain and a stroke costs breath, so neither
+    // waiting nor rushing is free.
     //
-    // In a free swim air is also the PACE. Lingering costs drain, and a stroke
-    // costs breath, so neither waiting nor rushing is free. 0.07 a stroke was
-    // set when the camera fixed the pace, and once the diver sets it that made
-    // a stroke about a third the price of cruising the same distance: the test
-    // pilot mashed through in 86s and surfaced on 89 air. Measured with the
-    // simulation's pilots over eight seeds, as tuned here:
+    // The pocket supply is what sets the gamble, and it is tuned so the exits
+    // form a ladder: the ones before the collapse are safe for anybody, and
+    // everything after it sorts divers by skill. Measured with the
+    // simulation's cruising pilot over twelve seeds, out of 12:
     //
-    //   cruise (strokes only to dodge)   143s   surfaces on 56 air   8/8
-    //   mash   (strokes at every chance)  83s   surfaces on 32 air   8/8
+    //   pilot reacts in    FIRST LIGHT  CISTERN  LAST LIGHT  FAR SIDE
+    //   8 frames               12         12        12          11
+    //   18 frames              12         12        10           7
+    //   30 frames              12         12         0           0
     //
-    // So careful is the better score and rushing still gets you out, and the
-    // pilot reacts in 8 frames: a person rushing through the dark hits more.
+    // Turning back is safe early (all 12 from 15% of the way in) and a coin
+    // toss from 40%, because the way home is as long as the way in and the
+    // pockets on it are already spent. Eight pockets of 16 let a careful diver
+    // reach the far side on 55 air, which made the deepest exit free.
     AIR_MAX: 100,
-    AIR_DRAIN: 0.013,        // per frame at rest
+    AIR_DRAIN: 0.013,        // per frame underwater; nothing at a surface
     STROKE_AIR: 0.25,        // per stroke - speed is bought with breath
     HIT_AIR: 6,
     HIT_STUN: 16,            // frames of reduced control after a hit
-    // Pockets are placed by distance, so they no longer arrive faster than a
-    // diver can use them: twelve at 22 left a fast diver throwing most of each
-    // one away and never short of air.
-    POCKET_REFILL: 16,
-    POCKETS_MAIN_LINE: 8,    // pockets reachable without leaving the main line
-    AIR_PANIC: 25,           // below this the vignette pulses and the pulse ticks
+    POCKET_REFILL: 14,
+    POCKETS_MAIN_LINE: 6,    // spread evenly down the whole cave
+    // Below this the vignette pulses, the heart beats, the bar goes red and the
+    // score counts it as DANGER. 25 was set for a roomier budget; with one tight
+    // tank, 25 to 35 is where a deep dive normally runs, and at 25 the music sat
+    // in DANGER from the collapse to the end of every one. 18 keeps it for trouble.
+    AIR_PANIC: 18,
 
     // ── The headlamp ──────────────────────────────────────────────────
     // The lamp radius IS the sight line, so it is bound by the fairness
@@ -230,11 +264,11 @@ const CONFIG = {
     DEBRIS_FALL: 1.6,
 
     // ── Scoring ───────────────────────────────────────────────────────
-    // Depth is fixed, so the score is what you have left when you surface.
-    AIR_POINTS: 40,          // per air remaining
+    // What you bring out, times the exit's multiplier. Air left is NOT
+    // scored: it would pay a diver to bank at the entrance without diving.
+    // The untouched bonus needs a pearl, for the same reason.
     PEARL_POINTS: 250,
     NOHIT_BONUS: 1500,
-    SURFACE_BONUS: 1000,
 
     PARTICLE_COUNT: 10,
     PARTICLE_LIFE: 26,
