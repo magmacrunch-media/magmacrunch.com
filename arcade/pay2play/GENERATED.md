@@ -1,4 +1,4 @@
-# Generated — do not edit here
+# Generated: do not edit here
 
 Every file in `arcade/pay2play/` is a copy. The source of truth is the
 [`pay2play`](https://github.com/magmacrunch-media/pay2play) repository, in its

@@ -431,6 +431,8 @@ const spinsEl    = document.getElementById('spins');
 // ═══════════════════════════════════════════════════════════
 
 function getRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+// Sound, if audio.js loaded. A cue only: nothing the rules decide depends on it.
+function cue(name){ if(window.p2pAudio) window.p2pAudio.sfx(name); }
 
 function displaySymbol(reelEl, name){
     reelEl.textContent='';
@@ -506,6 +508,8 @@ function noteFade(){
 
 function pullLever(){
     if(isSpinning) return;
+    if(window.p2pAudio) window.p2pAudio.startMusic();   // the first pull is the gesture audio waits for
+    cue('lever');
     startDecay();
     coins -= SPIN_COST;
     updateStats();
@@ -578,8 +582,8 @@ function stopReel(i){
     const pressed = reelPos[i];
     reelPos[i] = houseSlip(i, pressed);
     reelResults[i]=REEL_STRIPS[i][reelPos[i]];
-    if(reelPos[i] !== pressed) showSlip(i, pressed, reelPos[i]);
-    else displaySymbol(reels[i],reelResults[i]);
+    if(reelPos[i] !== pressed){ cue('slip'); showSlip(i, pressed, reelPos[i]); }
+    else { cue('stop'); displaySymbol(reels[i],reelResults[i]); }
     reels[i].classList.remove('spinning'); reels[i].classList.add('stopped');
     stopBtns[i].disabled=true;
     if(!reelStates[0]&&!reelStates[1]&&!reelStates[2]) setTimeout(()=>{ checkResults(); isSpinning=false; },300);
@@ -598,6 +602,7 @@ function checkResults(){
     if(payout>0) msg+=` +${payout}¢`;
     if(coins<0&&Math.random()<0.3) msg=getRandom(MESSAGES.debt);
     messageEl.textContent=msg;
+    cue(msgArr===MESSAGES.allMatch ? 'jackpot' : msgArr===MESSAGES.twoMatch ? 'twomatch' : 'nomatch');
     updateStats();
     if(payout===JACKPOT_PAYOUT){ document.getElementById('game-container').classList.add('flicker'); setTimeout(()=>document.getElementById('game-container').classList.remove('flicker'),500); }
 }
@@ -642,6 +647,7 @@ function pickEnding(){
 
 function showPrize(){
     stopDecay();
+    cue('cashout');
     document.getElementById('final-spins').textContent   = spins;
     document.getElementById('final-attention').textContent = Math.floor(attention);
     const debtDollars = Math.abs(coins)/100;
@@ -680,6 +686,7 @@ document.addEventListener('keydown', e=>{
     else if(e.key==='1'&&isSpinning) stopReel(0);
     else if(e.key==='2'&&isSpinning) stopReel(1);
     else if(e.key==='3'&&isSpinning) stopReel(2);
+    else if(e.key==='m'||e.key==='M'){ if(window.p2pAudio){ const off=window.p2pAudio.toggleMute(); if(!isSpinning) messageEl.textContent= off ? 'sound off' : 'sound on'; } }
     else if(e.key==='Escape') { if(isSpinning){ messageEl.textContent='Wait for reels to stop...'; } else { showPrize(); } }
 });
 
