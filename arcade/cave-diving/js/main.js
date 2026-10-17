@@ -6,7 +6,8 @@
 // frames model roderick-tron uses - so the loop is a plain rAF, the same
 // bypass makemecookies documents for AdAudio.
 
-/* global CONFIG, Timeline, clamp01, World, Player, Entities, Input, Light, Renderer, Sfx, diverPose, sprite */
+/* global CONFIG, SEGMENTS, Timeline, clamp01, World, Player, Entities, Input, Light, Renderer, Sfx,
+          Music, MusicLogic, diverPose, sprite */
 
 (function () {
     const canvas = document.getElementById('gameCanvas');
@@ -54,10 +55,14 @@
     let highScores = [];
 
     // ── The song ──────────────────────────────────────────────────────
-    // A plain <audio> element, not AdAudio: AdAudio hardcodes loop = true and
-    // exposes neither `ended` nor a playhead, and a run that IS one play of a
-    // track needs all three.
+    // An adaptive score cut from the one song, in music.js: the opening as
+    // written, loops chosen by danger, and the record's own ending as the
+    // finale. Not AdAudio, which hardcodes loop = true over a whole file, and
+    // no longer a plain <audio>, which cannot loop a section.
     const MUTE_KEY = 'caveDivingMuted';
+    // The finale enters on the bar after SURFACING begins, so the song's own
+    // climb-out and fade are the last thing you hear.
+    const FINALE_AT = SEGMENTS.find((s) => s.kind === 'ascent').at;
     let music = null;
     let musicMuted = false;
     try { musicMuted = localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { musicMuted = false; }
@@ -92,43 +97,46 @@
             const chosen = pickMusicSource();
             if (!chosen) {
                 noteAudioProblem('no supported audio format - the dive runs silent');
-                music = null;
                 return;
             }
-            // Deliberately not new Audio(''): an empty src resolves against the
-            // document URL, so the browser fetches this page and tries to
-            // decode the HTML.
-            music = new Audio();
-            music.src = chosen.url;
-            music.loop = false;
-            music.preload = 'auto';
-            music.volume = musicMuted ? 0 : CONFIG.MUSIC.VOLUME;
-            // Ogg carries no duration header, so the browser estimates one from
-            // bitrate while the file streams and corrects it once buffered.
-            // Reading it only at loadedmetadata puts every segment boundary in
-            // the wrong place.
-            const sync = () => {
-                if (Number.isFinite(music.duration) && music.duration > 1) {
-                    diveMs = music.duration * 1000;
+            // Sfx's context, so one unlock serves both. Created here, before
+            // any gesture, it starts suspended; startDive() resumes it.
+            const ac = Sfx.context();
+            if (!ac) {
+                noteAudioProblem('audio is unavailable in this browser - the dive runs silent');
+                return;
+            }
+            const m = new Music();
+            m.muted = musicMuted;
+            m.onEnded = () => { if (state === STATE.PLAYING) endDive(true); };
+            m.load(ac, chosen.url).then(() => {
+                music = m;
+                // The decoded buffer's length is exact, where an <audio>
+                // element's ogg duration was an estimate until fully buffered.
+                diveMs = m.duration() * 1000;
+                // Decoded after the dive began: come in where the dive is.
+                if (state === STATE.PLAYING || state === STATE.PAUSED) {
+                    m.start(elapsed / 1000);
+                    if (fraction() >= FINALE_AT) m.finale((diveMs - elapsed) / 1000);
+                    if (state === STATE.PAUSED) m.pause();
                 }
-            };
-            music.addEventListener('loadedmetadata', sync);
-            music.addEventListener('durationchange', sync);
-            music.addEventListener('ended', () => { if (state === STATE.PLAYING) endDive(true); });
-            music.addEventListener('error', () => {
+            }).catch(() => {
                 noteAudioProblem('the music file could not be loaded - the dive runs silent');
-                music = null;
             });
         } catch (e) {
             noteAudioProblem('audio is unavailable in this browser - the dive runs silent');
-            music = null;
         }
     }
 
     function setMuted(v) {
         musicMuted = v;
         try { localStorage.setItem(MUTE_KEY, v ? '1' : '0'); } catch (e) { /* private mode */ }
-        if (music) music.volume = v ? 0 : CONFIG.MUSIC.VOLUME;
+        if (music) {
+            music.setMuted(v);
+            // M is a gesture too, so it can recover a context the browser
+            // refused to start: the "press M twice" the warning offers.
+            if (state === STATE.PLAYING && music.ac.state === 'suspended') music.resume();
+        }
         Sfx.setMuted(v);
         if (musicDisplay) musicDisplay.textContent = v ? 'M: OFF' : 'M: ON';
         if (btnSound) {
@@ -160,22 +168,21 @@
         gameOverOverlay.classList.add('hidden');
         hud.classList.remove('hidden');
 
-        if (music) {
-            try {
-                music.currentTime = 0;
-                const p = music.play();
-                if (p) p.catch(() => noteAudioProblem('the browser blocked playback - press M twice'));
-            } catch (e) {
-                noteAudioProblem('the browser blocked playback - the dive runs silent');
-            }
+        // This runs inside the gesture that started the dive, which is what
+        // lets the shared context resume on iOS.
+        const ac = Sfx.context();
+        if (ac && ac.state === 'suspended') {
+            const p = ac.resume();
+            if (p) p.catch(() => noteAudioProblem('the browser blocked playback - press M twice'));
         }
+        if (music) music.start(0);
     }
 
     function endDive(reachedSurface) {
         if (state === STATE.OVER) return;
         state = STATE.OVER;
         surfaced = !!reachedSurface;
-        if (music) { try { music.pause(); } catch (e) { /* nothing to stop */ } }
+        if (music) music.stop();
         if (surfaced) Sfx.surface();
 
         const air = Math.round(player.air);
@@ -208,12 +215,12 @@
         if (state === STATE.PLAYING) {
             state = STATE.PAUSED;
             pauseOverlay.classList.remove('hidden');
-            if (music) { try { music.pause(); } catch (e) { /* ignore */ } }
+            if (music) music.pause();
         } else if (state === STATE.PAUSED) {
             state = STATE.PLAYING;
             lastTime = 0;
             pauseOverlay.classList.add('hidden');
-            if (music) { try { const p = music.play(); if (p) p.catch(() => {}); } catch (e) { /* ignore */ } }
+            if (music) music.resume();
         }
     }
 
@@ -221,11 +228,16 @@
 
     function update(dt, dtMs) {
         elapsed += dtMs;
-        // The frame clock leads; the song only corrects it. That way the dive
-        // is identical whether or not the audio arrived, and a stalled buffer
+        // The frame clock leads; the song only corrects it, and only while it
+        // plays straight - the opening and the finale. That way the dive is
+        // identical whether or not the audio arrived, and a stalled buffer
         // cannot freeze the level.
-        if (music && !music.paused && Number.isFinite(music.currentTime) && music.currentTime > 0.2) {
-            elapsed += (music.currentTime * 1000 - elapsed) * 0.05;
+        // Only small disagreements are the song's to settle: the finale lands
+        // within half a beat of the dive's end, and anything wider is a state
+        // the music got into, which must not drag the level after it.
+        const implied = music ? music.impliedDiveSec(diveMs / 1000) : null;
+        if (implied !== null && implied > 0.2 && Math.abs(implied * 1000 - elapsed) < 2000) {
+            elapsed += (implied * 1000 - elapsed) * 0.05;
         }
 
         const f = fraction();
@@ -248,6 +260,19 @@
                 // Faster as it runs out - the tell that the meter is nearly done
                 heartAt = 34 + (player.air / CONFIG.AIR_PANIC) * 40;
             }
+        }
+
+        if (music) {
+            music.tick(MusicLogic.dangerFrom({
+                air: player.air,
+                dark: seg.dark,
+                narrow: seg.narrow,
+                stun: player.stun,
+                shake: world.shake,
+                debris: entities.debris.some((d) => d.warned && !d.dead),
+                silt: siltNow,
+            }), dtMs / 1000);
+            if (f >= FINALE_AT) music.finale((diveMs - elapsed) / 1000);
         }
 
         if (flashAmount > 0) flashAmount -= 0.03 * dt;

@@ -65,6 +65,9 @@ const Sfx = (function () {
 
     return {
         setMuted(v) { muted = v; },
+        // The score shares this context rather than opening a second one: iOS
+        // unlocks a context per user gesture, and one unlock should cover both.
+        context() { return ctx(); },
         // A kick and the water moving over you. Short, so a fast stroke rate
         // does not turn into mush.
         stroke() { noise(0.16, 0.10, 900, 0, 260); },

@@ -42,6 +42,52 @@ const CONFIG = {
         ],
         VOLUME: 0.42,
         FADE_IN: 1.2,
+
+        // ── Adaptive score ────────────────────────────────────────────
+        // The song is no longer played straight through. Its opening plays
+        // as written up to the first CALM loop, the body of the dive is cut
+        // from loops of the song chosen by how much danger the diver is in,
+        // and the song's real ending is the finale. See music.js.
+        //
+        // The track has a faint but steady pulse. Fitted over 4..148s of the
+        // decoded ogg: 141.54 BPM, first beat at 0.178s, the phase holding to
+        // within about 40ms end to end. Every loop starts on a beat and lasts
+        // a whole number of bars, so a loop, a change of loop and the finale
+        // all keep the pulse.
+        GRID: { BEAT: 0.42390, FIRST: 0.1780, BAR_BEATS: 4 },
+
+        // Loops by tier, as [first beat, length in bars]. Picked by brightness
+        // (energy above 3kHz is where this track's intensity lives; its RMS is
+        // flat at about -15dB from 6s to 148s) and by how closely the music
+        // after each loop's end matches the music at its start, 0.98 to 0.99
+        // on a 40-band spectral comparison. The mp3 decodes to the same
+        // sample positions as the ogg, so one set of points serves both.
+        //
+        //   calm    26.46s / 116.75s, 6 bars       darkest, sparsest
+        //   unease  42.57s / 85.38s, 14 / 13 bars  the long middle
+        //   danger  129.47s / 106.15s, 6 bars      the brightest stretches
+        LOOPS: {
+            calm:   [[62, 6], [275, 6]],
+            unease: [[100, 14], [201, 13]],
+            danger: [[305, 6], [250, 6]],
+        },
+
+        // Seam crossfade when a loop repeats itself, and the fade when the
+        // music changes loop (a tier change, a rotation, the finale), which is
+        // one bar and always starts on a bar line.
+        SEAM_FADE: 0.06,
+        // Passes of one loop before a tier rotates to its other loop.
+        ROTATE_AFTER: 2,
+
+        // Danger is 0..1 and the tier follows it with hysteresis, so a value
+        // hovering on a threshold cannot flick the music back and forth.
+        // A tier also holds for at least HOLD_BARS before it may change again.
+        TIER_UP:   { unease: 0.34, danger: 0.68 },
+        TIER_DOWN: { unease: 0.22, danger: 0.52 },
+        HOLD_BARS: 2,
+        // Danger rises fast and falls slowly: seconds to close most of the gap.
+        DANGER_RISE: 0.4,
+        DANGER_FALL: 5.0,
     },
 
     // ── Swimming ──────────────────────────────────────────────────────

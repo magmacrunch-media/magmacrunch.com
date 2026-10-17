@@ -12,6 +12,8 @@
 //   4. clearance          no generated gap is narrower than the diver plus room
 //   5. timeline           the segments tile the song with no gap or overlap
 //   6. skill gradient     reacting faster actually scores better
+//   7. the score          loops keep the beat, and the music follows danger
+//                         without thrashing
 //
 // Six exists because makemecookies shipped a first pass with NO skill gradient
 // at all - a simulated player reacting in 700ms scored the same as one at
@@ -27,8 +29,8 @@ const JS = path.join(__dirname, '..', 'js');
 
 /** One context holding the real game modules, with no DOM. */
 function loadGame() {
-    const ctx = vm.createContext({ Math, Date, console, module: undefined });
-    for (const f of ['config.js', 'world.js', 'player.js', 'entities.js']) {
+    const ctx = vm.createContext({ Math, Date, console, Float32Array, module: undefined });
+    for (const f of ['config.js', 'world.js', 'player.js', 'entities.js', 'music.js']) {
         const src = fs.readFileSync(path.join(JS, f), 'utf8')
             // The trailing CommonJS export block is for this harness's benefit
             // when a file is required directly; inside the shared context the
@@ -42,11 +44,11 @@ function loadGame() {
     // same scope is what actually reaches them.
     return vm.runInContext(
         '({ CONFIG, SEGMENTS, JUNCTION_MS, Timeline, clamp01, lerp, smoothstep,' +
-        '   World, Player, Entities, mulberry32, SLICE })', ctx);
+        '   World, Player, Entities, mulberry32, SLICE, MusicLogic })', ctx);
 }
 
 const G = loadGame();
-const { CONFIG, SEGMENTS, Timeline, World, Player, Entities } = G;
+const { CONFIG, SEGMENTS, Timeline, World, Player, Entities, MusicLogic } = G;
 
 const DIVE_MS = CONFIG.DIVE_MS_FALLBACK;
 
@@ -97,6 +99,7 @@ function dive(seed, opts) {
         world.confine(player);
         const airBefore = player.air;
         entities.update(o.dt, world, player, seg, f, null);
+        if (o.onFrame) o.onFrame({ world, player, entities, seg, f, dtMs });
         if (player.air > airBefore) {
             pocketsTaken++;
             airGained += player.air - airBefore;
@@ -343,4 +346,150 @@ test('reacting faster scores better', () => {
     const slow = mean(42);     // ~700ms
     assert.ok(fast > slow * 1.15,
         'no skill gradient: fast ' + fast.toFixed(0) + ' vs slow ' + slow.toFixed(0));
+});
+
+// ── 7 · The score ─────────────────────────────────────────────────────
+//
+// music.js plays loops of the song chosen by danger. The audio engine needs a
+// browser; everything it decides with does not, and is tested here.
+
+const SONG_SEC = CONFIG.DIVE_MS_FALLBACK / 1000;
+const BEAT = CONFIG.MUSIC.GRID.BEAT;
+
+test('every loop starts on the beat, lasts whole bars, and fits in the song', () => {
+    for (const tier of ['calm', 'unease', 'danger']) {
+        const loops = MusicLogic.loops(tier);
+        assert.ok(loops.length >= 1, tier + ' has no loop');
+        for (const L of loops) {
+            const beats = (L.start - CONFIG.MUSIC.GRID.FIRST) / BEAT;
+            assert.ok(Math.abs(beats - Math.round(beats)) < 1e-9, tier + ' loop is off the beat');
+            const bars = L.len / MusicLogic.bar();
+            assert.ok(Math.abs(bars - Math.round(bars)) < 1e-9, tier + ' loop is not whole bars');
+            // The seam plays SEAM_FADE past the end, so that must exist too.
+            assert.ok(L.end + CONFIG.MUSIC.SEAM_FADE < SONG_SEC, tier + ' loop runs off the song');
+            // Long enough that the change-of-loop fade is not most of it.
+            assert.ok(L.len >= 4 * MusicLogic.bar(), tier + ' loop is under four bars');
+        }
+    }
+    // The opening plays as written into the first CALM loop, and has to have
+    // room for that before it.
+    assert.ok(MusicLogic.loops('calm')[0].start > MusicLogic.bar() * 2);
+});
+
+test('next bar lines and the beat grid are where they say', () => {
+    const b = MusicLogic.bar();
+    assert.strictEqual(MusicLogic.nextBar(10, 10), 10);
+    assert.ok(Math.abs(MusicLogic.nextBar(10, 10.01) - (10 + b)) < 1e-9);
+    // An intro's anchor is in the future; its bar lines count back from it.
+    assert.ok(Math.abs(MusicLogic.nextBar(20, 3) - (20 - Math.floor(17 / b) * b)) < 1e-9);
+    const p = MusicLogic.nearestBeat(77.7);
+    assert.ok(Math.abs(p - 77.7) <= BEAT / 2 + 1e-9);
+});
+
+/** Danger for a calm diver in segment seg: full air, nothing happening. */
+function quietDanger(seg, extra) {
+    return MusicLogic.dangerFrom(Object.assign({
+        air: CONFIG.AIR_MAX, dark: seg.dark, narrow: seg.narrow,
+        stun: 0, shake: 0, debris: false, silt: false,
+    }, extra || {}));
+}
+
+test('the cave alone never reaches DANGER; trouble does', () => {
+    for (const seg of SEGMENTS) {
+        const t = MusicLogic.tierFor('calm', quietDanger(seg));
+        assert.notStrictEqual(t, 'danger', seg.label + ' is DANGER with nothing happening');
+    }
+    assert.strictEqual(MusicLogic.tierFor('calm', quietDanger(SEGMENTS[0])), 'calm',
+        'the entry should be CALM');
+    const deep = SEGMENTS.find((s) => s.label === 'THE DEEP');
+    assert.strictEqual(MusicLogic.tierFor('calm', quietDanger(deep)), 'unease',
+        'the deep should be UNEASE even when nothing is happening');
+    const entry = SEGMENTS[0];
+    assert.strictEqual(MusicLogic.tierFor('calm', quietDanger(entry, { air: CONFIG.AIR_PANIC })), 'danger',
+        'reaching the panic line is DANGER anywhere');
+    assert.strictEqual(MusicLogic.tierFor('calm', quietDanger(entry, { stun: 5 })), 'danger',
+        'a hit is DANGER anywhere');
+    assert.strictEqual(MusicLogic.tierFor('calm', quietDanger(entry, { shake: 10 })), 'danger',
+        'the collapse is DANGER');
+});
+
+test('a danger hovering on a threshold does not flick the tier', () => {
+    let tier = 'calm', changes = 0;
+    for (let i = 0; i < 400; i++) {
+        const d = CONFIG.MUSIC.TIER_UP.unease + (i % 2 ? 0.03 : -0.03);
+        const next = MusicLogic.tierFor(tier, d);
+        if (next !== tier) changes++;
+        tier = next;
+    }
+    assert.ok(changes <= 1, 'flicked ' + changes + ' times');
+});
+
+test('a spike goes straight to DANGER, not by way of UNEASE', () => {
+    // Seen in the browser before the settle window existed: the UNEASE line
+    // is crossed first, and a change committed there blocks DANGER for a bar.
+    const bar = MusicLogic.bar();
+    for (const phase of [0, 0.05, 0.3, 0.9, 1.5]) {
+        const c = { tier: 'calm', pending: null, busyUntil: 0, holdUntil: 0 };
+        let danger = 0.1, first = null;
+        for (let t = 10 + phase; t < 16 && !first; t += 1 / 60) {
+            danger = MusicLogic.smooth(danger, 0.9, 1 / 60);
+            const go = MusicLogic.conduct(c, danger, t, 0.15, (x) => Math.ceil(x / bar) * bar);
+            if (go) first = go.tier;
+        }
+        assert.strictEqual(first, 'danger', 'phase ' + phase + ': first change was ' + first);
+    }
+});
+
+test('the finale ends with the dive, on the beat', () => {
+    const at = SEGMENTS.find((s) => s.kind === 'ascent').at;
+    const remaining = SONG_SEC * (1 - at);
+    const pos = MusicLogic.finaleEntry(SONG_SEC, remaining);
+    const beats = (pos - CONFIG.MUSIC.GRID.FIRST) / BEAT;
+    assert.ok(Math.abs(beats - Math.round(beats)) < 1e-9, 'finale enters off the beat');
+    // The song ends within half a beat of the dive, which the clock bends to.
+    assert.ok(Math.abs((SONG_SEC - pos) - remaining) <= BEAT / 2 + 1e-9);
+});
+
+test('over a real dive the music moves, and does not thrash', () => {
+    const report = [];
+    for (const seed of [1, 7, 99, 4242]) {
+        let danger = 0, t = 0;
+        let changes = 0, collapseTier = null, collapseAt = null;
+        // The engine's own conductor, with bar lines on a plain grid from 0.
+        const c = { tier: 'calm', pending: null, busyUntil: 0, holdUntil: 0 };
+        const bar = MusicLogic.bar();
+        const time = { calm: 0, unease: 0, danger: 0 };
+        dive(seed, {
+            onFrame({ world, player, entities, seg, dtMs }) {
+                const sec = dtMs / 1000;
+                t += sec;
+                danger = MusicLogic.smooth(danger, MusicLogic.dangerFrom({
+                    air: player.air, dark: seg.dark, narrow: seg.narrow,
+                    stun: player.stun, shake: world.shake,
+                    debris: entities.debris.some((d) => d.warned && !d.dead),
+                    silt: false,
+                }), sec);
+                if (MusicLogic.conduct(c, danger, t, 0.15, (x) => Math.ceil(x / bar) * bar)) changes++;
+                const tier = c.tier;
+                time[tier] += sec;
+                // What the music did in the few seconds after the way back shut.
+                if (world.collapseFired && collapseAt === null) collapseAt = t;
+                if (collapseAt !== null && t - collapseAt < 6 && collapseTier !== 'danger') collapseTier = tier;
+            },
+        });
+        const total = time.calm + time.unease + time.danger;
+        report.push({ seed, changes, collapseTier, calm: time.calm / total, unease: time.unease / total,
+            danger: time.danger / total });
+    }
+    console.log(report.map((r) => 'seed ' + r.seed + ': ' + r.changes + ' changes, calm ' +
+        (r.calm * 100).toFixed(0) + '% unease ' + (r.unease * 100).toFixed(0) + '% danger ' +
+        (r.danger * 100).toFixed(0) + '%').join('\n'));
+    for (const r of report) {
+        assert.ok(r.changes >= 2, 'seed ' + r.seed + ': the music never moved');
+        assert.ok(r.changes <= 40, 'seed ' + r.seed + ': ' + r.changes + ' tier changes');
+        assert.ok(r.calm > 0.1, 'seed ' + r.seed + ': almost never calm');
+        assert.ok(r.danger < 0.5, 'seed ' + r.seed + ': DANGER most of the dive');
+        // The collapse is the loudest moment in the game; the music must answer it.
+        assert.strictEqual(r.collapseTier, 'danger', 'seed ' + r.seed + ': the collapse never reached DANGER');
+    }
 });
