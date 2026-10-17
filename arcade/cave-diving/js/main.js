@@ -279,13 +279,17 @@
 
         world.update(dt);
 
+        // The diver moves on the map; the world then settles what that move
+        // ran into, which tunnel they are now in, and where the camera goes.
         const stroke = Input.stroking();
+        const ox = player.x, oy = player.y;
         player.update(dt, Input.axisX(), Input.axisY(), stroke, world, Sfx);
-        world.follow(player, dt, Sfx);
-        world.confine(player);
+        const contact = world.move(player, ox, oy);
+        world.track(player, dt, Sfx);
+        world.camera(player, dt);
         const seg = world.segment();
 
-        const r = entities.update(dt, world, player, Sfx);
+        const r = entities.update(dt, world, player, Sfx, contact);
         siltNow = r.silt;
         if (r.hit) { flashAmount = 0.5; flashColor = CONFIG.COLORS.danger; }
 
@@ -305,6 +309,7 @@
                 narrow: seg.narrow,
                 stun: player.stun,
                 shake: world.shake,
+                chase: world.chaseGap(player),
                 debris: entities.debrisComing(world),
                 silt: siltNow,
             }), dtMs / 1000);
@@ -332,8 +337,10 @@
     function drawDiver(above) {
         const pose = diverPose(player.fx, player.fy);
         const frame = player.kick > 0 ? 1 : 0;
-        const ox = Math.round(player.x - pose.w / 2);
-        const oy = Math.round(player.y - pose.h / 2);
+        // The diver is on the map; the screen is wherever the camera is.
+        const sc = world.toScreen(player.x, player.y);
+        const ox = Math.round(sc.x - pose.w / 2);
+        const oy = Math.round(sc.y - pose.h / 2);
         // A hit flickers the diver rather than tinting it: at this size a tint
         // is unreadable against the rock.
         if (player.stun > 0 && Math.floor(player.stun / 3) % 2 === 0 && !above) return null;

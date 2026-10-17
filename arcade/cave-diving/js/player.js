@@ -110,34 +110,10 @@ Player.prototype.update = function (dt, ax, ay, stroke, world, sfx) {
     if (this.air <= 0) { this.air = 0; this.dead = true; }
 };
 
-/**
- * Keep the diver inside the passage. Walls block but never damage - a squeeze
- * you can lose air to just by touching it is a squeeze nobody will enter, and
- * the hazards are what the fairness budget is written about.
- */
-Player.prototype.clampTo = function (lo, hi, axis) {
-    const half = axis === 'x' ? CONFIG.PLAYER_W / 2 : CONFIG.PLAYER_H / 2;
-    let hitWall = false;
-    if (axis === 'x') {
-        if (this.x - half < lo) { this.x = lo + half; if (this.vx < 0) this.vx *= -0.25; hitWall = true; }
-        if (this.x + half > hi) { this.x = hi - half; if (this.vx > 0) this.vx *= -0.25; hitWall = true; }
-    } else {
-        if (this.y - half < lo) { this.y = lo + half; if (this.vy < 0) this.vy *= -0.25; hitWall = true; }
-        if (this.y + half > hi) { this.y = hi - half; if (this.vy > 0) this.vy *= -0.25; hitWall = true; }
-    }
-    return hitWall;
-};
-
-/** Shove the diver clear of solid rock along the cross axis. */
-Player.prototype.pushCross = function (to, axis) {
-    if (axis === 'x') {
-        this.x = to;
-        this.vx *= -0.3;
-    } else {
-        this.y = to;
-        this.vy *= -0.3;
-    }
-};
+// Walls block but never damage - a squeeze you can lose air to just by
+// touching it is a squeeze nobody will enter. world.move() does the blocking
+// now, against the same water test the terrain is drawn from; only a rock
+// lump that it reports costs breath (entities.js).
 
 Player.prototype.takeHit = function (sfx) {
     if (this.stun > 0) return false;        // one hit per contact, not per frame

@@ -43,11 +43,20 @@ const CONFIG = {
     // close to the waterline a diver must come to have surfaced.
     SURFACE_HEADROOM: 60,
     SURFACE_REACH: 8,
-    // How fast the camera re-centers when the diver turns round, px per frame
-    // on top of however far the diver swam. Slow enough not to snap.
-    CAMERA_RECENTER: 3,
-    // Within this fraction of either screen edge the camera follows the diver
-    // exactly, whichever way they face.
+
+    // ── The map ───────────────────────────────────────────────────────
+    // The tunnels are laid end to end on one 2D map (world.js). Each runs on
+    // this far past its ends, into the room at the corner, and each corner
+    // gets a round room of ROOM_R on top, so a turn is a place.
+    TUNNEL_OVERHANG: 140,
+    ROOM_R: 150,
+    // The terrain is drawn, and walls are lit, on a grid of CELL-px squares.
+    CELL: 4,
+    // The camera leads the diver by this fraction of the screen in the
+    // direction they face, eases after them over CAMERA_EASE frames, and
+    // never lets them within CAMERA_BAND of an edge.
+    CAMERA_LOOK: 0.14,
+    CAMERA_EASE: 14,
     CAMERA_BAND: 0.25,
 
     // Two formats, or the game is silent on every iPhone and iPad. iOS has no
@@ -159,11 +168,9 @@ const CONFIG = {
     PLAYER_W: 12,
     PLAYER_H: 8,
     get PLAYER_HALF() { return this.PLAYER_W / 2; },
-
-    // The push line, as a fraction of the screen from its back edge: swim past
-    // it and the camera comes with you. Behind center, so most of the screen
-    // and the lamp cone show the way you are going.
-    RAIL_POS: 0.38,
+    // The body that collides with rock: a cross of points this far from the
+    // centre, inside the sprite, so the margin favours the diver.
+    PLAYER_RADIUS: 5,
 
     // ── Air ───────────────────────────────────────────────────────────
     // Air is the only life, and the whole run is ONE tank: surfacing lets you
@@ -177,9 +184,12 @@ const CONFIG = {
     // simulation's cruising pilot over twelve seeds, out of 12:
     //
     //   pilot reacts in    FIRST LIGHT  CISTERN  LAST LIGHT  FAR SIDE
-    //   8 frames               12         12        12          11
-    //   18 frames              12         12        10           7
-    //   30 frames              12         12         0           0
+    //   8 frames               12         12        12          12
+    //   18 frames              12         12        12           7
+    //   30 frames              12         12         3           0
+    //
+    // (Re-measured on the 2D map; on the per-tunnel screens it was 11, 10/7
+    // and 0/0 in the last two columns, the same shape.)
     //
     // Turning back is safe early (all 12 from 15% of the way in) and a coin
     // toss from 40%, because the way home is as long as the way in and the
@@ -190,6 +200,9 @@ const CONFIG = {
     STROKE_AIR: 0.25,        // per stroke - speed is bought with breath
     HIT_AIR: 6,
     HIT_STUN: 16,            // frames of reduced control after a hit
+    // Rock costs breath only when struck at least this fast, px per frame: a
+    // cruise (1.71) into it does, drifting or resting against it does not.
+    HIT_SPEED: 1.2,
     POCKET_REFILL: 14,
     POCKETS_MAIN_LINE: 6,    // spread evenly down the whole cave
     // Below this the vignette pulses, the heart beats, the bar goes red and the

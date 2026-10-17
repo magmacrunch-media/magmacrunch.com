@@ -55,6 +55,7 @@ const MusicLogic = {
      *
      *   s.air     0..AIR_MAX      s.dark, s.narrow  the segment's, 0..1
      *   s.stun    frames left     s.shake           frames of collapse left
+ *   s.chase   px between the diver and the rubble behind them, if any
      *   s.debris  rock is coming  s.silt            inside a silt cloud
      *
      * The terms are combined with max rather than summed, because each is a
@@ -67,7 +68,12 @@ const MusicLogic = {
         // 0 at twice the panic line, past the DANGER threshold at the line itself.
         const air = clamp01((panic * 2 - s.air) / (panic * 1.4));
         const hit = s.stun > 0 ? 0.85 : 0;
-        const collapse = s.shake > 0 ? 1 : 0;
+        // The collapse: the moment it falls, and then the rubble chasing up
+        // the tunnel. `chase` is how far behind the diver it is, px; inside
+        // 60 it is DANGER, gone by 160. The shake alone was under a second,
+        // and could fade to UNEASE before the next bar line committed it.
+        const chase = s.chase === undefined ? 0 : clamp01((160 - s.chase) / 100);
+        const collapse = Math.max(s.shake > 0 ? 1 : 0, chase);
         const cave = 0.30 * s.dark + 0.25 * s.narrow +
             (s.debris ? 0.25 : 0) + (s.silt ? 0.2 : 0);
         return clamp01(Math.max(air, hit, collapse, cave));

@@ -10,7 +10,8 @@
 //   2. air budget         a baseline diver can actually reach the surface
 //   2b. pace              rushing is faster and costs air: a real choice
 //   2c. the ways out      deeper pays more and risks more; turning back early
-//                         is safe; the cave persists; the collapse seals it
+//                         is safe; the cave persists; the collapse seals it;
+//                         nothing teleports; rock is where it is drawn
 //   3. sight line         hazards are visible for long enough to answer
 //   4. clearance          no generated gap is narrower than the diver plus room
 //   5. timeline           the segments tile the song with no gap or overlap
@@ -47,11 +48,11 @@ function loadGame() {
     // same scope is what actually reaches them.
     return vm.runInContext(
         '({ CONFIG, SEGMENTS, Timeline, clamp01, lerp, smoothstep,' +
-        '   World, Player, Entities, mulberry32, SLICE, MusicLogic })', ctx);
+        '   World, Player, Entities, mulberry32, SLICE, MusicLogic, lumpDepth })', ctx);
 }
 
 const G = loadGame();
-const { CONFIG, SEGMENTS, Timeline, World, Player, Entities, MusicLogic } = G;
+const { CONFIG, SEGMENTS, Timeline, World, Player, Entities, MusicLogic, lumpDepth } = G;
 
 // A dive that has not surfaced by then is stuck, not slow.
 const MAX_FRAMES = 60 * 600;
@@ -82,11 +83,28 @@ function dive(seed, opts) {
     world.placeAtExit(0, player);
     player.fx = 0; player.fy = 1;
 
+    // Property 4, measured on the lumps the generator actually placed, along
+    // their whole rounded profile, against the passage they stand in - with
+    // EVERY lump at that point counted, both walls, because lumps are long
+    // enough to overlap and two facing ones close the gap between them.
+    let minClearance = Infinity;
+    for (const r of entities.rocks) {
+        for (let i = 1; i < 12; i++) {
+            const at = r.s + (r.len * i) / 12;
+            const b = world.boundsAt(r.k, at);
+            let lo = b.wallLo, hi = b.hi;
+            for (const o of world.tunnels[r.k].rocks) {
+                const dep = lumpDepth(o, at);
+                if (o.fromLo) lo = Math.max(lo, b.wallLo + dep); else hi = Math.min(hi, b.hi - dep);
+            }
+            if (hi - lo < minClearance) minClearance = hi - lo;
+        }
+    }
+
     const dtMs = 16.667 * o.dt;
     let sinceThink = 0;
     let aim = { x: 0, y: 1, need: 0, cross: 0 };
     let strokeIn = 0;
-    let minClearance = Infinity;
     let frames = 0;
     let pocketsTaken = 0, airGained = 0, airWasted = 0;
     let banked = -1;
@@ -117,11 +135,13 @@ function dive(seed, opts) {
         if (stroke) strokeIn = CONFIG.STROKE_COOLDOWN;
         else strokeIn -= o.dt;
 
+        const ox = player.x, oy = player.y;
         player.update(o.dt, aim.x, aim.y, stroke, world, null);
-        world.follow(player, o.dt, null);
-        world.confine(player);
+        const contact = world.move(player, ox, oy);
+        world.track(player, o.dt, null);
+        world.camera(player, o.dt);
         const airBefore = player.air;
-        entities.update(o.dt, world, player, null);
+        entities.update(o.dt, world, player, null, contact);
         if (o.onFrame) o.onFrame({ world, player, entities, seg, f, dtMs });
         if (player.air > airBefore) {
             pocketsTaken++;
@@ -131,15 +151,6 @@ function dive(seed, opts) {
             airWasted += CONFIG.POCKET_REFILL - (player.air - airBefore);
         }
         deepest = Math.max(deepest, world.diverAlong);
-
-        // Property 4, sampled every frame against the passage the generator
-        // actually produced rather than against its own intent.
-        for (const r of entities.rocks) {
-            if (r.k !== world.segIndex) continue;
-            const b = world.boundsAt(r.s);
-            const left = (b.hi - (b.lo > b.wallLo ? b.lo : b.wallLo)) - r.depth;
-            if (left < minClearance) minClearance = left;
-        }
 
         const ex = world.exitAt(player);
         if (ex === o.bankAt) banked = ex;
@@ -169,73 +180,95 @@ function dive(seed, opts) {
 /**
  * Pick somewhere to be.
  *
- * Middle of the passage by default, the free lane beside a protrusion when
- * there is one, and a detour when air is low or a pearl is cheap; into the
- * alcove when the exit it means to bank at is close. `o.dir` is +1 swimming
- * deeper and -1 swimming back out.
+ * The pilot thinks in its current tunnel's frame - along and across - and
+ * turns that into a direction on the map, the way a player reads a passage
+ * and pushes the stick. Middle of the passage by default, the free lane
+ * beside a lump when there is one, a detour for a pearl or a pocket, and up
+ * into the alcove when the exit it means to bank at is close. `o.dir` is +1
+ * swimming deeper and -1 swimming back out.
+ *
+ * It steers a DIRECTION, never a point on the screen: an earlier pilot aimed
+ * at a fixed point past a push line and swam backwards out of every tunnel.
  */
 function think(world, player, entities, o) {
-    const vertical = world.axis === 'y';
-    const alongScreen = vertical ? player.y : player.x;
-    const cross = vertical ? player.x : player.y;
-    const here = world.alongAtScreen(alongScreen);
     const dir = o.dir || 1;
-    // `lead` px further along in the direction of travel, wherever the diver
-    // is on screen: a player steers a DIRECTION, not a screen position. An
-    // earlier pilot aimed at a fixed point past the push line, and on entering
-    // a squeeze, which re-anchors the camera, it found itself past that point
-    // and swam backwards out of the tunnel, three times, until it drowned.
-    // In the ascent forward is UP the screen.
-    let railTarget = alongScreen + o.lead * dir * (world.flip ? -1 : 1);
+    // At a corner, turn: within 60px of the end of this tunnel, aim for a
+    // point a little way into the next one (or the previous one, heading
+    // home), in that tunnel's frame. A player does this without thinking;
+    // a pilot that only ever steered along its own tunnel sat in the corner
+    // room until it drowned.
+    {
+        const k0 = world.cur;
+        const t0 = world.tunnels[k0];
+        const h0 = world.local(k0, player.x, player.y);
+        const last = world.tunnels.length - 1;
+        let kn = -1, sn = 0;
+        if (dir > 0 && k0 < last && h0.s > t0.E - 60) { kn = k0 + 1; sn = world.tunnels[kn].S + 90; }
+        if (dir < 0 && k0 > 0 && h0.s < t0.S + 60) { kn = k0 - 1; sn = world.tunnels[kn].E - 90; }
+        if (kn >= 0) {
+            const goal = world.toWorld(kn, sn, world.boundsAt(kn, sn).center);
+            const ax = goal.x - player.x, ay = goal.y - player.y;
+            const m = Math.hypot(ax, ay) || 1;
+            return { x: ax / m, y: ay / m, need: Math.min(m, 40), cross: 0 };
+        }
+    }
+    const k = world.cur;
+    const t = world.tunnels[k];
+    const here = world.local(k, player.x, player.y);
+    let da = o.lead * dir;
 
-    const b = world.boundsAt(here + 60 * dir);
-    let lo = b.lo, hi = b.hi;
+    const b = world.boundsAt(k, here.s + 60 * dir);
+    let lo = b.wallLo, hi = b.hi;
 
-    // Only the NEAREST protrusion. Folding every rock in the lookahead window
-    // into one lane collapses it whenever two rocks face each other from
-    // opposite walls, and the fallback then aims at the geometric center -
-    // which is to say, straight back into one of them.
+    // Every lump the diver is beside or about to reach narrows the lane from
+    // its own wall. Lumps are long enough now to overlap, and a pilot that
+    // steered round only the nearest one rammed the other fifteen times. The
+    // generator keeps facing lumps CLEARANCE_MIN apart, so the lane cannot
+    // close; if it somehow does, fall back to the nearest lump alone.
     let near = null, nearD = Infinity;
-    for (const r of entities.rocks) {
-        if (r.k !== world.segIndex) continue;
-        const d = dir > 0 ? r.s + r.len - here : here - r.s;
+    const lane = { lo, hi };
+    for (const r of t.rocks) {
+        const d = dir > 0 ? r.s + r.len - here.s : here.s - r.s;
         if (d < -10 || d > 200) continue;
+        const rb = world.boundsAt(k, r.s + r.len / 2);
+        const reach = r.depth * 1.25;
+        if (r.fromLo) lane.lo = Math.max(lane.lo, rb.wallLo + reach);
+        else lane.hi = Math.min(lane.hi, rb.hi - reach);
         if (d < nearD) { nearD = d; near = r; }
     }
-    if (near) {
-        if (near.fromLo) lo = Math.max(lo, near.c + near.depth);
-        else hi = Math.min(hi, near.c);
+    if (lane.hi - lane.lo >= CONFIG.PLAYER_W) { lo = lane.lo; hi = lane.hi; }
+    else if (near) {
+        const rb = world.boundsAt(k, near.s + near.len / 2);
+        if (near.fromLo) lo = Math.max(lo, rb.wallLo + near.depth * 1.25);
+        else hi = Math.min(hi, rb.hi - near.depth * 1.25);
     }
-    if (hi - lo < CONFIG.PLAYER_W) { lo = b.lo; hi = b.hi; }
+    if (hi - lo < CONFIG.PLAYER_W) { lo = b.wallLo; hi = b.hi; }
     let crossTarget = (lo + hi) / 2;
 
     // Falling rock is not covered by the lane: step aside from anything loose
     // and close, on whichever side has more room.
     for (const d of entities.debris) {
-        if (d.k !== world.segIndex || d.warn > 0 || d.dead) continue;
-        if (Math.abs(d.s - here) > 40 || Math.abs(d.c - cross) > 34) continue;
+        if (d.k !== k || d.warn > 0 || d.dead) continue;
+        if (Math.abs(d.s - here.s) > 40 || Math.abs(d.c - here.c) > 34) continue;
         crossTarget = (d.c - lo) > (hi - d.c) ? lo + 14 : hi - 14;
     }
 
     if (o.collect) {
         // Pearls are the score, so they are chased whenever they are cheap.
-        // A pocket wins only when the tank actually wants it: an earlier
-        // pilot chased pockets at anything under 92% and, once pearls became
-        // the whole score, brought out fewer than one a dive.
+        // A pocket wins only when the tank actually wants it.
         const wantAir = player.air < CONFIG.AIR_MAX - CONFIG.POCKET_REFILL;
         let best = null, bestD = Infinity;
-        const consider = (p, isAir) => {
-            if (p.taken || p.k !== world.segIndex) return;
-            const d = (p.s - here) * dir;
+        const consider = (q, isAir) => {
+            if (q.taken || q.k !== k) return;
+            const d = (q.s - here.s) * dir;
             if (d < 0 || d > 260) return;
-            const off = Math.abs(p.c - cross);
+            const off = Math.abs(q.c - here.c);
             if (isAir ? !wantAir : off >= o.greed) return;
-            // A pocket the tank wants outranks a pearl at the same distance.
             const score = d - (isAir ? 80 : 0);
-            if (score < bestD) { bestD = score; best = p; }
+            if (score < bestD) { bestD = score; best = q; }
         };
-        for (const p of entities.pockets) consider(p, true);
-        for (const p of entities.pearls) consider(p, false);
+        for (const q of entities.pockets) consider(q, true);
+        for (const q of entities.pearls) consider(q, false);
         // Never chase a prize into a wall: a detour is still clamped to the lane.
         if (best) crossTarget = Math.max(lo + 6, Math.min(hi - 6, best.c));
     }
@@ -243,15 +276,14 @@ function think(world, player, entities, o) {
     // The exit it means to leave by, when it is an alcove and close: line up
     // under it and swim up into it.
     const goal = world.exits[o.bankAt];
-    if (goal && goal.alcove && goal.seg === world.segIndex && Math.abs(goal.s - here) < 140) {
-        crossTarget = world.boundsAt(goal.s).wallLo - CONFIG.ALCOVE_DEPTH * 0.8;
-        railTarget = world.screenOf(goal.s);
+    if (goal && goal.alcove && goal.seg === k && Math.abs(goal.s - here.s) < 140) {
+        crossTarget = world.boundsAt(k, goal.s).wallLo - CONFIG.ALCOVE_DEPTH * 0.8;
+        da = goal.s - here.s;
     }
 
-    const dc = crossTarget - cross;
-    const da = railTarget - alongScreen;
-    const ax = vertical ? dc : da;
-    const ay = vertical ? da : dc;
+    const dc = crossTarget - here.c;
+    const ax = t.d.x * da + t.n.x * dc;
+    const ay = t.d.y * da + t.n.y * dc;
     const m = Math.hypot(ax, ay) || 1;
     return { x: ax / m, y: ay / m, need: m, cross: Math.abs(dc) };
 }
@@ -327,9 +359,6 @@ test('the dive is the same at 60Hz and at 120Hz', () => {
     for (const seed of [3, 77, 1234]) {
         const a = fixedRun(seed, 1, 600);
         const b = fixedRun(seed, 0.5, 600);
-        // And the camera, which now moves only because the diver did.
-        assert.ok(Math.abs(a.cam - b.cam) < 2,
-            'seed ' + seed + ' camera drifted ' + Math.abs(a.cam - b.cam).toFixed(2) + 'px over 10s');
         assert.ok(Math.abs(a.x - b.x) < 2 && Math.abs(a.y - b.y) < 2,
             'seed ' + seed + ' drifted ' + Math.abs(a.x - b.x).toFixed(2) + ',' +
             Math.abs(a.y - b.y).toFixed(2) + 'px over 10s');
@@ -351,35 +380,29 @@ test('the dive is the same at 60Hz and at 120Hz', () => {
     }
 });
 
-/** Physics only: fixed aim, fixed stroke rhythm, no steering feedback. */
+/**
+ * Physics only: fixed aim, fixed stroke rhythm, no steering feedback, and no
+ * walls. Whether a wall contact lands on one step or the next depends on the
+ * step, by design, so a diver driven into rock drifts apart at two rates for
+ * reasons that are not the integration. This is about Player's integration
+ * and nothing else; the full dive below covers the rest.
+ */
 function fixedRun(seed, dt, seconds60) {
-    const world = new World(seed);
     const player = new Player();
-    world.placeAtExit(0, player);
+    player.x = 0; player.y = 0;
     player.fx = 0; player.fy = 1;
-    const dtMs = 16.667 * dt;
     // The rhythm is on TIME, one stroke every 12 frames. Counting it down per
-    // step strokes every 11 frames at dt 1 and every 10.5 at dt 0.5, and once
-    // the camera follows the diver those extra strokes show up as 9px more
-    // cave, which is the test's rhythm and not the physics.
-    let elapsed = 0, t = 0, lastBeat = -1;
+    // step strokes every 11 frames at dt 1 and every 10.5 at dt 0.5, which is
+    // the test's rhythm and not the physics.
+    let t = 0, lastBeat = -1;
     for (let i = 0; i < seconds60 / dt; i++) {
-        world.update(dt);
         const beat = Math.floor(t / 12);
         const stroke = beat !== lastBeat;
         lastBeat = beat;
         t += dt;
-        player.update(dt, 0.3, 1, stroke, world, null);
-        world.follow(player, dt, null);
-        world.confine(player);
-        // No entities. With the camera following, this fixed-input diver
-        // ploughs forward at full stroke speed, and whether it clips a rock is
-        // then decided by a pixel, so one hit at one step size and none at the
-        // other read as a 6-air integration error. Hazards are the full-dive
-        // check's business below; this one is about the integration.
-        elapsed += dtMs;
+        player.update(dt, 0.3 + (seed % 3) * 0.1, 1, stroke, null, null);
     }
-    return { x: player.x, y: player.y, air: player.air, cam: world.camAlong };
+    return { x: player.x, y: player.y, air: player.air };
 }
 
 // ── 2 · The air budget ────────────────────────────────────────────────
@@ -443,86 +466,85 @@ test('turning back early always gets you out, and pays nothing extra', () => {
     }
 });
 
-/** Put the diver at along s, cross c, with the camera on them. */
-function putAt(world, player, s, c) {
-    world.useSegment(Timeline.indexAt(Math.min(s / CONFIG.DIVE_ALONG, 0.9999)));
-    const r = world.camRange();
-    world.camAlong = Math.max(r.min, Math.min(r.max, s - world.alongExtent / 2));
-    const sc = world.toScreen(s, c === undefined ? world.boundsAt(s).center : c);
-    player.x = sc.x; player.y = sc.y; player.vx = 0; player.vy = 0;
-    world.prevAlong = s;
+/** Put the diver at along s, cross c in tunnel k, with the camera on them. */
+function putAt(world, player, s, c, k) {
+    const kk = k === undefined ? Timeline.indexAt(Math.min(Math.max(s, 0) / CONFIG.DIVE_ALONG, 0.9999)) : k;
+    const p = world.toWorld(kk, s, c === undefined ? world.boundsAt(kk, s).center : c);
+    player.x = p.x; player.y = p.y; player.vx = 0; player.vy = 0;
+    world.cur = kk;
     world.diverAlong = s;
+    world.camera(player, 1, true);
 }
 
-/** Move the diver along the cave by ds, the way swimming would, and follow. */
-function swimBy(world, player, ds) {
-    const sign = world.flip ? -1 : 1;
-    if (world.axis === 'y') player.y += ds * sign; else player.x += ds * sign;
-    world.follow(player, 1, null);
-    world.confine(player);
+/** Swim straight at map point (x, y) in steps of `step`, as the game moves. */
+function swimTo(world, player, x, y, step) {
+    for (let i = 0; i < 2000; i++) {
+        const dx = x - player.x, dy = y - player.y;
+        const d = Math.hypot(dx, dy);
+        if (d < step) return true;
+        player.fx = dx / d; player.fy = dy / d;
+        const ox = player.x, oy = player.y;
+        player.x += (dx / d) * step; player.y += (dy / d) * step;
+        world.move(player, ox, oy);
+        world.track(player, 1, null);
+        world.camera(player, 1);
+        if (player.x === ox && player.y === oy) return false;   // blocked
+    }
+    return false;
 }
 
 test('the cave is the same rock on the way back', () => {
     const a = new World(77), b = new World(77);
     for (let k = 0; k < SEGMENTS.length; k++) {
-        assert.deepStrictEqual(a.segs[k].slices, b.segs[k].slices, 'segment ' + k + ' differs between two builds');
+        assert.deepStrictEqual(a.tunnels[k].slices, b.tunnels[k].slices, 'tunnel ' + k + ' differs between two builds');
     }
-    // Cross a boundary forward and back again, a few pixels at a time: the
-    // diver keeps their along position, and the camera returns to the
-    // segment it came from.
+    // Round the first corner and back: down the shaft, along the tunnel, and
+    // back again, crossing the boundary both ways without being moved.
     const w = new World(77), p = new Player();
-    const S1 = w.segs[1].S;
-    putAt(w, p, S1 - 40);
-    p.fx = 0; p.fy = 1;
-    for (let i = 0; i < 20; i++) swimBy(w, p, 4);
-    assert.strictEqual(w.segIndex, 1, 'did not cross into the tunnel');
-    const deep = w.diverAlong;
-    p.fx = -1; p.fy = 0;
-    for (let i = 0; i < 30; i++) swimBy(w, p, -4);
-    assert.strictEqual(w.segIndex, 0, 'did not cross back into the shaft');
-    assert.ok(Math.abs(w.diverAlong - (deep - 120)) < 1,
-        'the diver moved ' + (w.diverAlong - deep).toFixed(1) + 'px along, expected -120');
+    const t1 = w.tunnels[1];
+    putAt(w, p, t1.S - 120, undefined, 0);
+    const corner = w.toWorld(1, t1.S, w.boundsAt(1, t1.S).center);
+    const along = w.toWorld(1, t1.S + 160, w.boundsAt(1, t1.S + 160).center);
+    assert.ok(swimTo(w, p, corner.x, corner.y, 3), 'could not reach the first corner');
+    assert.ok(swimTo(w, p, along.x, along.y, 3), 'could not swim into the tunnel');
+    assert.strictEqual(w.cur, 1, 'did not cross into the tunnel');
+    const back = w.toWorld(0, t1.S - 160, w.boundsAt(0, t1.S - 160).center);
+    assert.ok(swimTo(w, p, corner.x, corner.y, 3) && swimTo(w, p, back.x, back.y, 3), 'could not swim back');
+    assert.strictEqual(w.cur, 0, 'did not cross back into the shaft');
 });
 
 test('the collapse seals the way back, and only once it comes down', () => {
     const w = new World(5), p = new Player();
     const k = SEGMENTS.findIndex((seg) => seg.collapse);
-    const S = w.segs[k].S;
-    // Before it falls, the boundary can be crossed both ways.
-    putAt(w, p, S - 30);
-    p.fx = 1; p.fy = 0;
-    for (let i = 0; i < 20; i++) swimBy(w, p, 4);
-    assert.strictEqual(w.segIndex, k);
+    const S = w.tunnels[k].S;
+    putAt(w, p, S - 20, undefined, k);
+    w.cur = k - 1;
+    assert.ok(!w.collapseFired, 'the roof came down before anyone entered');
+    const into = w.toWorld(k, S + 100, w.boundsAt(k, S + 100).center);
+    assert.ok(swimTo(w, p, into.x, into.y, 3), 'could not swim into NO WAY BACK');
+    assert.strictEqual(w.cur, k);
     assert.ok(w.collapseFired, 'entering NO WAY BACK did not bring the roof down');
-    // After it, swimming back stops at the rockfall, which is behind the
-    // boundary rather than across it.
-    p.fx = -1; p.fy = 0;
-    for (let i = 0; i < 80; i++) swimBy(w, p, -4);
-    assert.strictEqual(w.segIndex, k, 'swam back out through the collapse');
-    assert.ok(w.diverAlong >= w.sealAlong - 1,
-        'reached ' + (w.diverAlong - S).toFixed(0) + 'px from the boundary through the rockfall');
+    // Back the way it came: the rockfall is in the way, behind the boundary.
+    const out = w.toWorld(k, S - 200, w.boundsAt(k, S).center);
+    swimTo(w, p, out.x, out.y, 3);
+    assert.strictEqual(w.cur, k, 'swam back out through the collapse');
+    const at = w.local(k, p.x, p.y).s;
+    assert.ok(at >= w.sealAlong, 'reached ' + (at - w.sealAlong).toFixed(0) + 'px behind the rockfall');
 });
 
-test('nothing moves the diver along the cave in one frame', () => {
+test('nothing moves the diver in one frame further than a stroke can', () => {
     // The collapse used to shove the diver 127px forward the frame it fell,
-    // to clear a seal placed ahead of them. Swim the whole cave in small
-    // strokes across every boundary and hold every frame's step to the swim.
-    const w = new World(5), p = new Player();
-    w.placeAtExit(0, p);
-    p.fx = 0; p.fy = 1;
-    let prev = w.diverAlong;
-    for (let i = 0; i < 12000 && w.diverAlong < CONFIG.DIVE_ALONG - 60; i++) {
-        const facing = w.flip ? -1 : 1;
-        if (w.axis === 'y') { p.fx = 0; p.fy = facing; } else { p.fx = 1; p.fy = 0; }
-        swimBy(w, p, 3);
-        const step = w.diverAlong - prev;
-        // A stroke here is 3px, and the collapse's creep can add its push from
-        // behind; the teleport this replaced was 127.
-        assert.ok(Math.abs(step) < 12,
-            'the diver moved ' + step.toFixed(0) + 'px in one frame at along ' + prev.toFixed(0));
-        prev = w.diverAlong;
+    // and the old per-tunnel screens swapped the whole picture at every
+    // boundary. Dive the cave and hold every frame's move on the map to what
+    // swimming can do.
+    for (const seed of [5, 21]) {
+        let px = null, py = null, worst = 0;
+        dive(seed, { onFrame({ player }) {
+            if (px !== null) worst = Math.max(worst, Math.hypot(player.x - px, player.y - py));
+            px = player.x; py = player.y;
+        } });
+        assert.ok(worst < CONFIG.MAX_SPEED + 3, 'seed ' + seed + ': the diver moved ' + worst.toFixed(0) + 'px in a frame');
     }
-    assert.ok(w.diverAlong > CONFIG.DIVE_ALONG - 80, 'never reached the far side: stuck at ' + w.diverAlong.toFixed(0));
 });
 
 test('every way out can be reached, and diving on does not surface you again', () => {
@@ -532,17 +554,41 @@ test('every way out can be reached, and diving on does not surface you again', (
         const e = w.exits[i];
         w.placeAtExit(i, p);
         assert.strictEqual(w.exitAt(p), -1, e.name + ': diving on puts you straight back out');
-        if (e.alcove) {
-            putAt(w, p, e.s, w.boundsAt(e.s).wallLo - CONFIG.ALCOVE_DEPTH * 0.8);
-        } else {
-            putAt(w, p, i === 0 ? 2 : CONFIG.DIVE_ALONG - 2);
-        }
+        if (e.alcove) putAt(w, p, e.s, w.boundsAt(e.seg, e.s).wallLo - CONFIG.ALCOVE_DEPTH * 0.8, e.seg);
+        else if (i === 0) putAt(w, p, 2, undefined, 0);
+        else putAt(w, p, CONFIG.DIVE_ALONG - 2, undefined, w.tunnels.length - 1);
         assert.strictEqual(w.exitAt(p), i, e.name + ' cannot be reached');
     }
     for (let i = 1; i <= last; i++) {
         assert.ok(CONFIG.EXITS[i].mult > CONFIG.EXITS[i - 1].mult, 'the multipliers do not climb');
         assert.ok(CONFIG.EXITS[i].at > CONFIG.EXITS[i - 1].at, 'the exits are out of order');
     }
+});
+
+test('rock lumps are rounded and solid exactly where they are drawn', () => {
+    const w = new World(8), e = new Entities(w);
+    let checked = 0;
+    for (const r of e.rocks.slice(0, 20)) {
+        // Thickest near the middle, nothing at the ends: not a rectangle.
+        assert.ok(lumpDepth(r, r.s) < 0.01 && lumpDepth(r, r.s + r.len) < 0.01, 'a lump has square ends');
+        // Near the tip against the middle; the roughness is +-24%, so a tip at
+        // 12% of the length could read within 1.3x of the middle on a rough
+        // lump while still being plainly rounded.
+        const mid = lumpDepth(r, r.s + r.len / 2), tip = lumpDepth(r, r.s + r.len * 0.03);
+        assert.ok(mid > tip * 1.4, 'a lump is as deep at its tip as its middle: ' + tip.toFixed(1) + ' vs ' + mid.toFixed(1));
+        // And the water test agrees with the profile, just inside and outside it.
+        const at = r.s + r.len / 2;
+        const b = w.boundsAt(r.k, at);
+        const face = r.fromLo ? b.wallLo + mid : b.hi - mid;
+        const inside = w.toWorld(r.k, at, face + (r.fromLo ? -2 : 2));
+        const outside = w.toWorld(r.k, at, face + (r.fromLo ? 2 : -2));
+        const hit = {};
+        assert.strictEqual(w.cellAt(inside.x, inside.y, hit), 0, 'no rock just inside a lump');
+        assert.strictEqual(hit.rock, r, 'the wrong lump answered');
+        assert.notStrictEqual(w.cellAt(outside.x, outside.y), 0, 'rock just outside a lump');
+        checked++;
+    }
+    assert.ok(checked >= 10);
 });
 
 // ── 2b · Pace is a choice ─────────────────────────────────────────────
@@ -707,7 +753,7 @@ test('over a real dive the music moves, and does not thrash', () => {
                 t += sec;
                 danger = MusicLogic.smooth(danger, MusicLogic.dangerFrom({
                     air: player.air, dark: seg.dark, narrow: seg.narrow,
-                    stun: player.stun, shake: world.shake,
+                    stun: player.stun, shake: world.shake, chase: world.chaseGap(player),
                     debris: entities.debris.some((d) => d.warned && !d.dead),
                     silt: false,
                 }), sec);

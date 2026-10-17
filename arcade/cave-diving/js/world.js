@@ -1,24 +1,23 @@
 // world.js - cave diving (not even once) | MagmaCrunch Media (c) 2026
-// The cave, the camera, and the ways out.
+// The cave on one map, the camera, and the ways out.
 //
-// COORDINATES. The diver lives in SCREEN space and the camera moves over the
-// cave. That is not a shortcut - it is what makes one camera serve both a
-// vertical shaft and a horizontal squeeze. `along` is distance down the
-// passage, from the entrance at 0 to the far exit at DIVE_ALONG, and `cross`
-// is the other axis. The ascent sets `flip`, which mirrors along onto the
-// screen so that deeper is still a larger number while the diver swims up.
+// ONE MAP. Every tunnel has a start point and a direction on a single 2D map:
+// shafts go down, squeezes go right, the ascent goes up, laid end to end with
+// a rounded room at each corner. The diver and the camera live in that space,
+// so nothing ever rotates. An earlier version drew each tunnel in its own
+// screen orientation and swapped pictures at the boundary, which read as the
+// diver being teleported, six times a dive.
 //
-// THE CAVE PERSISTS. It is generated whole, segment by segment, when the
-// world is made, so the diver can turn round and swim back the way they came
-// and find the same rock. Each segment keeps its own passage in its own cross
-// axis; a chamber opens at every boundary, and crossing one swaps which
-// segment the camera shows. The diver is never rebased on a crossing, because
-// nothing about the diver was expressed in the old axis: only the camera is
-// re-anchored, so the diver's along position is unchanged.
+// ONE QUESTION. Whether a point is water is decided in exactly one place,
+// cellAt(): inside a tunnel strip or a corner room or an exit alcove, not in a
+// rock lump, not behind the collapse. Collision asks it, and the terrain is
+// drawn by asking it on a grid, so what you see is what you hit.
 //
-// THE WAYS OUT. The entrance, a lit alcove in the wall of a few segments, and
-// the far end of the cave are all surfaces (CONFIG.EXITS). Reaching one is
-// exitAt()'s business; what happens then is main.js's.
+// LOCAL FRAMES. A tunnel's own coordinates are `s`, distance along the main
+// line (global: 0 at the entrance, DIVE_ALONG at the far side), and `c`, the
+// cross position from 0 to the tunnel's cross extent, with the low wall at
+// small c: the ceiling of a squeeze, the left wall of a shaft. The generator
+// and the entities work in these, and local()/toWorld() convert.
 
 /* global CONFIG, SEGMENTS, Timeline, Renderer, lerp, smoothstep */
 
@@ -32,46 +31,21 @@ function mulberry32(a) {
     };
 }
 
-const SLICE = 16;      // along-space spacing between passage samples
-// How far past each end of a segment its passage is generated. The camera can
-// look that far into the next chamber before the diver crosses into it: a
-// screen is at most 480px along, with the diver kept behind its middle.
-const OVERHANG = 336;
-// Hysteresis on a boundary crossing, so a diver hanging on the line does not
-// flip the camera's axis every frame.
-const CROSS_MARGIN = 10;
+const SLICE = 16;      // along spacing between passage samples
+
+// Cell codes from cellAt().
+const ROCK = 0, WATER = 1, SKY = 2;
 
 function World(seed) {
     this.reset(seed);
 }
 
-/** Along positions where segment k starts and ends. */
-function segSpan(k) {
-    return {
-        S: SEGMENTS[k].at * CONFIG.DIVE_ALONG,
-        E: Timeline.endOf(k) * CONFIG.DIVE_ALONG,
-    };
-}
-
-/** Screen layout a segment kind implies. */
-function axisFor(seg) {
-    const axis = seg.kind === 'squeeze' ? 'x' : 'y';
-    return {
-        axis,
-        flip: seg.kind === 'ascent',
-        crossExtent: axis === 'y' ? CONFIG.CANVAS_W : CONFIG.CANVAS_H,
-        alongExtent: axis === 'y' ? CONFIG.CANVAS_H : CONFIG.CANVAS_W,
-    };
-}
-
-/** The exits with their along positions and segments, in order down the cave. */
-function exitList() {
-    return CONFIG.EXITS.map((e, i) => Object.assign({
-        index: i,
-        s: e.at * CONFIG.DIVE_ALONG,
-        seg: Timeline.indexAt(Math.min(e.at, 0.9999)),
-        alcove: e.at > 0 && e.at < 1,
-    }, e));
+/** Direction, wall normal and cross extent for a segment kind. */
+function frameFor(seg) {
+    // n points from the low wall toward the high wall.
+    if (seg.kind === 'squeeze') return { d: { x: 1, y: 0 }, n: { x: 0, y: 1 }, X: CONFIG.CANVAS_H };
+    if (seg.kind === 'ascent') return { d: { x: 0, y: -1 }, n: { x: 1, y: 0 }, X: CONFIG.CANVAS_W };
+    return { d: { x: 0, y: 1 }, n: { x: 1, y: 0 }, X: CONFIG.CANVAS_W };
 }
 
 World.prototype.reset = function (seed) {
@@ -81,95 +55,131 @@ World.prototype.reset = function (seed) {
     // the order they happen to be built in.
     this.rng = mulberry32(sd);
     this.entityRng = mulberry32((sd + 0x9e3779b9) | 0);
-    this.exits = exitList();
-    this.segs = [];
-    for (let k = 0; k < SEGMENTS.length; k++) this.segs.push(this.buildSegment(k));
+    this.exits = CONFIG.EXITS.map((e, i) => Object.assign({
+        index: i,
+        s: e.at * CONFIG.DIVE_ALONG,
+        seg: Timeline.indexAt(Math.min(e.at, 0.9999)),
+        alcove: e.at > 0 && e.at < 1,
+    }, e));
 
-    this.collapseFired = false;
-    this.sealAlong = 0;         // how far back the diver can go once it falls
-    this.shake = 0;
-    this.vel = 0;
-    this.axisChanged = false;
-    this.lookBack = false;
-    this.useSegment(0);
-    this.camAlong = -CONFIG.SURFACE_HEADROOM;
+    this.tunnels = [];
+    let P = { x: 0, y: 0 };
+    for (let k = 0; k < SEGMENTS.length; k++) {
+        const t = this.buildTunnel(k, P);
+        this.tunnels.push(t);
+        P = { x: P.x + t.d.x * (t.E - t.S), y: P.y + t.d.y * (t.E - t.S) };
+    }
+    // A rounded room at every corner, where one tunnel meets the next.
+    this.rooms = [];
+    for (let k = 1; k < this.tunnels.length; k++) {
+        this.rooms.push({ x: this.tunnels[k].P.x, y: this.tunnels[k].P.y, r: CONFIG.ROOM_R, k });
+    }
+
+    this.cur = 0;               // the tunnel the diver is in
     this.diverAlong = 0;
-    this.prevAlong = null;
-};
-
-/** Make segment k the one the camera shows. */
-World.prototype.useSegment = function (k) {
-    this.segIndex = k;
-    const g = this.segs[k];
-    this.axis = g.axis;
-    this.flip = g.flip;
-    this.crossExtent = g.crossExtent;
-    this.alongExtent = g.alongExtent;
-    this.slices = g.slices;
-    this.speed = Timeline.scrollSpeed(SEGMENTS[k]);
+    this.collapseFired = false;
+    this.sealAlong = -Infinity; // nothing behind this along the collapse tunnel
+    this.collapseK = SEGMENTS.findIndex((seg) => seg.collapse);
+    this.shake = 0;
+    this.camX = 0;
+    this.camY = 0;
+    this.grid = null;
 };
 
 /**
- * Generate segment k's passage, from OVERHANG before it to OVERHANG after.
+ * Generate tunnel k's passage, starting at map point P.
  *
  * Half-widths are quoted against the 480px cross axis of a shaft and scaled
- * to the segment's own cross axis; without that a "wide" squeeze would be
- * taller than the screen and its walls would never appear. Each end of a
- * segment opens into a chamber: a junction at an interior boundary, the pool
- * under the surface at the entrance and at the far end.
+ * to the tunnel's own cross extent. Each end of a tunnel opens into a chamber
+ * so the corner rooms are wide; the entrance and the far end open into the
+ * pool under the surface.
  */
-World.prototype.buildSegment = function (k) {
+World.prototype.buildTunnel = function (k, P) {
     const seg = SEGMENTS[k];
-    const ax = axisFor(seg);
-    const { S, E } = segSpan(k);
+    const f = frameFor(seg);
+    const S = seg.at * CONFIG.DIVE_ALONG;
+    const E = Timeline.endOf(k) * CONFIG.DIVE_ALONG;
     const last = SEGMENTS.length - 1;
-    const from = k === 0 ? -CONFIG.SURFACE_HEADROOM - SLICE * 2 : S - OVERHANG;
-    const to = k === last ? E + CONFIG.SURFACE_HEADROOM + SLICE * 2 : E + OVERHANG;
-    const base = Timeline.passageWidth(seg) * (ax.crossExtent / CONFIG.CANVAS_W) / 2;
-    const room = ax.crossExtent * 0.46;
+    const over = CONFIG.TUNNEL_OVERHANG;
+    const from = k === 0 ? S - CONFIG.SURFACE_HEADROOM - SLICE * 2 : S - over;
+    const to = k === last ? E + CONFIG.SURFACE_HEADROOM + SLICE * 2 : E + over;
+    const base = Timeline.passageWidth(seg) * (f.X / CONFIG.CANVAS_W) / 2;
+    const room = f.X * 0.46;
     const J = CONFIG.JUNCTION_ALONG;
-    const exits = this.exits.filter((e) => e.seg === k && e.alcove);
     const near = (d) => (d < J ? 1 - Math.max(0, d) / J : 0);
+    const alcoves = this.exits.filter((e) => e.seg === k && e.alcove);
 
     let wander = 0, wanderV = 0;
     const phase = this.rng() * Math.PI * 2;
     const slices = [];
     for (let s = from; s <= to; s += SLICE) {
         const t = smoothstep(Math.max(near(s - S), near(E - s)));
-        const half = lerp(base, room, t);
-
+        // Past its own ends a tunnel only runs on into the corner room, and
+        // it closes off ROUNDED there rather than in a square cut: without
+        // the taper each corner had a boxy notch where the strip stopped.
+        const endTaper = (d) => Math.sqrt(Math.max(0, Math.min(1, d / 110)));
+        const taper = (k === 0 ? 1 : endTaper(s - from)) * (k === last ? 1 : endTaper(to - s));
+        const half = lerp(base, room, t) * taper;
         // The centerline wanders as a damped random walk over a slow sine. The
         // sine alone is too regular to read as rock; the walk alone drifts
-        // into a corner and stays there. Chambers pull it back to the middle.
+        // into a corner and stays there. Chambers pull it back to the middle,
+        // which is also what makes adjoining tunnels meet in their rooms.
         wanderV += (this.rng() - 0.5) * 0.9;
         wanderV *= 0.86;
         wander += wanderV;
-        const swing = (ax.crossExtent * 0.5 - half) * 0.8;
+        const swing = (f.X * 0.5 - half) * 0.8;
         wander = Math.max(-swing, Math.min(swing, wander));
         const sine = Math.sin(phase + s * 0.006) * swing * 0.45;
-        let center = ax.crossExtent / 2 + lerp(wander * 0.5 + sine, 0, t);
-        center = Math.max(half + 6, Math.min(ax.crossExtent - half - 6, center));
-
+        let center = f.X / 2 + lerp(wander * 0.5 + sine, 0, t);
+        center = Math.max(half + 6, Math.min(f.X - half - 6, center));
         let lo = center - half;
         const hi = center + half;
         const wallLo = lo;
-        // An exit is an alcove cut into the LOW wall - the ceiling of a
-        // squeeze, the left wall of a shaft - tapering at its edges.
-        for (const e of exits) {
+        // An exit is an alcove cut into the LOW wall, tapering at its edges.
+        for (const e of alcoves) {
             const d = Math.abs(s - e.s);
             if (d < CONFIG.ALCOVE_HALF) {
-                const cut = CONFIG.ALCOVE_DEPTH * Math.cos((d / CONFIG.ALCOVE_HALF) * Math.PI / 2);
-                lo = Math.max(2, lo - cut);
+                lo -= CONFIG.ALCOVE_DEPTH * Math.cos((d / CONFIG.ALCOVE_HALF) * Math.PI / 2);
             }
         }
         slices.push({ s, lo, hi, wallLo });
     }
-    return Object.assign({ k, S, E, from, to, slices }, ax);
+
+    // The map-space box the tunnel can occupy, for cheap rejection.
+    const ends = [
+        this.mapPoint(P, f, S, from, 0), this.mapPoint(P, f, S, from, f.X),
+        this.mapPoint(P, f, S, to, 0), this.mapPoint(P, f, S, to, f.X),
+    ];
+    const pad = CONFIG.ALCOVE_DEPTH + 4;
+    const box = {
+        x0: Math.min(...ends.map((p) => p.x)) - pad, x1: Math.max(...ends.map((p) => p.x)) + pad,
+        y0: Math.min(...ends.map((p) => p.y)) - pad, y1: Math.max(...ends.map((p) => p.y)) + pad,
+    };
+    return { k, P, d: f.d, n: f.n, X: f.X, S, E, from, to, slices, rocks: [], box };
 };
 
-/** Passage bounds in cross-axis pixels at an along position. */
-World.prototype.boundsAt = function (s) {
-    const sl = this.slices;
+/** Map point of along s, cross c in a tunnel with origin P and frame f. */
+World.prototype.mapPoint = function (P, f, S, s, c) {
+    const u = s - S, v = c - f.X / 2;
+    return { x: P.x + f.d.x * u + f.n.x * v, y: P.y + f.d.y * u + f.n.y * v };
+};
+
+/** Map point of (s, c) in tunnel k. */
+World.prototype.toWorld = function (k, s, c) {
+    const t = this.tunnels[k];
+    return this.mapPoint(t.P, t, t.S, s, c);
+};
+
+/** Tunnel k's local (s, c) of map point (x, y). */
+World.prototype.local = function (k, x, y) {
+    const t = this.tunnels[k];
+    const dx = x - t.P.x, dy = y - t.P.y;
+    return { s: t.S + dx * t.d.x + dy * t.d.y, c: t.X / 2 + dx * t.n.x + dy * t.n.y };
+};
+
+/** Passage bounds in tunnel k at along s, in that tunnel's cross units. */
+World.prototype.boundsAt = function (k, s) {
+    const sl = this.tunnels[k].slices;
     const i = Math.floor((s - sl[0].s) / SLICE);
     const a = sl[Math.max(0, Math.min(sl.length - 1, i))];
     const b = sl[Math.max(0, Math.min(sl.length - 1, i + 1))];
@@ -178,26 +188,221 @@ World.prototype.boundsAt = function (s) {
     return { lo, hi, center: (lo + hi) / 2, half: (hi - lo) / 2, wallLo: lerp(a.wallLo, b.wallLo, f) };
 };
 
-/** Along position of a point at `screenCoord` along the scroll axis. */
-World.prototype.alongAtScreen = function (screenCoord) {
-    return this.flip
-        ? this.camAlong + (this.alongExtent - screenCoord)
-        : this.camAlong + screenCoord;
+/**
+ * How far a rock lump stands out of its wall at along s. Rounded, thickest in
+ * the middle and tapering to nothing at both ends, with a little irregularity
+ * so no two read alike. A rectangle is what this replaced.
+ */
+function lumpDepth(r, s) {
+    const t = (s - r.s) / r.len;
+    if (t <= 0 || t >= 1) return 0;
+    // A low power flattens the top into a mound; 0.65 read as a spike.
+    const bulge = Math.pow(Math.sin(Math.PI * t), 0.42);
+    const rough = 1 + 0.16 * Math.sin(t * 9.0 + r.seed) + 0.08 * Math.sin(t * 23.0 + r.seed * 2.1);
+    return r.depth * bulge * rough;
+}
+
+/** The rock lump at (s, c) in tunnel k, or null. */
+World.prototype.rockAt = function (k, s, c) {
+    const rocks = this.tunnels[k].rocks;
+    for (let i = 0; i < rocks.length; i++) {
+        const r = rocks[i];
+        if (s <= r.s || s >= r.s + r.len) continue;
+        const b = this.boundsAt(k, s);
+        const dep = lumpDepth(r, s);
+        if (r.fromLo ? c < b.wallLo + dep : c > b.hi - dep) return r;
+    }
+    return null;
 };
 
-/** Where an along position lands on screen. */
-World.prototype.screenOf = function (s) {
-    return this.flip ? this.alongExtent - (s - this.camAlong) : s - this.camAlong;
+/**
+ * THE question: what is at map point (x, y)? WATER, SKY (above a waterline)
+ * or ROCK. `hit` is filled with the rock lump when it is a lump that answered.
+ */
+World.prototype.cellAt = function (x, y, hit) {
+    // Behind the collapse is rock, whatever was there.
+    if (this.collapseFired) {
+        const t = this.tunnels[this.collapseK];
+        const u = (x - t.P.x) * t.d.x + (y - t.P.y) * t.d.y + t.S;
+        // A rockfall, not a wall: its face is ragged across the passage. It
+        // only ever reaches BACK from sealAlong, so the diver it is chasing is
+        // never inside it.
+        const v = (x - t.P.x) * t.n.x + (y - t.P.y) * t.n.y;
+        const rag = 9 + 6 * Math.sin(v * 0.13) + 4 * Math.sin(v * 0.41 + 1.3);
+        if (u < this.sealAlong - rag + 9) return ROCK;
+    }
+    let water = false;
+    for (let k = 0; k < this.tunnels.length && !water; k++) {
+        const t = this.tunnels[k];
+        if (x < t.box.x0 || x > t.box.x1 || y < t.box.y0 || y > t.box.y1) continue;
+        const p = this.local(k, x, y);
+        if (p.s < t.from || p.s > t.to) continue;
+        const b = this.boundsAt(k, p.s);
+        if (p.c < b.lo || p.c > b.hi) continue;
+        // Above the waterline at either end of the cave is air.
+        if ((k === 0 && p.s < 0) || (k === this.tunnels.length - 1 && p.s > CONFIG.DIVE_ALONG)) return SKY;
+        const r = this.rockAt(k, p.s, p.c);
+        if (r) { if (hit) hit.rock = r; return ROCK; }
+        water = true;
+    }
+    if (!water) {
+        for (const rm of this.rooms) {
+            const dx = x - rm.x, dy = y - rm.y;
+            if (dx * dx + dy * dy < rm.r * rm.r) { water = true; break; }
+        }
+    }
+    return water ? WATER : ROCK;
 };
 
-/** Convert an (along, cross) cave position into screen pixels. */
-World.prototype.toScreen = function (s, cross) {
-    const a = this.screenOf(s);
-    return this.axis === 'y' ? { x: cross, y: a } : { x: a, y: cross };
+/** How much of the diver's body, a cross of five points, is in water: 0..5. */
+World.prototype.wetness = function (x, y, hit) {
+    const r = CONFIG.PLAYER_RADIUS;
+    return (this.cellAt(x, y, hit) === WATER) + (this.cellAt(x - r, y, hit) === WATER) +
+        (this.cellAt(x + r, y, hit) === WATER) + (this.cellAt(x, y - r, hit) === WATER) +
+        (this.cellAt(x, y + r, hit) === WATER);
 };
 
-World.prototype.diverAlongOf = function (player) {
-    return this.alongAtScreen(this.axis === 'y' ? player.y : player.x);
+/** Is the diver's body entirely in water? */
+World.prototype.fits = function (x, y, hit) {
+    return this.wetness(x, y, hit) === 5;
+};
+
+/**
+ * Resolve the diver's move from (ox, oy) to where Player.update put them.
+ * Slides along whatever blocks them, one axis at a time, and zeroes the
+ * velocity that ran into it. Returns { wall, rock } for what was touched.
+ *
+ * It must never be able to TRAP the diver. If they are already partly in
+ * rock, every candidate fails fits() including staying put, and an earlier
+ * version left a diver pinned to a wall for the rest of the dive. So an
+ * embedded diver may take any move that leaves more of them in water.
+ */
+World.prototype.move = function (player, ox, oy) {
+    const hit = { rock: null };
+    const nx = player.x, ny = player.y;
+    if (this.fits(nx, ny, hit)) return { wall: false, rock: null };
+    // Rock hurts when you HIT it, not when you touch it. Billing every
+    // contact charged a diver resting against a lump, or sliding along one,
+    // six air a quarter-second: fifteen hits in thirteen seconds.
+    const impact = Math.hypot(player.vx, player.vy) >= CONFIG.HIT_SPEED;
+    let rx = ox, ry = oy;
+    // An axis slide counts only if it carries a real share of the move. A
+    // diver moving along a wall has next to no motion on the other axis, so
+    // "slide on that axis" was a move of almost nothing that trivially fit:
+    // it was taken every frame, zeroed the forward speed, and the diver
+    // stood still against the wall for good. A tolerance of 1e-6 did not
+    // help; the drift there is a few hundred-thousandths of a pixel.
+    const share = 0.3 * Math.hypot(nx - ox, ny - oy);
+    if (Math.abs(nx - ox) >= share && this.fits(nx, oy)) { rx = nx; player.vy = 0; }
+    else if (Math.abs(ny - oy) >= share && this.fits(ox, ny)) { ry = ny; player.vx = 0; }
+    else if (this.glide(player, nx, ny, ox, oy)) { rx = player.x; ry = player.y; }
+    else {
+        const was = this.wetness(ox, oy);
+        let best = was;
+        for (const [cx, cy] of [[nx, ny], [nx, oy], [ox, ny]]) {
+            const w = this.wetness(cx, cy);
+            if (w > best) { best = w; rx = cx; ry = cy; }
+        }
+        if (best === was) { player.vx = 0; player.vy = 0; }
+    }
+    player.x = rx; player.y = ry;
+    return { wall: true, rock: impact ? hit.rock : null };
+};
+
+/**
+ * Slide along a SLOPED wall. The axis slides above only work against a wall
+ * square to the screen; against one that narrows slowly, each step forward
+ * pushed the body a tenth of a pixel into rock, both slides failed, and the
+ * diver stuck there. So also try stepping a pixel or two off the wall, either
+ * side, keeping whichever axis carries the most of the move. Leaves the
+ * diver at the result and returns true, or returns false.
+ */
+World.prototype.glide = function (player, nx, ny, ox, oy) {
+    const mx = Math.abs(nx - ox) >= Math.abs(ny - oy);
+    for (const d of [1, 2]) {
+        for (const sgn of [-1, 1]) {
+            const cx = mx ? nx : ox + sgn * d, cy = mx ? oy + sgn * d : ny;
+            if (this.fits(cx, cy)) {
+                player.x = cx; player.y = cy;
+                if (mx) player.vy = 0; else player.vx = 0;
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+/**
+ * Keep track of which tunnel the diver is in, how far along the cave that
+ * is, and whether they have just committed to NO WAY BACK. Also runs the
+ * collapse's chase: once it falls, the rubble follows the diver up the tunnel
+ * at the segment's creep, and a diver who stops is pushed on by it.
+ */
+World.prototype.track = function (player, dt, sfx) {
+    // Each boundary is judged in ONE frame, the later tunnel's, with a little
+    // hysteresis. Judging leaving by the earlier tunnel's own "past my end"
+    // flapped at corners: a point up and to the right of a shaft-to-squeeze
+    // corner is past the shaft's end AND before the squeeze's start.
+    // The boundary is the line through the corner that BISECTS it. The line
+    // the next tunnel starts on is the wrong one: at a shaft that turns into
+    // a squeeze it is vertical, so a diver swimming back UP the shaft never
+    // crossed it and stayed "in" the squeeze. And a frame runs on for ever,
+    // so the diver must also be IN the tunnel they switch to: without that,
+    // the line is crossed 1600px up the first shaft by anyone 39px right of
+    // its middle.
+    const M = 12;
+    const k = this.cur;
+    const past = (j) => {                  // how far past corner j, toward tunnel j
+        const a = this.tunnels[j - 1].d, b = this.tunnels[j].d, P = this.tunnels[j].P;
+        const nx = a.x + b.x, ny = a.y + b.y, m = Math.hypot(nx, ny) || 1;
+        return ((player.x - P.x) * nx + (player.y - P.y) * ny) / m;
+    };
+    if (k < this.tunnels.length - 1 && past(k + 1) > M && this.inStrip(k + 1, player.x, player.y)) {
+        this.cur = k + 1;
+    } else if (k > 0 && !(this.collapseFired && k === this.collapseK) &&
+        past(k) < -M && this.inStrip(k - 1, player.x, player.y)) {
+        this.cur = k - 1;
+    }
+    const p = this.local(this.cur, player.x, player.y);
+    this.diverAlong = p.s;
+
+    if (this.cur === this.collapseK && !this.collapseFired) {
+        this.collapseFired = true;
+        this.shake = 46;
+        // The rockfall comes down just BEHIND the diver, wherever they are.
+        this.sealAlong = p.s - 2;
+        if (sfx) sfx.collapse();
+    }
+    if (this.collapseFired) {
+        const ct = this.tunnels[this.collapseK];
+        const creep = SEGMENTS[this.collapseK].creep || 0;
+        // It chases only up its own tunnel, and gives up at the far room.
+        if (this.cur === this.collapseK && this.sealAlong < ct.E - CONFIG.JUNCTION_ALONG) {
+            this.sealAlong += creep * dt;
+        }
+        const pc = this.local(this.collapseK, player.x, player.y);
+        const gap = pc.s - this.sealAlong - CONFIG.PLAYER_RADIUS - 2;
+        if (gap < 0) {
+            player.x -= ct.d.x * gap;
+            player.y -= ct.d.y * gap;
+            if (this.cur === this.collapseK) this.diverAlong -= gap;
+        }
+    }
+};
+
+/** Is map point (x, y) inside tunnel k's passage, ignoring lumps? */
+World.prototype.inStrip = function (k, x, y) {
+    const t = this.tunnels[k];
+    const p = this.local(k, x, y);
+    if (p.s < t.from || p.s > t.to) return false;
+    const b = this.boundsAt(k, p.s);
+    return p.c >= b.lo - 8 && p.c <= b.hi + 8;
+};
+
+/** How far behind the diver the collapse's rubble is, px, or undefined. */
+World.prototype.chaseGap = function (player) {
+    if (!this.collapseFired || this.cur !== this.collapseK) return undefined;
+    return this.local(this.collapseK, player.x, player.y).s - this.sealAlong;
 };
 
 /** How far down the cave the diver is, 0..1. Depth on the HUD. */
@@ -205,158 +410,58 @@ World.prototype.progress = function () {
     return Math.max(0, Math.min(1, this.diverAlong / CONFIG.DIVE_ALONG));
 };
 
-/** The segment the camera is in, which is the one the diver is in. */
-World.prototype.segment = function () { return SEGMENTS[this.segIndex]; };
+/** The segment the diver is in. */
+World.prototype.segment = function () { return SEGMENTS[this.cur]; };
 
-/**
- * Per frame, before the diver moves. Only the collapse's shake decays here
- * now: the camera moves in follow(), after the diver has.
- */
+/** Per frame: the collapse's shake decays. */
 World.prototype.update = function (dt) {
     if (this.shake > 0) this.shake -= dt;
 };
 
-/** The range camAlong may take in the current segment. */
-World.prototype.camRange = function () {
-    const g = this.segs[this.segIndex];
-    return { min: g.from, max: g.to - this.alongExtent };
-};
-
 /**
- * Cross into segment k, keeping the diver where they are in the cave. The
- * camera is re-anchored so the diver's along position maps to the same
- * screen pixel in the new axis; if that would show cave the segment does not
- * have, the camera is clamped and the diver moved on screen instead.
+ * The camera looks a little ahead of the diver in the direction they face,
+ * eases there rather than snapping, and never lets them near the screen's
+ * edge. It is a plain pan over the map: there is nothing to rotate.
  */
-World.prototype.enter = function (k, player, s, sfx) {
-    const from = this.segIndex;
-    this.useSegment(k);
-    const vertical = this.axis === 'y';
-    let scr = vertical ? player.y : player.x;
-    const fwd = this.flip ? this.alongExtent - scr : scr;
-    const r = this.camRange();
-    this.camAlong = Math.max(r.min, Math.min(r.max, s - fwd));
-    const nf = s - this.camAlong;
-    scr = this.flip ? this.alongExtent - nf : nf;
-    if (vertical) player.y = scr; else player.x = scr;
-    this.axisChanged = true;
-    this.prevAlong = s;
-
-    // The way back shutting. Fired on the way IN to the segment that carries
-    // it, so it lands as the diver commits, and never on the way back out.
-    if (SEGMENTS[k].collapse && k > from && !this.collapseFired) {
-        this.collapseFired = true;
-        // The rockfall comes down just BEHIND the diver, wherever they are. It
-        // used to sit a fixed half-chamber into the segment, 130px past the
-        // boundary, and the diver crossing at 10px was shoved 127px forward
-        // in one frame to clear it: a teleport, every time, at the same spot.
-        this.sealAlong = s - 2;
-        this.shake = 46;
-        if (sfx) sfx.collapse();
-    }
+World.prototype.camera = function (player, dt, snap) {
+    const W = CONFIG.CANVAS_W, H = CONFIG.CANVAS_H;
+    const tx = player.x + player.fx * W * CONFIG.CAMERA_LOOK - W / 2;
+    const ty = player.y + player.fy * H * CONFIG.CAMERA_LOOK - H / 2;
+    const k = snap ? 1 : 1 - Math.exp(-dt / CONFIG.CAMERA_EASE);
+    this.camX += (tx - this.camX) * k;
+    this.camY += (ty - this.camY) * k;
+    const bx = W * CONFIG.CAMERA_BAND, by = H * CONFIG.CAMERA_BAND;
+    this.camX = Math.max(player.x - (W - bx), Math.min(player.x - bx, this.camX));
+    this.camY = Math.max(player.y - (H - by), Math.min(player.y - by, this.camY));
 };
 
-/**
- * Move the camera after the diver, and carry them across segment boundaries.
- * Call after the diver moves, before confine().
- *
- * The camera keeps the diver behind the middle of the screen in whichever
- * direction they face, so most of the screen and the lamp show where they are
- * going, and when they turn round it re-centers at a capped speed rather than
- * snapping. Swimming at the line moves the camera exactly as far as the diver
- * swam, which is what keeps it independent of frame rate.
- *
- * A segment's `creep` is a floor under the camera's forward speed: a diver
- * slower than it drifts toward the back edge, and confine() pushes them on.
- */
-World.prototype.follow = function (player, dt, sfx) {
-    this.axisChanged = false;
-    let s = this.diverAlongOf(player);
-    const k = this.segIndex, g = this.segs[k];
-    if (s > g.E + CROSS_MARGIN && k < this.segs.length - 1) this.enter(k + 1, player, s, sfx);
-    else if (s < g.S - CROSS_MARGIN && k > 0 && !this.sealedBehind()) this.enter(k - 1, player, s, sfx);
-
-    const vertical = this.axis === 'y';
-    const scr = vertical ? player.y : player.x;
-    const fwd = this.flip ? this.alongExtent - scr : scr;
-    // Facing along the cave, + is deeper. Hysteresis, so a diver dodging
-    // sideways does not swing the camera back and forth.
-    const facing = (vertical ? player.fy : player.fx) * (this.flip ? -1 : 1);
-    if (facing < -0.35) this.lookBack = true;
-    else if (facing > 0.35) this.lookBack = false;
-    const push = this.alongExtent * CONFIG.RAIL_POS;
-    const target = this.lookBack ? this.alongExtent - push : push;
-
-    const moved = this.prevAlong === null ? 0 : Math.abs(s - this.prevAlong);
-    const cap = moved + CONFIG.CAMERA_RECENTER * dt;
-    const e = fwd - target;
-    let move = 0;
-    if (!this.lookBack && e > 0) move = Math.min(e, cap);
-    else if (this.lookBack && e < 0) move = Math.max(e, -cap);
-    const creep = SEGMENTS[this.segIndex].creep;
-    if (creep) move = Math.max(move, creep * dt);
-    // Past the band, the camera follows exactly whichever way the diver
-    // faces. Without it a diver who turned round while still drifting deeper
-    // slid to the screen's edge and was held there, because a camera looking
-    // back only ever moved back.
-    const band = this.alongExtent * CONFIG.CAMERA_BAND;
-    const after = fwd - move;
-    if (after > this.alongExtent - band) move += after - (this.alongExtent - band);
-    else if (after < band) move -= band - after;
-
-    const r = this.camRange();
-    const cam = Math.max(r.min, Math.min(r.max, this.camAlong + move));
-    move = cam - this.camAlong;
-    this.camAlong = cam;
-    this.vel = move / Math.max(dt, 1e-6);
-    // The diver stays put in the cave, so on screen they move against the
-    // camera: back when it moves forward, forward when it moves back.
-    const shift = this.flip ? move : -move;
-    if (vertical) player.y += shift; else player.x += shift;
-
-    s = this.diverAlongOf(player);
-    this.diverAlong = s;
-    this.prevAlong = s;
+/** Map point to screen. */
+World.prototype.toScreen = function (x, y) {
+    return { x: x - this.camX, y: y - this.camY };
 };
 
-/** True when the collapse has sealed the way back out of this segment. */
-World.prototype.sealedBehind = function () {
-    return this.collapseFired && !!SEGMENTS[this.segIndex].collapse;
-};
-
-/** Clamp the diver to the passage. Returns true if a wall was touched. */
-World.prototype.confine = function (player) {
-    const vertical = this.axis === 'y';
-    const alongCoord = vertical ? player.y : player.x;
-    const b = this.boundsAt(this.alongAtScreen(alongCoord));
-    const hitWall = player.clampTo(b.lo, b.hi, vertical ? 'x' : 'y');
-
-    // Along, the diver is held to the screen, to the cave's two surfaces, and
-    // in front of the collapse once it has come down.
-    const sMin = this.sealedBehind() ? this.sealAlong : 0;
-    const sMax = CONFIG.DIVE_ALONG;
-    const a1 = this.screenOf(sMin), a2 = this.screenOf(sMax);
-    const lo = Math.max(10, Math.min(a1, a2));
-    const hi = Math.min(this.alongExtent - 10, Math.max(a1, a2));
-    if (lo < hi) player.clampTo(lo, hi, vertical ? 'y' : 'x');
-    this.diverAlong = this.diverAlongOf(player);
-    return hitWall;
+/** Tunnel-local point to screen. */
+World.prototype.localToScreen = function (k, s, c) {
+    const p = this.toWorld(k, s, c);
+    return { x: p.x - this.camX, y: p.y - this.camY };
 };
 
 /**
  * The exit the diver is in, or -1. The entrance and the far end are reached
- * by swimming up out of the cave; an alcove by swimming into it, past where
+ * by swimming up to the waterline; an alcove by swimming into it, past where
  * the wall would otherwise be.
  */
 World.prototype.exitAt = function (player) {
-    const s = this.diverAlongOf(player);
-    if (s <= CONFIG.SURFACE_REACH) return 0;
-    if (s >= CONFIG.DIVE_ALONG - CONFIG.SURFACE_REACH) return this.exits.length - 1;
-    const cross = this.axis === 'y' ? player.x : player.y;
+    const last = this.exits.length - 1;
+    const p0 = this.local(0, player.x, player.y);
+    if (this.cur === 0 && p0.s <= CONFIG.SURFACE_REACH) return 0;
+    const pl = this.local(this.tunnels.length - 1, player.x, player.y);
+    if (this.cur === this.tunnels.length - 1 && pl.s >= CONFIG.DIVE_ALONG - CONFIG.SURFACE_REACH) return last;
     for (const e of this.exits) {
-        if (!e.alcove || e.seg !== this.segIndex) continue;
-        if (Math.abs(s - e.s) > CONFIG.ALCOVE_HALF * 0.6) continue;
-        if (cross < this.boundsAt(s).wallLo - CONFIG.ALCOVE_DEPTH * 0.55) return e.index;
+        if (!e.alcove) continue;
+        const p = this.local(e.seg, player.x, player.y);
+        if (Math.abs(p.s - e.s) > CONFIG.ALCOVE_HALF * 0.6) continue;
+        if (p.c < this.boundsAt(e.seg, p.s).wallLo - CONFIG.ALCOVE_DEPTH * 0.55) return e.index;
     }
     return -1;
 };
@@ -365,40 +470,34 @@ World.prototype.exitAt = function (player) {
 World.prototype.placeAtExit = function (i, player) {
     const e = this.exits[i];
     const last = this.exits.length - 1;
-    const s = i === 0 ? CONFIG.SURFACE_REACH + 16
-        : i === last ? CONFIG.DIVE_ALONG - CONFIG.SURFACE_REACH - 16
-        : e.s;
-    const k = Timeline.indexAt(Math.min(s / CONFIG.DIVE_ALONG, 0.9999));
-    this.useSegment(k);
-    const r = this.camRange();
-    const push = this.alongExtent * CONFIG.RAIL_POS;
-    // From the far side the only way on is back into the cave.
-    this.lookBack = i === last;
-    this.camAlong = Math.max(r.min, Math.min(r.max, s - (i === last ? this.alongExtent - push : push)));
-    const a = this.screenOf(s);
-    const b = this.boundsAt(s);
-    const cross = e.alcove ? b.wallLo + 10 : b.center;
-    if (this.axis === 'y') { player.x = cross; player.y = a; } else { player.x = a; player.y = cross; }
+    let k, s, c;
+    if (i === 0) { k = 0; s = CONFIG.SURFACE_REACH + 16; c = this.boundsAt(0, s).center; }
+    else if (i === last) {
+        k = this.tunnels.length - 1; s = CONFIG.DIVE_ALONG - CONFIG.SURFACE_REACH - 16;
+        c = this.boundsAt(k, s).center;
+    } else { k = e.seg; s = e.s; c = this.boundsAt(k, s).wallLo + 10; }
+    const p = this.toWorld(k, s, c);
+    player.x = p.x; player.y = p.y;
     player.vx = 0; player.vy = 0;
+    this.cur = k;
     this.diverAlong = s;
-    this.prevAlong = s;
-    this.axisChanged = true;
+    this.camera(player, 1, true);
 };
 
 /** Lights the mask should punch for the ways out: daylight in the water. */
 World.prototype.lights = function () {
     const out = [];
     for (const e of this.exits) {
-        if (e.seg !== this.segIndex) continue;
-        const a = this.screenOf(e.s);
-        if (a < -120 || a > this.alongExtent + 120) continue;
+        if (Math.abs(e.s - this.diverAlong) > 700) continue;
         if (e.alcove) {
-            const sc = this.toScreen(e.s, this.boundsAt(e.s).lo + 4);
+            const sc = this.localToScreen(e.seg, e.s, this.boundsAt(e.seg, e.s).lo + 4);
             out.push({ x: sc.x, y: sc.y, r: 46, a: 0.75 });
             continue;
         }
-        for (let c = 30; c < this.crossExtent; c += 70) {
-            const sc = this.axis === 'y' ? { x: c, y: a } : { x: a, y: c };
+        const k = e.index === 0 ? 0 : this.tunnels.length - 1;
+        const t = this.tunnels[k];
+        for (let c = 30; c < t.X; c += 70) {
+            const sc = this.localToScreen(k, e.s, c);
             out.push({ x: sc.x, y: sc.y, r: 80, a: 0.85 });
         }
     }
@@ -407,131 +506,142 @@ World.prototype.lights = function () {
 
 // ── Drawing ───────────────────────────────────────────────────────────
 
+/**
+ * The terrain, drawn by asking cellAt() on a grid of CELL-px squares locked
+ * to the map, so the walls keep the stepped pixel look and do not shimmer as
+ * the camera pans. Rock touching water is lit; rock far from it is deep.
+ */
 World.prototype.draw = function (ctx, t) {
     const C = CONFIG.COLORS;
-    const g = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);
+    const W = CONFIG.CANVAS_W, H = CONFIG.CANVAS_H, N = CONFIG.CELL;
+    const g = ctx.createLinearGradient(0, 0, 0, H);
     g.addColorStop(0, C.water);
     g.addColorStop(1, C.waterDeep);
     ctx.fillStyle = g;
-    ctx.fillRect(0, 0, CONFIG.CANVAS_W, CONFIG.CANVAS_H);
+    ctx.fillRect(0, 0, W, H);
 
-    const vertical = this.axis === 'y';
-    // A rectangle given in (along, cross) screen terms.
-    const rect = (a, c, la, lc) => {
-        if (vertical) ctx.fillRect(c, a, lc, la); else ctx.fillRect(a, c, la, lc);
+    const gx0 = Math.floor(this.camX / N) - 1, gy0 = Math.floor(this.camY / N) - 1;
+    const cols = Math.ceil(W / N) + 3, rows = Math.ceil(H / N) + 3;
+    if (!this.grid || this.grid.length !== cols * rows) this.grid = new Uint8Array(cols * rows);
+    const grid = this.grid;
+    for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+            grid[j * cols + i] = this.cellAt((gx0 + i + 0.5) * N, (gy0 + j + 0.5) * N);
+        }
+    }
+    const at = (i, j) => (i < 0 || j < 0 || i >= cols || j >= rows ? ROCK : grid[j * cols + i]);
+    // Each cell's paint: 0 nothing (water), 1 deep rock, 2 rock, 3 lit edge,
+    // 4 sky. Drawn as horizontal RUNS of one paint, one fillRect each: a
+    // rect per cell was about 5000 draw calls a frame, which is the part a
+    // phone pays for, where the cell tests themselves cost ~1.3ms.
+    const paints = [null, C.rockDeep, C.rock, C.rockLit, '#2c7a86'];
+    const paintOf = (i, j) => {
+        const v = grid[j * cols + i];
+        if (v === SKY) return 4;
+        if (v === WATER) return 0;
+        let edge = false, deep = true;
+        for (let dj = -3; dj <= 3 && (deep || !edge); dj++) {
+            for (let di = -3; di <= 3; di++) {
+                if (at(i + di, j + dj) === WATER) {
+                    deep = false;
+                    if (Math.abs(di) <= 1 && Math.abs(dj) <= 1) edge = true;
+                }
+            }
+        }
+        return edge ? 3 : deep ? 1 : 2;
     };
-    const X = this.crossExtent;
-
-    for (let i = 0; i < this.slices.length; i++) {
-        const sl = this.slices[i];
-        const a = this.screenOf(sl.s);
-        if (a < -SLICE * 2 || a > this.alongExtent + SLICE * 2) continue;
-        const lo = Math.round(sl.lo), hi = Math.round(sl.hi);
-        const pos = Math.round(this.flip ? a - SLICE : a);
-        ctx.fillStyle = C.rock;
-        rect(pos, 0, SLICE, lo);
-        rect(pos, hi, SLICE, X - hi);
-        ctx.fillStyle = C.rockLit;
-        rect(pos, lo - 3, SLICE, 3);
-        rect(pos, hi, SLICE, 3);
-        ctx.fillStyle = C.rockDeep;
-        rect(pos, 0, SLICE, Math.max(0, lo - 14));
-        rect(pos, hi + 14, SLICE, Math.max(0, X - hi - 14));
+    let current = -1;
+    for (let j = 0; j < rows; j++) {
+        const sy = Math.round((gy0 + j) * N - this.camY);
+        let i = 0;
+        while (i < cols) {
+            const pnt = paintOf(i, j);
+            let end = i + 1;
+            while (end < cols && paintOf(end, j) === pnt) end++;
+            if (pnt) {
+                if (pnt !== current) { ctx.fillStyle = paints[pnt]; current = pnt; }
+                const sx = Math.round((gx0 + i) * N - this.camX);
+                ctx.fillRect(sx, sy, (end - i) * N, N);
+            }
+            i = end;
+        }
     }
 
-    // The ways out. An alcove gets a chimney of daylight cut up through the
-    // rock above it; the entrance and the far end get the surface itself.
-    for (const e of this.exits) {
-        if (e.seg !== this.segIndex) continue;
-        const a = this.screenOf(e.s);
-        if (a < -120 || a > this.alongExtent + 120) continue;
-        if (e.alcove) {
-            const lo = Math.round(this.boundsAt(e.s).lo);
-            const w = 18;
-            const ap = Math.round(a - w / 2);
-            const grad = vertical
-                ? ctx.createLinearGradient(lo, 0, 0, 0)
-                : ctx.createLinearGradient(0, lo, 0, 0);
-            grad.addColorStop(0, 'rgba(120,210,215,0.55)');
-            grad.addColorStop(1, 'rgba(220,250,245,0.95)');
-            ctx.fillStyle = grad;
-            rect(ap, 0, w, lo);
-            // Light falling out of it into the passage, shimmering.
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-            ctx.globalAlpha = 0.10 + 0.04 * Math.sin(t * 0.05 + e.index);
-            ctx.fillStyle = '#9fe8e8';
-            rect(ap - 6, lo, w + 12, 60);
-            ctx.restore();
-            continue;
-        }
-        // The surface. Whichever way the axis runs, the air is between the
-        // screen edge and the waterline at screen position a.
-        if (a > 0) {
-            ctx.fillStyle = '#2c7a86';
-            rect(0, 0, Math.round(a), X);
-        }
-        ctx.fillStyle = 'rgba(200,245,245,0.8)';
-        for (let c = 0; c < X; c += 2) {
+    // The waterlines at the entrance and the far side.
+    ctx.fillStyle = 'rgba(200,245,245,0.8)';
+    for (const k of [0, this.tunnels.length - 1]) {
+        const s = k === 0 ? 0 : CONFIG.DIVE_ALONG;
+        const tn = this.tunnels[k];
+        const b = this.boundsAt(k, s);
+        for (let c = b.lo; c < b.hi; c += 2) {
+            const p = this.localToScreen(k, s, c);
+            if (p.x < -4 || p.x > W + 4 || p.y < -4 || p.y > H + 4) continue;
             const wave = Math.round(Math.sin(c * 0.05 + t * 0.04) * 1.5);
-            rect(Math.round(a) + wave, c, 1, 2);
+            ctx.fillRect(Math.round(p.x), Math.round(p.y) + wave * Math.abs(tn.d.y), 2, 1);
         }
     }
+
+    // Alcove chimneys: daylight cut up through the rock above each one.
+    for (const e of this.exits) {
+        if (!e.alcove || Math.abs(e.s - this.diverAlong) > 700) continue;
+        this.chimney(ctx, e, 'rgba(120,210,215,0.55)', 'rgba(220,250,245,0.95)', false);
+    }
+};
+
+/** The quad of daylight from an alcove's mouth back to the open sky. */
+World.prototype.chimney = function (ctx, e, inner, outer, additive) {
+    const lo = this.boundsAt(e.seg, e.s).lo;
+    const w = 9;
+    const a = this.localToScreen(e.seg, e.s - w, lo), b = this.localToScreen(e.seg, e.s + w, lo);
+    const c = this.localToScreen(e.seg, e.s + w, lo - 400), d = this.localToScreen(e.seg, e.s - w, lo - 400);
+    const g = ctx.createLinearGradient(a.x, a.y, d.x, d.y);
+    g.addColorStop(0, inner);
+    g.addColorStop(0.3, outer);
+    g.addColorStop(1, outer);
+    ctx.save();
+    if (additive) ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(c.x, c.y); ctx.lineTo(d.x, d.y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 };
 
 /**
  * Daylight, drawn AFTER the darkness mask. Seeing light in the dark is how a
  * diver finds a way out, so an exit must not depend on the lamp to be seen:
- * drawn under the mask like the rock, the chimneys came out as flat pale boxes
- * that were easy to swim past.
+ * a shaft falling from the opening and widening as it goes, and a glow at the
+ * mouth, both visible well beyond the lamp.
  */
 World.prototype.drawDaylight = function (ctx, t) {
-    const vertical = this.axis === 'y';
     for (const e of this.exits) {
-        if (!e.alcove || e.seg !== this.segIndex) continue;
-        const a = this.screenOf(e.s);
-        if (a < -80 || a > this.alongExtent + 80) continue;
-        const lo = this.boundsAt(e.s).lo;
-        const w = 18;
+        if (!e.alcove || Math.abs(e.s - this.diverAlong) > 700) continue;
         const flicker = 0.85 + 0.15 * Math.sin(t * 0.05 + e.index * 1.7);
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        // The chimney itself, brightest where it meets the sky.
-        const g = vertical
-            ? ctx.createLinearGradient(lo, 0, 0, 0)
-            : ctx.createLinearGradient(0, lo, 0, 0);
-        g.addColorStop(0, 'rgba(120,210,215,' + (0.28 * flicker).toFixed(3) + ')');
-        g.addColorStop(1, 'rgba(230,255,250,' + (0.65 * flicker).toFixed(3) + ')');
-        ctx.fillStyle = g;
-        if (vertical) ctx.fillRect(0, Math.round(a - w / 2), Math.round(lo), w);
-        else ctx.fillRect(Math.round(a - w / 2), 0, w, Math.round(lo));
-        ctx.restore();
-        // And the light it lets into the passage: a shaft falling from the
-        // opening and widening as it goes, the way daylight looks from below,
-        // plus a glow at the mouth. Both visible well beyond the lamp. Where
-        // the rock above is thin the chimney itself is only a few pixels, so
-        // this is what actually says "a way out".
-        const reach = Math.min(110, this.crossExtent - lo - 20);
-        const sg = vertical
-            ? ctx.createLinearGradient(lo, 0, lo + reach, 0)
-            : ctx.createLinearGradient(0, lo, 0, lo + reach);
+        this.chimney(ctx, e, 'rgba(120,210,215,' + (0.25 * flicker).toFixed(3) + ')',
+            'rgba(230,255,250,' + (0.6 * flicker).toFixed(3) + ')', true);
+        const lo = this.boundsAt(e.seg, e.s).lo;
+        const reach = 110, w = 9;
+        const p0 = this.localToScreen(e.seg, e.s - w, lo), p1 = this.localToScreen(e.seg, e.s + w, lo);
+        const p2 = this.localToScreen(e.seg, e.s + w + 22, lo + reach);
+        const p3 = this.localToScreen(e.seg, e.s - w - 22, lo + reach);
+        const mid0 = this.localToScreen(e.seg, e.s, lo), mid1 = this.localToScreen(e.seg, e.s, lo + reach);
+        const sg = ctx.createLinearGradient(mid0.x, mid0.y, mid1.x, mid1.y);
         sg.addColorStop(0, 'rgba(170,240,235,' + (0.34 * flicker).toFixed(3) + ')');
         sg.addColorStop(1, 'rgba(170,240,235,0)');
         ctx.save();
         ctx.globalCompositeOperation = 'lighter';
         ctx.fillStyle = sg;
         ctx.beginPath();
-        const p0 = this.toScreen(e.s - w / 2, lo), p1 = this.toScreen(e.s + w / 2, lo);
-        const p2 = this.toScreen(e.s + w / 2 + 22, lo + reach), p3 = this.toScreen(e.s - w / 2 - 22, lo + reach);
         ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y);
         ctx.closePath();
         ctx.fill();
-        const mouth = this.toScreen(e.s, lo + 10);
+        const mouth = this.localToScreen(e.seg, e.s, lo + 10);
         Renderer.glow(ctx, mouth.x, mouth.y, 70, '120,220,220', 0.3 * flicker);
         ctx.restore();
     }
 };
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { World, mulberry32, SLICE };
+    module.exports = { World, mulberry32, SLICE, lumpDepth, ROCK, WATER, SKY };
 }
