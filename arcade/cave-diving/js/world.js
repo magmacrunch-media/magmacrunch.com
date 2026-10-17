@@ -86,6 +86,7 @@ World.prototype.reset = function (seed) {
     for (let k = 0; k < SEGMENTS.length; k++) this.segs.push(this.buildSegment(k));
 
     this.collapseFired = false;
+    this.sealAlong = 0;         // how far back the diver can go once it falls
     this.shake = 0;
     this.vel = 0;
     this.axisChanged = false;
@@ -245,6 +246,11 @@ World.prototype.enter = function (k, player, s, sfx) {
     // it, so it lands as the diver commits, and never on the way back out.
     if (SEGMENTS[k].collapse && k > from && !this.collapseFired) {
         this.collapseFired = true;
+        // The rockfall comes down just BEHIND the diver, wherever they are. It
+        // used to sit a fixed half-chamber into the segment, 130px past the
+        // boundary, and the diver crossing at 10px was shoved 127px forward
+        // in one frame to clear it: a teleport, every time, at the same spot.
+        this.sealAlong = s - 2;
         this.shake = 46;
         if (sfx) sfx.collapse();
     }
@@ -327,7 +333,7 @@ World.prototype.confine = function (player) {
 
     // Along, the diver is held to the screen, to the cave's two surfaces, and
     // in front of the collapse once it has come down.
-    const sMin = this.sealedBehind() ? this.segs[this.segIndex].S + CONFIG.JUNCTION_ALONG * 0.5 : 0;
+    const sMin = this.sealedBehind() ? this.sealAlong : 0;
     const sMax = CONFIG.DIVE_ALONG;
     const a1 = this.screenOf(sMin), a2 = this.screenOf(sMax);
     const lo = Math.max(10, Math.min(a1, a2));
