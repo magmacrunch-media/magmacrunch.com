@@ -26,7 +26,9 @@ On Windows (MC1): Git Credential Manager already authenticates pushes as the
 right account. Do **not** run `gh auth login` or `gh auth switch` here, and
 ignore `gh auth status` reporting "not logged into any GitHub hosts" — that is
 expected and harmless (only CI uses `gh`). Just verify the commit author:
-`git log -1 --format='%an <%ae>'` → want `magmacrunchmedia <magmacrunchmedia@gmail.com>`.
+`git log -1 --format='%an <%ae>'` → on this box, want
+`magmacrunchmedia <magmacrunchmedia@gmail.com>`. Any `magmacrunch-media` org
+member is correct.
 
 On the Mac: `gh` *is* the credential helper, so pushes go out as whichever
 account `gh` has active — run the `gh auth` check in `docs/ops/git-identity.md`
