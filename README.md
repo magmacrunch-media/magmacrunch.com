@@ -1,6 +1,6 @@
 # magmacrunch.com
 
-OfficiL website for magmacrunch media: music, art, archives, arcade games, and more. Static HTML/CSS/JS. [adenosine](https://github.com/magmacrunch-media/adenosine) engine for game systems.
+Official website for magmacrunch media, LLC, featuring music, art, archives, arcade games, and more. Static HTML/CSS/JS. [adenosine](https://github.com/magmacrunch-media/adenosine) engine for game systems.
 
 Live site: [magmacrunch.com](https://magmacrunch.com)
 
