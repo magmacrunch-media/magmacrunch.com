@@ -207,7 +207,7 @@
     "c": "page",
     "u": "/press/scientific/index.html",
     "d": "Academic writing and physics",
-    "b": "scientific — press — magmacrunch media home › press › scientific // scientific // a journal of science & technology essays on physics, mathematics, and the machinery of the universe. // pieces // X-ray verification of sol-gel resist shrinkage in substrate-conformal imprint lithography for a replicated blazed reflection grating paper mccoy et al. · 2020 ▶ Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by TASTE paper mccoy et al. · 2020 ▶ Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equil..."
+    "b": "scientific — press — magmacrunch media home › press › scientific // scientific // a journal of science & technology essays on physics, mathematics, and the machinery of the universe, and the papers they grew out of. // papers // papers: published elsewhere collection 4 peer-reviewed papers · rebuilt from arXiv ▶ // essays // On the Quantum Nature of Photons essay jake mccoy · sep 2024 ▶ Why is off-plane diffraction conical? essay jake mccoy · 2022 ▶"
   },
   {
     "t": "experimental",
@@ -1904,39 +1904,46 @@
     "b": "Why is off-plane diffraction conical? — press — magmacrunch media home › press › scientific › Why is off-plane diffraction conical? essay Why is off-plane diffraction conical? jake mccoy 2022 The equation for a cone oriented along the $z$-axis with an opening angle $2\\gamma$ is given by $$ x^2 + y^2 = z^2 \\tan^2\\!\\left(\\gamma\\right) , $$ where $r = |z| \\tan(\\gamma)$ is the radius of a circular slice of the cone at an axial position $z$, as shown in Figure 1 . Figure 1. Projection of a cone given by Equation 1. To see how off-plane-diffracted orders are confined to the surface of a cone, the tr..."
   },
   {
+    "t": "papers · scientific · press · magmacrunch media",
+    "c": "press",
+    "u": "/press/scientific/papers/index.html",
+    "d": "Scientific journal",
+    "b": "papers · scientific · press · magmacrunch media home › press › scientific › papers // papers // published elsewhere peer-reviewed papers first published in journals, rebuilt here from the manuscripts posted to arXiv. each page links the published version of record, which is the one to cite. // papers // X-ray verification of sol-gel resist shrinkage in substrate-conformal imprint lithography for a replicated blazed reflection grating paper mccoy et al. · osa continuum · 2020 ▶ Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by TASTE paper mcc..."
+  },
+  {
+    "t": "Sol-gel resist shrinkage in SCIL gratings · press · magmacrunch media",
+    "c": "press",
+    "u": "/press/scientific/papers/scil-shrinkage/index.html",
+    "d": "Scientific journal",
+    "b": "Sol-gel resist shrinkage in SCIL gratings · press · magmacrunch media home › press › scientific › papers › Sol-gel resist shrinkage in SCIL gratings paper X-ray verification of sol-gel resist shrinkage in substrate-conformal imprint lithography for a replicated blazed reflection grating jake mccoy , marc verschuuren, drew miles, randall mcentaffer 2020 // this version // Published by the Optical Society, now Optica Publishing Group. This paper appeared in OSA Continuum , and that published article is the version of record and the one to cite: McCoy, J. A., Verschuuren, M. A., Miles, D. M. & Mc..."
+  },
+  {
+    "t": "EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media",
+    "c": "press",
+    "u": "/press/scientific/papers/taste-efficiency/index.html",
+    "d": "Scientific journal",
+    "b": "EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media home › press › scientific › papers › EUV and soft x-ray efficiency of a TASTE grating paper Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by thermally activated selective topography equilibration jake mccoy , randall mcentaffer, drew miles the pennsylvania state university 2020 // this version // Published by IOP Publishing for the AAS. This paper appeared in The Astrophysical Journal , published by IOP Publishing on behalf of the American Astronomical Society. Tha..."
+  },
+  {
+    "t": "X-ray reflection gratings by TASTE · press · magmacrunch media",
+    "c": "press",
+    "u": "/press/scientific/papers/taste-gratings/index.html",
+    "d": "Scientific journal",
+    "b": "X-ray reflection gratings by TASTE · press · magmacrunch media home › press › scientific › papers › X-ray reflection gratings by TASTE paper Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equilibration (TASTE) jake mccoy , randall mcentaffer, chad eichfeld the pennsylvania state university 2018 // this version // Published by AIP Publishing for the AVS. This paper appeared in the Journal of Vacuum Science & Technology B , published by AIP Publishing on behalf of the AVS, in a special issue for the 62nd EIPBN conference. That published artic..."
+  },
+  {
+    "t": "Telemetry interfacing with low cost FPGAs · press · magmacrunch media",
+    "c": "press",
+    "u": "/press/scientific/papers/telemetry-fpga/index.html",
+    "d": "Scientific journal",
+    "b": "Telemetry interfacing with low cost FPGAs · press · magmacrunch media home › press › scientific › papers › Telemetry interfacing with low cost FPGAs paper A primer for telemetry interfacing in accordance with NASA standards using low cost FPGAs jake mccoy , ted schultz, james tutt, thomas rogers, drew miles, randall mcentaffer 2016 // this version // Published by World Scientific. This paper appeared in the Journal of Astronomical Instrumentation , published by World Scientific Publishing Company . That published article is the version of record, and it is the one to cite: McCoy, J. A., Schult..."
+  },
+  {
     "t": "On the Quantum Nature of Photons",
     "c": "press",
     "u": "/press/scientific/photon-quantum.html",
     "d": "Scientific journal",
     "b": "On the Quantum Nature of Photons — press — magmacrunch media home › press › scientific › On the Quantum Nature of Photons essay On the Quantum Nature of Photons jake mccoy september 2024 Classical Harmonic Oscillator The Hamiltonian for a 1D harmonic oscillator with mass $m$ and angular frequency $\\omega$ can be written in terms of position, $x$, and momentum, $p_x$, in phase space as $$ H = \\frac{p_x^2}{2 m} + \\frac{1}{2} m \\omega^2 x^2 . $$ Hamilton's equations give $$ \\dot{x} = \\frac{\\partial H}{\\partial p_x} = \\frac{p_x}{m} \\quad \\text{and} \\quad \\dot{p_x} = -\\frac{\\partial H}{\\partial x} ..."
-  },
-  {
-    "t": "Sol-gel resist shrinkage in SCIL gratings · press · magmacrunch media",
-    "c": "press",
-    "u": "/press/scientific/scil-shrinkage/index.html",
-    "d": "Scientific journal",
-    "b": "Sol-gel resist shrinkage in SCIL gratings · press · magmacrunch media home › press › scientific › Sol-gel resist shrinkage in SCIL gratings paper X-ray verification of sol-gel resist shrinkage in substrate-conformal imprint lithography for a replicated blazed reflection grating jake mccoy , marc verschuuren, drew miles, randall mcentaffer 2020 // this version // Published by the Optical Society, now Optica Publishing Group. This paper appeared in OSA Continuum , and that published article is the version of record and the one to cite: McCoy, J. A., Verschuuren, M. A., Miles, D. M. & McEntaffer,..."
-  },
-  {
-    "t": "EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media",
-    "c": "press",
-    "u": "/press/scientific/taste-efficiency/index.html",
-    "d": "Scientific journal",
-    "b": "EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media home › press › scientific › EUV and soft x-ray efficiency of a TASTE grating paper Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by thermally activated selective topography equilibration jake mccoy , randall mcentaffer, drew miles the pennsylvania state university 2020 // this version // Published by IOP Publishing for the AAS. This paper appeared in The Astrophysical Journal , published by IOP Publishing on behalf of the American Astronomical Society. That publish..."
-  },
-  {
-    "t": "X-ray reflection gratings by TASTE · press · magmacrunch media",
-    "c": "press",
-    "u": "/press/scientific/taste-gratings/index.html",
-    "d": "Scientific journal",
-    "b": "X-ray reflection gratings by TASTE · press · magmacrunch media home › press › scientific › X-ray reflection gratings by TASTE paper Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equilibration (TASTE) jake mccoy , randall mcentaffer, chad eichfeld the pennsylvania state university 2018 // this version // Published by AIP Publishing for the AVS. This paper appeared in the Journal of Vacuum Science & Technology B , published by AIP Publishing on behalf of the AVS, in a special issue for the 62nd EIPBN conference. That published article is the..."
-  },
-  {
-    "t": "Telemetry interfacing with low cost FPGAs · press · magmacrunch media",
-    "c": "press",
-    "u": "/press/scientific/telemetry-fpga/index.html",
-    "d": "Scientific journal",
-    "b": "Telemetry interfacing with low cost FPGAs · press · magmacrunch media home › press › scientific › Telemetry interfacing with low cost FPGAs paper A primer for telemetry interfacing in accordance with NASA standards using low cost FPGAs jake mccoy , ted schultz, james tutt, thomas rogers, drew miles, randall mcentaffer 2016 // this version // Published by World Scientific. This paper appeared in the Journal of Astronomical Instrumentation , published by World Scientific Publishing Company . That published article is the version of record, and it is the one to cite: McCoy, J. A., Schultz, T. B.,..."
   },
   {
     "t": "adenosine",

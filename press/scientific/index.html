@@ -100,6 +100,7 @@
             gap: 0;
             animation: fadeUp 0.5s 0.18s ease both;
         }
+        .pieces-wrap + .pieces-wrap { margin-top: 36px; }
 
         .pieces-label {
             font-family: 'Press Start 2P', monospace;
@@ -219,62 +220,29 @@
     <p class="page-subtitle">a journal of science &amp; technology</p>
 
     <div class="press-intro">
-        <p>essays on physics, mathematics, and the machinery of the universe.</p>
+        <p>essays on physics, mathematics, and the machinery of the universe, and papers first published elsewhere.</p>
     </div>
 
     <div class="section-divider"></div>
 
     <div class="pieces-wrap">
-        <div class="pieces-label">// pieces //</div>
+        <div class="pieces-label">// papers //</div>
+        <a href="papers/" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">papers: published elsewhere</div>
+                    <div class="piece-card-meta">
+                        <span class="type">collection</span>
+                        4 peer-reviewed papers &nbsp;·&nbsp; rebuilt from arXiv
+                    </div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+    </div>
 
-        <a href="scil-shrinkage/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">X-ray verification of sol-gel resist shrinkage in substrate-conformal imprint lithography for a replicated blazed reflection grating</div>
-                    <div class="piece-card-meta">
-                        <span class="type">paper</span>
-                        mccoy et al. &nbsp;·&nbsp; 2020
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
-        </a>
-        <a href="taste-efficiency/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by TASTE</div>
-                    <div class="piece-card-meta">
-                        <span class="type">paper</span>
-                        mccoy et al. &nbsp;·&nbsp; 2020
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
-        </a>
-        <a href="taste-gratings/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equilibration (TASTE)</div>
-                    <div class="piece-card-meta">
-                        <span class="type">paper</span>
-                        mccoy et al. &nbsp;·&nbsp; 2018
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
-        </a>
-        <a href="telemetry-fpga/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">A primer for telemetry interfacing in accordance with NASA standards using low cost FPGAs</div>
-                    <div class="piece-card-meta">
-                        <span class="type">paper</span>
-                        mccoy et al. &nbsp;·&nbsp; 2016
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
-        </a>
+    <div class="pieces-wrap">
+        <div class="pieces-label">// essays //</div>
         <a href="photon-quantum.html" class="piece-card">
             <div class="piece-card-info">
                 <div class="piece-card-text">
@@ -287,7 +255,6 @@
                 <span class="piece-card-arrow">▶</span>
             </div>
         </a>
-
         <a href="cone/" class="piece-card">
             <div class="piece-card-info">
                 <div class="piece-card-text">
@@ -300,7 +267,6 @@
                 <span class="piece-card-arrow">▶</span>
             </div>
         </a>
-
     </div>
 
 </main>
