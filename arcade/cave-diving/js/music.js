@@ -131,15 +131,14 @@ const MusicLogic = {
     },
 
     /**
-     * Where to enter the song for the finale, so its last sound lands as the
-     * dive ends. `remaining` is dive seconds left at the moment of entry.
-     * Snapped to a beat, so the pulse carries over; the dive clock bends the
-     * few hundred milliseconds that costs.
+     * Where the finale enters the song: the beat nearest FINALE_FROM, the top
+     * of the record's final climb, so what follows is its climb-out and fade.
+     * On a beat so the pulse carries over from whatever loop was playing.
      */
-    finaleEntry(songDur, remaining) {
-        const pos = this.nearestBeat(songDur - remaining);
-        return Math.max(0, Math.min(pos, songDur - this.bar()));
-    },
+    finaleFrom() { return this.nearestBeat(CONFIG.MUSIC.FINALE_FROM); },
+
+    /** How long the finale lasts, from its entry to the end of the song. */
+    finaleSec(songDur) { return songDur - this.finaleFrom(); },
 };
 
 function Music() {
@@ -309,6 +308,11 @@ Music.prototype.start = function (diveSec) {
     this.tier = 'calm';
     this.rotation = { calm: 0, unease: 0, danger: 0 };
     this.finaleAt = null;
+    this.finaleDone = false;
+    // A drowned or surfaced dive faded the output to nothing; bring it back.
+    const g = this.out.gain;
+    g.cancelScheduledValues(ac.currentTime);
+    g.setValueAtTime(this.muted ? 0 : this.volume, ac.currentTime);
     const calm = this.loopFor('calm');
     if (diveSec < calm.start - MusicLogic.bar()) {
         const v = this.newVoice(now, 0, { loop: calm, tier: 'calm', intro: true,
@@ -345,38 +349,64 @@ Music.prototype.pause = function () { if (this.ac) this.ac.suspend(); };
 Music.prototype.resume = function () { if (this.ac) this.ac.resume(); };
 
 /**
- * Schedule the song's ending so it finishes as the dive does. `remaining` is
- * dive seconds left now.
+ * Play the song's ending from the next bar. The game calls this when it
+ * expects the diver to surface in about finaleSec(), so the record's fade and
+ * the surface arrive together; the dive is a free swim, so that is an
+ * estimate, and both ways of missing it are handled. Surface early and the
+ * ending plays on over the results. Linger and it runs out under you, and
+ * onEnded hands back to afterFinale(), which brings the loops back.
  */
-Music.prototype.finale = function (remaining) {
-    if (!this.active || this.finaleAt) return;
+Music.prototype.finale = function () {
+    if (!this.active || this.finaleAt || this.finaleDone) return;
     const now = this.ac.currentTime;
     const t = MusicLogic.nextBar(this.active.anchorTime, now + MUSIC_LEAD);
-    const pos = MusicLogic.finaleEntry(this.buf.duration, remaining - (t - now));
+    const pos = MusicLogic.finaleFrom();
+    this.pending = null;
     this.retire(this.active, t);
     const v = this.newVoice(t, MusicLogic.bar(), { tier: 'finale', anchorTime: t, finale: true });
     const src = this.pass(v, t, pos, this.buf.duration - pos, false, false);
-    src.onended = () => { if (this.onEnded) this.onEnded(); };
+    src.onended = () => {
+        this.finaleDone = true;
+        if (this.onEnded) this.onEnded();
+    };
     this.active = v;
     this.finaleAt = { t, pos };
 };
 
-/**
- * The dive time the music implies, while the music is playing the song
- * straight (the opening, and the finale), or null while it is looping. The
- * game nudges its clock toward this so the record's opening and ending stay
- * on the level, as the whole song used to.
- */
-Music.prototype.impliedDiveSec = function (diveTotal) {
-    const v = this.active;
-    if (!v || !this.ac) return null;
-    const now = this.ac.currentTime;
-    if (v.intro && now < v.anchorTime) return v.introFrom + (now - v.introT0);
-    if (v.finale && this.finaleAt && now >= this.finaleAt.t) {
-        const pos = this.finaleAt.pos + (now - this.finaleAt.t);
-        return diveTotal - (this.buf.duration - pos);
-    }
-    return null;
+Music.prototype.finaleSec = function () {
+    return this.buf ? MusicLogic.finaleSec(this.buf.duration) : 0;
+};
+
+/** The song ended and the diver is still down there: fade the loops back in. */
+Music.prototype.afterFinale = function () {
+    if (!this.ac || !this.buf) return;
+    const now = this.ac.currentTime + 0.05;
+    this.active = this.startLoop(this.loopFor(this.tier), now, MusicLogic.bar() * 2);
+    this.finaleAt = null;
+    this.busyUntil = now + MusicLogic.bar() * 2;
+    this.holdUntil = this.busyUntil;
+};
+
+/** Fade everything out over `sec` and stop. Drowning, or surfacing early. */
+Music.prototype.fadeOut = function (sec) {
+    if (!this.ac || !this.out) return;
+    const t = this.ac.currentTime;
+    const g = this.out.gain;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(g.value, t);
+    g.linearRampToValueAtTime(0, t + sec);
+    const voices = this.voices.slice();
+    setTimeout(() => {
+        for (const v of voices) {
+            for (const s of v.sources) {
+                s.onended = null;
+                try { s.stop(); } catch (e) { /* not started */ }
+            }
+            try { v.gain.disconnect(); } catch (e) { /* gone */ }
+        }
+        this.voices = this.voices.filter((v) => voices.indexOf(v) < 0);
+        if (voices.indexOf(this.active) >= 0) this.active = null;
+    }, sec * 1000 + 100);
 };
 
 /** Per frame (or per timer tick): follow the danger, and keep passes queued. */

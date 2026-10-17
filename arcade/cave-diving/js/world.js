@@ -3,16 +3,16 @@
 //
 // COORDINATES. The diver lives in SCREEN space and the cave streams past. That
 // is not a shortcut - it is what makes one camera serve both a vertical shaft
-// and a horizontal squeeze. The water and the camera move together, so a
-// passive diver stays put on screen and no "current" force is needed; and when
-// the scroll axis changes at a segment boundary the diver needs no rebasing at
+// and a horizontal squeeze. The camera follows the diver forward (follow())
+// and never back, so the cave is still water and the diver sets the pace; and
+// when the scroll axis changes at a segment boundary the diver needs no rebasing at
 // all, because nothing about the diver was expressed in the old axis.
 //
 // Only the cave changes meaning. `along` is distance down the passage and
 // always increases, even in the ascent - the ascent sets `flip`, which mirrors
 // the mapping to the screen rather than running the generator backwards.
 
-/* global CONFIG, SEGMENTS, JUNCTION_MS, Timeline, lerp */
+/* global CONFIG, SEGMENTS, Timeline, lerp */
 
 /** Seeded PRNG so the tests can drive the same cave twice. */
 function mulberry32(a) {
@@ -47,7 +47,9 @@ World.prototype.reset = function (seed) {
     this.wander = 0;
     this.wanderV = 0;
     this.phase = this.rng() * Math.PI * 2;
-    this.junction = 0;          // ms left in a junction chamber
+    this.junction = 0;          // along-distance left in a junction chamber
+    this.junctionFrom = 0;
+    this.vel = 0;               // camera speed this frame, px per 60fps frame
     this.collapseFired = false;
     this.shake = 0;
     this.setAxisFor(SEGMENTS[0]);
@@ -125,15 +127,26 @@ World.prototype.screenOf = function (s) {
     return this.flip ? this.alongExtent - (s - this.camAlong) : s - this.camAlong;
 };
 
+/** How far down the cave the camera has come, 0..1. This IS the dive's clock. */
+World.prototype.progress = function () {
+    return Math.max(0, Math.min(1, this.camAlong / CONFIG.DIVE_ALONG));
+};
+
 /**
- * Advance the camera and the timeline.
- * `f` is the dive fraction, 0..1, taken from the song clock in main.js.
+ * Advance the timeline, and generate the passage ahead of the camera.
+ * `f` is the dive fraction, 0..1, from progress(): distance, not time.
+ *
+ * The camera itself no longer scrolls on its own. It moves in follow(), when
+ * the diver swims forward past the push line, so the diver sets the pace -
+ * except in a segment with a `creep`, where the cave behind is coming down and
+ * the camera keeps moving whether you do or not.
  */
 World.prototype.update = function (dt, dtMs, f, sfx) {
     const idx = Timeline.indexAt(f);
     if (idx !== this.segIndex) {
         this.segIndex = idx;
-        this.junction = JUNCTION_MS;
+        this.junction = CONFIG.JUNCTION_ALONG;
+        this.junctionFrom = this.camAlong;
         const seg = SEGMENTS[idx];
         // The way back shutting. It is placed on the loudest moment in the
         // track (88.7s), so the boom and the music land together.
@@ -155,15 +168,17 @@ World.prototype.update = function (dt, dtMs, f, sfx) {
     } else {
         this.axisChanged = false;
     }
-    if (this.junction > 0) this.junction -= dtMs;
+    // A junction chamber is a stretch of cave now, not a stretch of time: a
+    // diver who lingers in one should not watch it close up around them.
+    if (this.junction > 0) {
+        this.junction = Math.max(0, CONFIG.JUNCTION_ALONG - (this.camAlong - this.junctionFrom));
+    }
     if (this.shake > 0) this.shake -= dt;
 
     const seg = SEGMENTS[this.segIndex];
-    // Scroll eases in out of a junction, so the chamber is somewhere you
-    // arrive rather than a jolt in the middle of the room.
-    const ease = this.junction > 0 ? 0.45 + 0.55 * (1 - this.junction / JUNCTION_MS) : 1;
-    this.speed = Timeline.scrollSpeed(seg) * ease;
-    this.camAlong += this.speed * dt;
+    // The NOMINAL pace of this segment. Nothing scrolls at it any more; it
+    // spaces the hazards (entities.js) and sets the creep's ceiling.
+    this.speed = Timeline.scrollSpeed(seg);
 
     while (!this.slices.length ||
            this.slices[this.slices.length - 1].s < this.camAlong + this.alongExtent + 160) {
@@ -172,6 +187,36 @@ World.prototype.update = function (dt, dtMs, f, sfx) {
     while (this.slices.length > 4 && this.slices[0].s < this.camAlong - 200) {
         this.slices.shift();
     }
+};
+
+/**
+ * Move the camera after the diver. Call after the diver moves, before confine.
+ *
+ * The diver lives in screen space, so the camera moving forward by d means the
+ * diver's screen position moves back by d to stay at the same place in the
+ * cave. Swimming past the push line carries the camera with you and holds you
+ * on the line; swimming back is free, as far as the screen's back edge.
+ *
+ * A segment's `creep` is a floor under the camera's speed. A diver slower
+ * than it drifts toward the back edge, and confine() then pushes them on.
+ */
+World.prototype.follow = function (player, dt) {
+    const vertical = this.axis === 'y';
+    const screen = vertical ? player.y : player.x;
+    // Forward distance from the back edge of the screen. In the ascent forward
+    // is UP, so it is measured from the bottom.
+    const fwd = this.flip ? this.alongExtent - screen : screen;
+    const push = this.alongExtent * CONFIG.RAIL_POS;
+
+    let move = Math.max(0, fwd - push);
+    const seg = SEGMENTS[this.segIndex];
+    if (seg.creep) move = Math.max(move, seg.creep * dt);
+    if (move <= 0) { this.vel = 0; return; }
+
+    this.camAlong += move;
+    this.vel = move / Math.max(dt, 1e-6);
+    const back = this.flip ? move : -move;
+    if (vertical) player.y += back; else player.x += back;
 };
 
 /** Clamp the diver to the passage. Returns true if a wall was touched. */

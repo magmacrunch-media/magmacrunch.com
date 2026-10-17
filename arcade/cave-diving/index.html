@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
     <link rel="stylesheet" href="css/base.css?v=1df50c21">
-    <link rel="stylesheet" href="css/start-screen.css?v=464d070d">
+    <link rel="stylesheet" href="css/start-screen.css?v=6d315fa6">
     <link rel="stylesheet" href="css/game.css?v=64f05f13">
     <link rel="stylesheet" href="css/modals.css?v=255d91f2">
 </head>
@@ -30,28 +30,7 @@
 <!-- Title -->
 <div id="titleScreen" class="title-screen">
     <h1>CAVE DIVING<br><span class="sub-title">(not even once)</span></h1>
-    <p class="subtitle">one song. one tank. no way back.</p>
-    <div class="controls-hint">
-        ARROWS / WASD: aim<br>
-        Z / SPACE: stroke<br>
-        M: sound &middot; P: pause
-    </div>
-    <div class="brief">
-        <div class="brief-row">
-            <span class="brief-mark lamp">&#9679;</span>
-            <span class="brief-text">Your lamp is the only light. It points where you aim.</span>
-        </div>
-        <div class="brief-row">
-            <span class="brief-mark air">&#9679;</span>
-            <span class="brief-text">Every stroke costs air. Green pockets refill it.
-            Score is what you have left when you surface.</span>
-        </div>
-        <div class="brief-row">
-            <span class="brief-mark warn">&#9888;</span>
-            <span class="brief-text">Rock does not kill you. Running out of air does.
-            A rumble means the ceiling is coming down.</span>
-        </div>
-    </div>
+    <p class="subtitle">one tank. no way back.</p>
     <div class="start-prompt">PRESS SPACE</div>
     <button id="btnStart" class="touch-start">DIVE</button>
     <button id="btnSound" class="sound-toggle" aria-pressed="false">SOUND: ON</button>
@@ -89,6 +68,10 @@
     <div class="panel">
         <h2>PAUSED</h2>
         <p class="panel-note">the cave waits</p>
+        <div class="controls-hint">
+            ARROWS / WASD: swim &middot; Z / SPACE: stroke<br>
+            M: sound &middot; P: pause
+        </div>
         <button id="btnResume" class="btn">RESUME</button>
     </div>
 </div>
@@ -126,16 +109,17 @@
 <script src="../shared/adenosine-score-client.js?v=565e71be"></script>
 <script src="../shared/score-server.js?v=9acd988c"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
-<script src="js/config.js?v=b17e4336"></script>
+<script src="js/config.js?v=cf635c45"></script>
 <script src="js/pixels.js?v=3c7c6684"></script>
 <script src="js/sfx.js?v=bd61bd09"></script>
-<script src="js/music.js?v=879be469"></script>
+<script src="js/music.js?v=7c8966cb"></script>
 <script src="js/input.js?v=a30886cc"></script>
 <script src="js/renderer.js?v=e92d28fb"></script>
 <script src="js/light.js?v=7e2e5051"></script>
-<script src="js/player.js?v=596c8f4a"></script>
-<script src="js/world.js?v=fb19a727"></script>
+<script src="js/title.js?v=ab7e6c40"></script>
+<script src="js/player.js?v=7bf4f42b"></script>
+<script src="js/world.js?v=cc12e3c5"></script>
 <script src="js/entities.js?v=46ac8abc"></script>
-<script src="js/main.js?v=9036655f"></script>
+<script src="js/main.js?v=03104233"></script>
 </body>
 </html>

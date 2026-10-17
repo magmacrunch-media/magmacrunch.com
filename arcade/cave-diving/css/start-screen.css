@@ -1,5 +1,7 @@
-/* start-screen.css — cave diving (not even once)
-   The title card, the briefing, and the touch START button. */
+/* start-screen.css - cave diving (not even once)
+   The title card and the touch START button. The card explains nothing: the
+   scene behind it is drawn by title.js on the game canvas, and the controls
+   live on the pause screen. */
 
 .title-screen {
     position: fixed;
@@ -8,23 +10,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 14px;
-    padding: 24px 18px;
+    /* Low on the screen, over the dark of the shaft, leaving the waterline and
+       the diver clear. The canvas shows through: only the bottom is darkened,
+       enough for the type to sit on. */
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 24px 18px max(7vh, 28px);
     text-align: center;
-    background: radial-gradient(ellipse at 50% 40%,
-        rgba(9, 40, 50, 0.86) 0%,
-        rgba(3, 11, 16, 0.95) 70%);
+    background: linear-gradient(to bottom,
+        rgba(1, 5, 7, 0) 0%,
+        rgba(1, 5, 7, 0) 45%,
+        rgba(1, 5, 7, 0.55) 100%);
     overflow-y: auto;
 }
 
 .title-screen h1 {
     margin: 0;
-    font-size: clamp(15px, 4.6vw, 30px);
+    font-size: clamp(18px, 5.4vw, 40px);
     line-height: 1.5;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.12em;
     color: var(--accent);
-    text-shadow: 0 0 14px rgba(63, 224, 208, 0.55);
+    text-shadow: 0 0 18px rgba(63, 224, 208, 0.5), 0 2px 0 rgba(0, 0, 0, 0.8);
 }
 
 .sub-title {
@@ -37,7 +43,7 @@
     margin: 0;
     font-size: clamp(7px, 1.9vw, 10px);
     color: var(--hud-dim);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.3em;
 }
 
 .controls-hint {
@@ -45,39 +51,6 @@
     line-height: 2;
     color: var(--hud-dim);
     letter-spacing: 0.06em;
-}
-
-.brief {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    max-width: 470px;
-    text-align: left;
-    padding: 12px 14px;
-    border: 1px solid rgba(63, 224, 208, 0.28);
-    background: rgba(7, 24, 32, 0.7);
-}
-
-.brief-row {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-}
-
-.brief-mark {
-    flex: 0 0 auto;
-    font-size: 9px;
-    line-height: 1.7;
-}
-
-.brief-mark.lamp { color: var(--lamp); }
-.brief-mark.air { color: var(--air); }
-.brief-mark.warn { color: var(--danger); }
-
-.brief-text {
-    font-size: 7px;
-    line-height: 1.9;
-    color: var(--hud-text);
 }
 
 .start-prompt {

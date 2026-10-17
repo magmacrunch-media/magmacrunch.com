@@ -7,7 +7,7 @@
 // bypass makemecookies documents for AdAudio.
 
 /* global CONFIG, SEGMENTS, Timeline, clamp01, World, Player, Entities, Input, Light, Renderer, Sfx,
-          Music, MusicLogic, diverPose, sprite */
+          Music, MusicLogic, Title, diverPose, sprite */
 
 (function () {
     const canvas = document.getElementById('gameCanvas');
@@ -43,8 +43,8 @@
     let state = STATE.TITLE;
     let lastTime = 0;
     let titleFrame = 0;
-    let elapsed = 0;             // ms into the dive
-    let diveMs = CONFIG.DIVE_MS_FALLBACK;
+    let elapsed = 0;             // ms into the dive, for animation only
+    let pace = 0;                // the diver's recent forward speed, px/s
     let world, entities, player;
     let flashAmount = 0;
     let flashColor = '#ffffff';
@@ -60,8 +60,9 @@
     // finale. Not AdAudio, which hardcodes loop = true over a whole file, and
     // no longer a plain <audio>, which cannot loop a section.
     const MUTE_KEY = 'caveDivingMuted';
-    // The finale enters on the bar after SURFACING begins, so the song's own
-    // climb-out and fade are the last thing you hear.
+    // The finale can only start once SURFACING has begun, and then starts when
+    // the diver's pace puts the surface about one finale away, so the song's
+    // own climb-out and fade are the last thing you hear.
     const FINALE_AT = SEGMENTS.find((s) => s.kind === 'ascent').at;
     let music = null;
     let musicMuted = false;
@@ -108,16 +109,15 @@
             }
             const m = new Music();
             m.muted = musicMuted;
-            m.onEnded = () => { if (state === STATE.PLAYING) endDive(true); };
+            // The song ran out before the diver surfaced: loops again.
+            m.onEnded = () => { if (state === STATE.PLAYING) m.afterFinale(); };
             m.load(ac, chosen.url).then(() => {
                 music = m;
-                // The decoded buffer's length is exact, where an <audio>
-                // element's ogg duration was an estimate until fully buffered.
-                diveMs = m.duration() * 1000;
                 // Decoded after the dive began: come in where the dive is.
+                // The opening is timed from the start of the dive, and update()
+                // starts the finale on its own when it is due.
                 if (state === STATE.PLAYING || state === STATE.PAUSED) {
                     m.start(elapsed / 1000);
-                    if (fraction() >= FINALE_AT) m.finale((diveMs - elapsed) / 1000);
                     if (state === STATE.PAUSED) m.pause();
                 }
             }).catch(() => {
@@ -156,6 +156,7 @@
         player.fx = 0; player.fy = 1;
 
         elapsed = 0;
+        pace = 0;
         flashAmount = 0;
         surfaced = false;
         score = 0;
@@ -182,7 +183,9 @@
         if (state === STATE.OVER) return;
         state = STATE.OVER;
         surfaced = !!reachedSurface;
-        if (music) music.stop();
+        // Surfacing inside the finale lets the record play out over the
+        // results; anything else fades rather than cutting off mid-bar.
+        if (music && !(surfaced && music.finaleAt)) music.fadeOut(surfaced ? 4 : 1.5);
         if (surfaced) Sfx.surface();
 
         const air = Math.round(player.air);
@@ -209,7 +212,8 @@
         submitAndRefresh();
     }
 
-    function fraction() { return clamp01(elapsed / diveMs); }
+    // Distance, not time: the dive is a free swim.
+    function fraction() { return world ? world.progress() : 0; }
 
     function togglePause() {
         if (state === STATE.PLAYING) {
@@ -228,17 +232,6 @@
 
     function update(dt, dtMs) {
         elapsed += dtMs;
-        // The frame clock leads; the song only corrects it, and only while it
-        // plays straight - the opening and the finale. That way the dive is
-        // identical whether or not the audio arrived, and a stalled buffer
-        // cannot freeze the level.
-        // Only small disagreements are the song's to settle: the finale lands
-        // within half a beat of the dive's end, and anything wider is a state
-        // the music got into, which must not drag the level after it.
-        const implied = music ? music.impliedDiveSec(diveMs / 1000) : null;
-        if (implied !== null && implied > 0.2 && Math.abs(implied * 1000 - elapsed) < 2000) {
-            elapsed += (implied * 1000 - elapsed) * 0.05;
-        }
 
         const f = fraction();
         const seg = Timeline.segmentAt(f);
@@ -247,7 +240,10 @@
 
         const stroke = Input.stroking();
         player.update(dt, Input.axisX(), Input.axisY(), stroke, world, Sfx);
+        world.follow(player, dt);
         world.confine(player);
+        // Smoothed over a few seconds: a single stroke is not a pace.
+        pace += (world.vel * 60 - pace) * (1 - Math.exp(-dtMs / 3000));
 
         const r = entities.update(dt, world, player, seg, f, Sfx);
         siltNow = r.silt;
@@ -272,7 +268,10 @@
                 debris: entities.debris.some((d) => d.warned && !d.dead),
                 silt: siltNow,
             }), dtMs / 1000);
-            if (f >= FINALE_AT) music.finale((diveMs - elapsed) / 1000);
+            if (f >= FINALE_AT) {
+                const toSurface = (1 - f) * CONFIG.DIVE_ALONG / Math.max(pace, 10);
+                if (toSurface <= music.finaleSec() + 1 || f >= 0.985) music.finale();
+            }
         }
 
         if (flashAmount > 0) flashAmount -= 0.03 * dt;
@@ -353,28 +352,7 @@
 
     function drawTitle() {
         titleFrame++;
-        const g = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);
-        g.addColorStop(0, '#0a2430');
-        g.addColorStop(1, CONFIG.COLORS.waterDeep);
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, CONFIG.CANVAS_W, CONFIG.CANVAS_H);
-        Renderer.caustics(ctx, titleFrame, 1);
-
-        ctx.fillStyle = CONFIG.COLORS.rock;
-        for (let i = 0; i < 6; i++) {
-            const w = 30 + i * 9;
-            ctx.fillRect(0, CONFIG.CANVAS_H - 34 - i * 5, w, 6);
-            ctx.fillRect(CONFIG.CANVAS_W - w, CONFIG.CANVAS_H - 30 - i * 6, w, 6);
-        }
-
-        const bob = Math.sin(titleFrame * 0.04) * 4;
-        const pose = diverPose(1, 0.25);
-        sprite(ctx, pose.rows[Math.floor(titleFrame / 22) % 2],
-            Math.round(CONFIG.CANVAS_W / 2 - 8),
-            Math.round(CONFIG.CANVAS_H / 2 - 6 + bob),
-            pose.flipX, pose.flipY);
-        Renderer.glow(ctx, CONFIG.CANVAS_W / 2 + 8, CONFIG.CANVAS_H / 2 - 2 + bob, 54, '255,243,196', 0.16);
-        Renderer.vignette(ctx, 0.55);
+        Title.draw(ctx, titleFrame);
     }
 
     function drawHud() {

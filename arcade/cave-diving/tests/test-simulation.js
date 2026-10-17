@@ -8,6 +8,7 @@
 //
 //   1. dt-invariance      the dive is the same at 60Hz and 120Hz
 //   2. air budget         a baseline diver can actually reach the surface
+//   2b. pace              rushing is faster and costs air: a real choice
 //   3. sight line         hazards are visible for long enough to answer
 //   4. clearance          no generated gap is narrower than the diver plus room
 //   5. timeline           the segments tile the song with no gap or overlap
@@ -43,14 +44,15 @@ function loadGame() {
     // ran. Reading the bindings back out through an expression evaluated in the
     // same scope is what actually reaches them.
     return vm.runInContext(
-        '({ CONFIG, SEGMENTS, JUNCTION_MS, Timeline, clamp01, lerp, smoothstep,' +
+        '({ CONFIG, SEGMENTS, Timeline, clamp01, lerp, smoothstep,' +
         '   World, Player, Entities, mulberry32, SLICE, MusicLogic })', ctx);
 }
 
 const G = loadGame();
 const { CONFIG, SEGMENTS, Timeline, World, Player, Entities, MusicLogic } = G;
 
-const DIVE_MS = CONFIG.DIVE_MS_FALLBACK;
+// A dive that has not surfaced by then is stuck, not slow.
+const MAX_FRAMES = 60 * 600;
 
 /**
  * Dive once.
@@ -60,7 +62,9 @@ const DIVE_MS = CONFIG.DIVE_MS_FALLBACK;
  * pearl, in cross-axis pixels.
  */
 function dive(seed, opts) {
-    const o = Object.assign({ dt: 1, reaction: 8, greed: 70, collect: true }, opts || {});
+    // The baseline pilot CRUISES: the careful diver the game is tuned for.
+    const o = Object.assign({ dt: 1, reaction: 8, greed: 70, collect: true, lead: 30, cruise: true },
+        opts || {});
     const world = new World(seed);
     const player = new Player();
     player.x = CONFIG.CANVAS_W / 2;
@@ -77,8 +81,8 @@ function dive(seed, opts) {
     let frames = 0;
     let pocketsTaken = 0, airGained = 0, airWasted = 0;
 
-    while (elapsed < DIVE_MS && !player.dead) {
-        const f = elapsed / DIVE_MS;
+    while (world.progress() < 1 && !player.dead && frames < MAX_FRAMES) {
+        const f = world.progress();
         const seg = Timeline.segmentAt(f);
         world.update(o.dt, dtMs, f, null);
 
@@ -91,11 +95,14 @@ function dive(seed, opts) {
         // Stroke to close a gap, not on a metronome. Air is spent per stroke,
         // so a pilot that mashes at the cooldown burns breath it never needed
         // and the budget it proves is the wrong one.
-        const stroke = strokeIn <= 0 && aim.need > 14;
+        // A cruising pilot only strokes to change lane - dodging, or reaching
+        // a pocket - and holds its pace by steering, which costs nothing.
+        const stroke = strokeIn <= 0 && (o.cruise ? aim.cross > 18 : aim.need > 14);
         if (stroke) strokeIn = CONFIG.STROKE_COOLDOWN;
         else strokeIn -= o.dt;
 
         player.update(o.dt, aim.x, aim.y, stroke, world, null);
+        world.follow(player, o.dt);
         world.confine(player);
         const airBefore = player.air;
         entities.update(o.dt, world, player, seg, f, null);
@@ -153,7 +160,11 @@ function think(world, player, entities, o) {
     const alongScreen = vertical ? player.y : player.x;
     const cross = vertical ? player.x : player.y;
     const here = world.alongAtScreen(alongScreen);
-    const railTarget = (vertical ? CONFIG.CANVAS_H : CONFIG.CANVAS_W) * CONFIG.RAIL_POS;
+    // Somewhere just past the push line, so the pilot swims the camera on.
+    // `lead` is how hard it pushes: the knob between a careful diver and one
+    // who rushes. In the ascent forward is UP the screen.
+    const fwdTarget = world.alongExtent * CONFIG.RAIL_POS + o.lead;
+    const railTarget = world.flip ? world.alongExtent - fwdTarget : fwdTarget;
 
     const b = world.boundsAt(here + 60);
     let lo = b.lo, hi = b.hi;
@@ -206,7 +217,7 @@ function think(world, player, entities, o) {
     const ax = vertical ? dc : da;
     const ay = vertical ? da : dc;
     const m = Math.hypot(ax, ay) || 1;
-    return { x: ax / m, y: ay / m, need: m };
+    return { x: ax / m, y: ay / m, need: m, cross: Math.abs(dc) };
 }
 
 // ── 5 · The timeline tiles the song ───────────────────────────────────
@@ -220,10 +231,11 @@ test('segments tile the dive with no gap or overlap', () => {
             'segment ' + (i - 1) + ' must end exactly where ' + i + ' starts');
     }
     assert.strictEqual(Timeline.endOf(SEGMENTS.length - 1), 1);
-    // Every segment is long enough to be a place rather than a flicker.
+    // Every segment is long enough to be a place rather than a flicker:
+    // several screens of cave, and well past its own junction chamber.
     for (let i = 0; i < SEGMENTS.length; i++) {
-        const secs = (Timeline.endOf(i) - SEGMENTS[i].at) * DIVE_MS / 1000;
-        assert.ok(secs > 8, 'segment ' + i + ' is only ' + secs.toFixed(1) + 's');
+        const px = (Timeline.endOf(i) - SEGMENTS[i].at) * CONFIG.DIVE_ALONG;
+        assert.ok(px > 4 * CONFIG.JUNCTION_ALONG, 'segment ' + i + ' is only ' + px.toFixed(0) + 'px');
     }
 });
 
@@ -233,13 +245,29 @@ test('the lamp shows a hazard for longer than it takes to answer one', () => {
     const need = CONFIG.TELEGRAPH_MIN_FRAMES + CONFIG.REACTION_FRAMES;
     assert.ok(CONFIG.SIGHT_FRAMES >= need,
         'sight line is ' + CONFIG.SIGHT_FRAMES.toFixed(1) + ' frames, need ' + need);
-    // The budget is quoted against the fastest scroll and the dimmest lamp, so
-    // it must hold for every segment, not just on average.
+    // The budget is quoted against the cruise and the dimmest lamp, so it must
+    // hold for every segment, and for the collapse's creep, which is the one
+    // pace the diver does not choose.
     for (const seg of SEGMENTS) {
-        const frames = (Timeline.lampRadius(seg) - CONFIG.PLAYER_HALF) / Timeline.scrollSpeed(seg);
+        const speed = Math.max(CONFIG.CRUISE_SPEED, seg.creep || 0);
+        const frames = (Timeline.lampRadius(seg) - CONFIG.PLAYER_HALF) / speed;
         assert.ok(frames >= need,
             seg.label + ': ' + frames.toFixed(1) + ' frames of warning, need ' + need);
+        if (seg.creep) assert.ok(seg.creep < CONFIG.CRUISE_SPEED, seg.label + ' creeps faster than a cruise');
     }
+    // CRUISE_SPEED is a closed form; hold it to the real physics. Steer only,
+    // straight along, and measure distance covered once at terminal speed.
+    const p = new Player();
+    p.x = 0; p.y = 135; p.fx = 1; p.fy = 0;
+    let x0 = 0;
+    for (let i = 0; i < 600; i++) {
+        if (i === 300) x0 = p.x;
+        p.update(1, 1, 0, false, null, null);
+        p.air = CONFIG.AIR_MAX;
+    }
+    const cruise = (p.x - x0) / 300;
+    assert.ok(Math.abs(cruise - CONFIG.CRUISE_SPEED) < 0.02,
+        'cruise measured ' + cruise.toFixed(3) + ', config says ' + CONFIG.CRUISE_SPEED.toFixed(3));
 });
 
 // ── 4 · Clearance ─────────────────────────────────────────────────────
@@ -263,6 +291,9 @@ test('the dive is the same at 60Hz and at 120Hz', () => {
     for (const seed of [3, 77, 1234]) {
         const a = fixedRun(seed, 1, 600);
         const b = fixedRun(seed, 0.5, 600);
+        // And the camera, which now moves only because the diver did.
+        assert.ok(Math.abs(a.cam - b.cam) < 2,
+            'seed ' + seed + ' camera drifted ' + Math.abs(a.cam - b.cam).toFixed(2) + 'px over 10s');
         assert.ok(Math.abs(a.x - b.x) < 2 && Math.abs(a.y - b.y) < 2,
             'seed ' + seed + ' drifted ' + Math.abs(a.x - b.x).toFixed(2) + ',' +
             Math.abs(a.y - b.y).toFixed(2) + 'px over 10s');
@@ -287,20 +318,30 @@ function fixedRun(seed, dt, seconds60) {
     player.x = CONFIG.CANVAS_W / 2;
     player.y = CONFIG.CANVAS_H * CONFIG.RAIL_POS;
     player.fx = 0; player.fy = 1;
-    const entities = new Entities(world.entityRng);
     const dtMs = 16.667 * dt;
-    let elapsed = 0, strokeIn = 0;
+    // The rhythm is on TIME, one stroke every 12 frames. Counting it down per
+    // step strokes every 11 frames at dt 1 and every 10.5 at dt 0.5, and once
+    // the camera follows the diver those extra strokes show up as 9px more
+    // cave, which is the test's rhythm and not the physics.
+    let elapsed = 0, t = 0, lastBeat = -1;
     for (let i = 0; i < seconds60 / dt; i++) {
-        const f = elapsed / DIVE_MS;
+        const f = world.progress();
         world.update(dt, dtMs, f, null);
-        const stroke = strokeIn <= 0;
-        if (stroke) strokeIn = CONFIG.STROKE_COOLDOWN; else strokeIn -= dt;
+        const beat = Math.floor(t / 12);
+        const stroke = beat !== lastBeat;
+        lastBeat = beat;
+        t += dt;
         player.update(dt, 0.3, 1, stroke, world, null);
+        world.follow(player, dt);
         world.confine(player);
-        entities.update(dt, world, player, Timeline.segmentAt(f), f, null);
+        // No entities. With the camera following, this fixed-input diver
+        // ploughs forward at full stroke speed, and whether it clips a rock is
+        // then decided by a pixel, so one hit at one step size and none at the
+        // other read as a 6-air integration error. Hazards are the full-dive
+        // check's business below; this one is about the integration.
         elapsed += dtMs;
     }
-    return { x: player.x, y: player.y, air: player.air };
+    return { x: player.x, y: player.y, air: player.air, cam: world.camAlong };
 }
 
 // ── 2 · The air budget ────────────────────────────────────────────────
@@ -333,6 +374,25 @@ test('a baseline diver reaches the surface with air to spare', () => {
         'air is never under pressure - average surface air ' + avg.toFixed(1));
 });
 
+// ── 2b · Pace is a choice ─────────────────────────────────────────────
+
+test('rushing is faster, and costs air', () => {
+    // The point of a free swim: neither pace is free. If rushing were also the
+    // better air, every dive would be a sprint and the cave would never get to
+    // be slow and frightening; if it were not faster, nobody would.
+    const seeds = [1, 2, 3, 5, 8, 13];
+    const mean = (opts, k) => seeds.reduce((s, seed) => s + dive(seed, opts)[k], 0) / seeds.length;
+    const careful = { frames: mean({}, 'frames'), air: mean({}, 'air') };
+    const rushed = { frames: mean({ cruise: false }, 'frames'), air: mean({ cruise: false }, 'air') };
+    assert.ok(rushed.frames < careful.frames * 0.8,
+        'rushing is barely faster: ' + (rushed.frames / 60).toFixed(0) + 's vs ' + (careful.frames / 60).toFixed(0) + 's');
+    assert.ok(rushed.air < careful.air - 10,
+        'rushing costs no air: ' + rushed.air.toFixed(0) + ' vs ' + careful.air.toFixed(0));
+    // And a careful dive is a few minutes, not a sprint and not a slog.
+    assert.ok(careful.frames / 60 > 100 && careful.frames / 60 < 240,
+        'a careful dive takes ' + (careful.frames / 60).toFixed(0) + 's');
+});
+
 // ── 6 · The skill gradient ────────────────────────────────────────────
 
 test('reacting faster scores better', () => {
@@ -353,7 +413,7 @@ test('reacting faster scores better', () => {
 // music.js plays loops of the song chosen by danger. The audio engine needs a
 // browser; everything it decides with does not, and is tested here.
 
-const SONG_SEC = CONFIG.DIVE_MS_FALLBACK / 1000;
+const SONG_SEC = CONFIG.MUSIC.SONG_SEC;
 const BEAT = CONFIG.MUSIC.GRID.BEAT;
 
 test('every loop starts on the beat, lasts whole bars, and fits in the song', () => {
@@ -440,14 +500,18 @@ test('a spike goes straight to DANGER, not by way of UNEASE', () => {
     }
 });
 
-test('the finale ends with the dive, on the beat', () => {
-    const at = SEGMENTS.find((s) => s.kind === 'ascent').at;
-    const remaining = SONG_SEC * (1 - at);
-    const pos = MusicLogic.finaleEntry(SONG_SEC, remaining);
+test('the finale enters on the beat and is long enough to surface to', () => {
+    const pos = MusicLogic.finaleFrom();
     const beats = (pos - CONFIG.MUSIC.GRID.FIRST) / BEAT;
     assert.ok(Math.abs(beats - Math.round(beats)) < 1e-9, 'finale enters off the beat');
-    // The song ends within half a beat of the dive, which the clock bends to.
-    assert.ok(Math.abs((SONG_SEC - pos) - remaining) <= BEAT / 2 + 1e-9);
+    assert.ok(Math.abs(pos - CONFIG.MUSIC.FINALE_FROM) <= BEAT / 2 + 1e-9);
+    // Long enough to be an ending, and short enough that SURFACING, which is
+    // where it may start, is longer than it at a cruise.
+    const sec = MusicLogic.finaleSec(SONG_SEC);
+    assert.ok(sec > 10 && sec < 25, 'finale is ' + sec.toFixed(1) + 's');
+    const ascent = SEGMENTS.find((s) => s.kind === 'ascent');
+    const cruiseSec = (1 - ascent.at) * CONFIG.DIVE_ALONG / CONFIG.CRUISE_SPEED / 60;
+    assert.ok(cruiseSec > sec, 'SURFACING at a cruise is ' + cruiseSec.toFixed(1) + 's, shorter than the finale');
 });
 
 test('over a real dive the music moves, and does not thrash', () => {
