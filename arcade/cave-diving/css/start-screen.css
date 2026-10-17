@@ -39,13 +39,6 @@
     text-shadow: 0 0 10px rgba(255, 243, 196, 0.4);
 }
 
-.subtitle {
-    margin: 0;
-    font-size: clamp(7px, 1.9vw, 10px);
-    color: var(--hud-dim);
-    letter-spacing: 0.3em;
-}
-
 .controls-hint {
     font-size: 8px;
     line-height: 2;
